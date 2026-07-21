@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community — PEV Squad</title>
+<link rel="icon" type="image/jpeg" href="images/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('pev-theme');
+    if(!t){ t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
+    document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="logo">
+      <img src="images/logo.jpg" alt="PEV Squad" class="logo-img">
+      <span class="tag">/// EUC · SCOOTER · ESK8</span>
+    </a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="community.html" class="active">Community</a></li>
+        <li><a href="featured-riders.html">Featured Riders</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="for-sale.html">For Sale</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="sponsors.html">Sponsors</a></li>
+      </ul>
+      <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle color theme">☀</button>
+      <button class="nav-toggle" type="button">Menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="stripe-bar"></div>
+
+<section class="page-header">
+  <div class="wrap">
+    <span class="eyebrow">Who rides with us</span>
+    <h1>The Community</h1>
+    <p>PEV Squad is a collective of riders across Indonesia — mostly performance EUC, some performance scooters, and the occasional electric skateboard. No entry fee, just show up and ride.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="statbar">
+      <div><div class="n">184</div><div class="l">Active Members</div></div>
+      <div><div class="n">9</div><div class="l">Cities</div></div>
+      <div><div class="n">62,000+</div><div class="l">KM Logged</div></div>
+      <div><div class="n">37</div><div class="l">Meetups Held</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Rider roster</span>
+        <h2>Recently Active Members</h2>
+        <p>A rolling snapshot of who's been out riding, wrenching, and posting lately.</p>
+      </div>
+    </div>
+    <div class="grid grid-3">
+
+      <div class="card">
+        <div class="avatar" style="background:#3a1a0f;"><span>RG</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Rangga Wibisono</h3>
+          <div class="card-meta">Jakarta · Kingsong / Sherman</div>
+          <p class="desc">Squad co-founder. Runs the weekly Sudirman night ride.</p>
+        </div>
+        <div class="card-foot"><span>Joined 2018</span><span>14,200 km</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#1f2a1a;"><span>DA</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Dinda Anjani</h3>
+          <div class="card-meta">Bandung · Dualtron Thunder</div>
+          <p class="desc">Runs scooter tuning workshops for new members.</p>
+        </div>
+        <div class="card-foot"><span>Joined 2020</span><span>9,800 km</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#1a2430;"><span>TM</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Teuku Maulana</h3>
+          <div class="card-meta">Surabaya · Veyron / Custom Esk8</div>
+          <p class="desc">Builds custom esk8 decks between EUC sessions.</p>
+        </div>
+        <div class="card-foot"><span>Joined 2019</span><span>11,050 km</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#2a1f30;"><span>NP</span></div>
+        <div class="card-body">
+          <span class="badge grey">Member</span>
+          <h3>Nadia Pratiwi</h3>
+          <div class="card-meta">Jakarta · Inmotion V13</div>
+          <p class="desc">New to EUC, six months in and already doing 40km commutes.</p>
+        </div>
+        <div class="card-foot"><span>Joined 2025</span><span>1,240 km</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#302a1a;"><span>BS</span></div>
+        <div class="card-body">
+          <span class="badge grey">Member</span>
+          <h3>Bimo Santoso</h3>
+          <div class="card-meta">Yogyakarta · Segway S20</div>
+          <p class="desc">Weekend rider, leads the Yogya regional chapter.</p>
+        </div>
+        <div class="card-foot"><span>Joined 2022</span><span>5,600 km</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#1a3028;"><span>FH</span></div>
+        <div class="card-body">
+          <span class="badge grey">Member</span>
+          <h3>Fajar Hidayat</h3>
+          <div class="card-meta">Bekasi · Kaabo Wolf Warrior</div>
+          <p class="desc">Scooter mechanic, handles most of the squad's repairs.</p>
+        </div>
+        <div class="card-foot"><span>Joined 2021</span><span>7,300 km</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">No email required</span>
+        <h2>Where We Actually Talk</h2>
+        <p>Our community lives on chat, not inboxes. Join the WhatsApp group to get in the loop on rides and drops.</p>
+      </div>
+      <a href="#" class="btn btn-solid">Join WhatsApp Group</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="images/logo.jpg" alt="PEV Squad" class="footer-logo">
+        <div class="footer-motto">WE TAKE IT <span>PERSONAL.</span></div>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="for-sale.html">For Sale</a></li>
+            <li><a href="events.html">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Squad</h4>
+          <ul>
+            <li><a href="featured-riders.html">Featured Riders</a></li>
+            <li><a href="sponsors.html">Sponsors</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Follow</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">WhatsApp Group</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 PEV SQUAD</span>
+      <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+/* ==========================================================================
+   KINETIC // DIGITAL STRUCTURES — alternative design direction
+   Self-contained design system. Does NOT share tokens with ../css/style.css.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --orange: #FF4800;
+  --black: #000000;
+  --white: #FFFFFF;
+  --font-main: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --border-width: 2px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--black);
+  color: var(--white);
+  font-family: var(--font-main);
+  overflow-x: hidden;
+  line-height: 1.1;
+}
+
+/* ==========================================================================
+   Layout — split hero grid + panels
+   ========================================================================== */
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  border-bottom: var(--border-width) solid var(--black);
+}
+
+.panel {
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-orange {
+  background-color: var(--orange);
+  color: var(--black);
+  border-right: var(--border-width) solid var(--black);
+}
+
+.panel-white {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+/* ==========================================================================
+   Type scale
+   ========================================================================== */
+
+.display-huge {
+  font-size: 28vw;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.06em;
+  line-height: 0.75;
+  margin-top: 2rem;
+  display: block;
+  transform: scaleY(1.4);
+  transform-origin: top;
+}
+
+.meta-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.manifesto-text {
+  font-size: 2.5rem;
+  font-weight: 700;
+  max-width: 90%;
+  margin-top: 4rem;
+  letter-spacing: -0.02em;
+}
+
+.section-title {
+  margin-top: 2rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Nav
+   ========================================================================== */
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.25rem;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+  display: block;
+}
+
+nav a:hover {
+  transform: translateX(10px);
+}
+
+.arrow {
+  margin-right: 0.5rem;
+}
+
+/* ==========================================================================
+   Header meta strip
+   ========================================================================== */
+
+.header-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+.logo-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-symbol {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 0.5rem;
+}
+
+.logo-name {
+  font-weight: 900;
+}
+
+.meta-right {
+  text-align: right;
+}
+
+.contact-link {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   About / news blocks
+   ========================================================================== */
+
+.about-block {
+  margin-top: 4rem;
+}
+
+.about-body {
+  margin-top: 1rem;
+  max-width: 400px;
+  font-weight: 500;
+}
+
+.news-block {
+  margin-top: 2rem;
+}
+
+.news-headline {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+}
+
+.news-link {
+  display: block;
+  margin-top: 1rem;
+  color: inherit;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Image containers
+   ========================================================================== */
+
+.image-container {
+  width: 100%;
+  aspect-ratio: 4/5;
+  background-color: #eee;
+  margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.1);
+  transition: filter 0.5s ease;
+}
+
+.image-container:hover img {
+  filter: grayscale(0) contrast(1);
+}
+
+.image-container-wide {
+  height: 200px;
+  margin-top: 3rem;
+}
+
+.image-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: var(--black);
+  color: var(--white);
+  padding: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+/* ==========================================================================
+   Marquee
+   ========================================================================== */
+
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--black);
+  color: var(--white);
+  padding: 1rem 0;
+  border-top: var(--border-width) solid var(--black);
+  border-bottom: var(--border-width) solid var(--black);
+}
+
+.marquee-inner {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+}
+
+.marquee-text {
+  font-size: 8vw;
+  display: inline;
+  margin: 0 2rem;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ==========================================================================
+   Project index rows
+   ========================================================================== */
+
+.projects {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.project-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 200px;
+  padding: 1.5rem 2rem;
+  border-bottom: var(--border-width) solid var(--black);
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.project-row:hover {
+  background-color: var(--orange);
+}
+
+.project-id {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.project-title {
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.project-meta {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+footer {
+  background-color: var(--black);
+  color: var(--white);
+  padding: 4rem 2rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 2rem;
+}
+
+.footer-big {
+  font-size: 5vw;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.8;
+  transform: scaleY(1.2);
+  transform-origin: top;
+}
+
+.footer-office {
+  margin-top: 3rem;
+}
+
+.footer-office p {
+  margin-top: 0.5rem;
+}
+
+.footer-nav {
+  margin-top: 1rem;
+}
+
+.footer-email {
+  margin-top: 1rem;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.footer-legal {
+  margin-top: 4rem;
+}
+
+.footer-legal p {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+  .display-huge {
+    font-size: 40vw;
+  }
+  .project-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .footer-big {
+    font-size: 10vw;
+  }
+}

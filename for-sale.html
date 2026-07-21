@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Sale — PEV Squad</title>
+<link rel="icon" type="image/jpeg" href="images/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('pev-theme');
+    if(!t){ t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
+    document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="logo">
+      <img src="images/logo.jpg" alt="PEV Squad" class="logo-img">
+      <span class="tag">/// EUC · SCOOTER · ESK8</span>
+    </a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="featured-riders.html">Featured Riders</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="for-sale.html" class="active">For Sale</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="sponsors.html">Sponsors</a></li>
+      </ul>
+      <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle color theme">☀</button>
+      <button class="nav-toggle" type="button">Menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="stripe-bar"></div>
+
+<section class="page-header">
+  <div class="wrap">
+    <span class="eyebrow">Rider to rider</span>
+    <h1>For Sale</h1>
+    <p>New and second-hand gear listed by squad members. Deals are arranged directly between buyer and seller — reach out through the contact listed on each post.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="collab-strip">
+      <a href="#brand-new" class="collab-chip">↓ Brand New</a>
+      <a href="#second-hand" class="collab-chip">↓ Second Hand</a>
+    </div>
+  </div>
+</section>
+
+<section id="brand-new" class="tight">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Sealed &amp; unused</span>
+        <h2>Brand New</h2>
+        <p>Unopened units and unworn gear, sold at or below retail by members.</p>
+      </div>
+    </div>
+    <div class="filters">
+      <span class="filter-tag active">All</span>
+      <span class="filter-tag">EUC</span>
+      <span class="filter-tag">Scooter</span>
+      <span class="filter-tag">Esk8</span>
+      <span class="filter-tag">Accessories</span>
+    </div>
+    <div class="grid grid-3">
+
+      <div class="card">
+        <div class="avatar" style="background:#1a2a30;"><span>SCT</span></div>
+        <div class="card-body">
+          <span class="badge grey">Scooter</span>
+          <h3>Dualtron Mini Special+</h3>
+          <div class="card-meta">Sealed box · Never used</div>
+          <p class="desc">Unopened unit, bought as backup and never used. Original invoice available.</p>
+          <div class="price-tag">Rp 22.000.000</div>
+        </div>
+        <div class="card-foot"><span>Fajar H. · Bekasi</span><span>Posted 1d ago</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#1a2430;"><span>ACC</span></div>
+        <div class="card-body">
+          <span class="badge grey">Accessories</span>
+          <h3>Full Face Helmet + Wrist Guards</h3>
+          <div class="card-meta">Size L · Tags attached</div>
+          <p class="desc">Bought a size too large. Never worn outdoors, tags still attached.</p>
+          <div class="price-tag">Rp 1.450.000</div>
+        </div>
+        <div class="card-foot"><span>Ayu K. · Jakarta</span><span>Posted 2d ago</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#30241a;"><span>EUC</span></div>
+        <div class="card-body">
+          <span class="badge grey">EUC</span>
+          <h3>Veteran Sherman-S</h3>
+          <div class="card-meta">Sealed box · Import unit</div>
+          <p class="desc">Ordered two, only need one. Still in factory packaging with warranty card unregistered.</p>
+          <div class="price-tag">Rp 45.000.000</div>
+        </div>
+        <div class="card-foot"><span>Wahyu P. · Semarang</span><span>Posted 6h ago</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="second-hand" class="section-alt tight">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Ridden, well kept</span>
+        <h2>Second Hand</h2>
+        <p>Used gear from squad members, listed with honest condition notes and mileage.</p>
+      </div>
+    </div>
+    <div class="filters">
+      <span class="filter-tag active">All</span>
+      <span class="filter-tag">EUC</span>
+      <span class="filter-tag">Scooter</span>
+      <span class="filter-tag">Esk8</span>
+      <span class="filter-tag">Accessories</span>
+    </div>
+    <div class="grid grid-3">
+
+      <div class="card">
+        <div class="avatar" style="background:#241a30;"><span>EUC</span></div>
+        <div class="card-body">
+          <span class="badge grey">EUC</span>
+          <h3>Kingsong S20 — 2023</h3>
+          <div class="card-meta">Good condition</div>
+          <p class="desc">1,800 km on the clock, battery health 96%. New tire fitted last month. Comes with case and charger.</p>
+          <div class="price-tag">Rp 18.500.000</div>
+        </div>
+        <div class="card-foot"><span>Rangga W. · Jakarta</span><span>Posted 3d ago</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#2a301a;"><span>ESK8</span></div>
+        <div class="card-body">
+          <span class="badge grey">Esk8</span>
+          <h3>Trampa Deck + VESC 75/300</h3>
+          <div class="card-meta">Custom build</div>
+          <p class="desc">Hand-built dual-belt setup, well maintained. Selling to fund an EUC upgrade.</p>
+          <div class="price-tag">Rp 9.750.000</div>
+        </div>
+        <div class="card-foot"><span>Teuku M. · Surabaya</span><span>Posted 5d ago</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#301a1a;"><span>EUC</span></div>
+        <div class="card-body">
+          <span class="badge grey">EUC</span>
+          <h3>Begode Master Pro</h3>
+          <div class="card-meta">Fair condition</div>
+          <p class="desc">3,200 km, shell has minor scuffs from a low-speed tip-over. Rides perfectly, no faults.</p>
+          <div class="price-tag">Rp 14.000.000</div>
+        </div>
+        <div class="card-foot"><span>Bimo S. · Yogyakarta</span><span>Posted 1w ago</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#301a28;"><span>SCT</span></div>
+        <div class="card-body">
+          <span class="badge grey">Scooter</span>
+          <h3>Kaabo Wolf Warrior 11</h3>
+          <div class="card-meta">Good condition</div>
+          <p class="desc">2,600 km, new deck grip tape, battery holds full range. Local pickup only.</p>
+          <div class="price-tag">Rp 16.800.000</div>
+        </div>
+        <div class="card-foot"><span>Dinda A. · Bandung</span><span>Posted 4d ago</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="images/logo.jpg" alt="PEV Squad" class="footer-logo">
+        <div class="footer-motto">WE TAKE IT <span>PERSONAL.</span></div>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="for-sale.html">For Sale</a></li>
+            <li><a href="events.html">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Squad</h4>
+          <ul>
+            <li><a href="featured-riders.html">Featured Riders</a></li>
+            <li><a href="sponsors.html">Sponsors</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Follow</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">WhatsApp Group</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 PEV SQUAD</span>
+      <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

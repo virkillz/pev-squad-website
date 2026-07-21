@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events — PEV Squad</title>
+<link rel="icon" type="image/jpeg" href="images/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('pev-theme');
+    if(!t){ t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
+    document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="logo">
+      <img src="images/logo.jpg" alt="PEV Squad" class="logo-img">
+      <span class="tag">/// EUC · SCOOTER · ESK8</span>
+    </a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="featured-riders.html">Featured Riders</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="for-sale.html">For Sale</a></li>
+        <li><a href="events.html" class="active">Events</a></li>
+        <li><a href="sponsors.html">Sponsors</a></li>
+      </ul>
+      <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle color theme">☀</button>
+      <button class="nav-toggle" type="button">Menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="stripe-bar"></div>
+
+<section class="page-header">
+  <div class="wrap">
+    <span class="eyebrow">Group rides &amp; meetups</span>
+    <h1>Events</h1>
+    <p>Where the squad shows up in person — night rides, demo days, and meetups. Here's what's coming up, and what we've already done.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Mark your calendar</span>
+        <h2>Upcoming Events</h2>
+      </div>
+    </div>
+    <div class="grid" style="gap:18px;">
+
+      <div class="event-card">
+        <div class="date">
+          <div class="d">02</div>
+          <div class="m">Aug</div>
+          <div class="y">2026</div>
+        </div>
+        <div>
+          <span class="badge">Night Ride</span>
+          <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-weight:700; font-size:1.3rem; margin-top:10px;">Sudirman-Thamrin Loop</h3>
+          <p style="color:var(--grey); margin-top:8px;">Monthly night ride through Central Jakarta's main corridor. Meet at Bundaran HI, 20:00. Open to all skill levels — EUC, scooter, and esk8 welcome.</p>
+        </div>
+      </div>
+
+      <div class="event-card">
+        <div class="date">
+          <div class="d">16</div>
+          <div class="m">Aug</div>
+          <div class="y">2026</div>
+        </div>
+        <div>
+          <span class="badge">Demo Day</span>
+          <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-weight:700; font-size:1.3rem; margin-top:10px;">Volt Rides Demo &amp; Try-Out</h3>
+          <p style="color:var(--grey); margin-top:8px;">Test the newest Kingsong and Dualtron units before they hit retail, hosted with our collaborator Volt Rides. Ancol Beach City parking lot, 09:00–14:00.</p>
+        </div>
+      </div>
+
+      <div class="event-card">
+        <div class="date">
+          <div class="d">06</div>
+          <div class="m">Sep</div>
+          <div class="y">2026</div>
+        </div>
+        <div>
+          <span class="badge">Regional Meetup</span>
+          <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-weight:700; font-size:1.3rem; margin-top:10px;">Bandung Chapter Gathering</h3>
+          <p style="color:var(--grey); margin-top:8px;">Quarterly meetup for the Bandung/West Java members. Casual ride followed by gear swap and tuning session.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Recap</span>
+        <h2>Past Events</h2>
+      </div>
+    </div>
+    <div class="grid" style="gap:18px;">
+
+      <div class="event-card past">
+        <div class="date">
+          <div class="d">21</div>
+          <div class="m">Jun</div>
+          <div class="y">2026</div>
+        </div>
+        <div>
+          <span class="badge grey">Group Ride</span>
+          <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-weight:700; font-size:1.3rem; margin-top:10px;">Ancol Sunrise Ride</h3>
+          <p style="color:var(--grey); margin-top:8px;">28 riders joined the 5am coastal loop around Ancol. Good turnout from the Jakarta and Bekasi chapters.</p>
+        </div>
+      </div>
+
+      <div class="event-card past">
+        <div class="date">
+          <div class="d">10</div>
+          <div class="m">May</div>
+          <div class="y">2026</div>
+        </div>
+        <div>
+          <span class="badge grey">Workshop</span>
+          <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-weight:700; font-size:1.3rem; margin-top:10px;">Battery Safety &amp; Maintenance Clinic</h3>
+          <p style="color:var(--grey); margin-top:8px;">Dinda Anjani led a hands-on session on battery health checks and safe charging practices for scooters and EUCs.</p>
+        </div>
+      </div>
+
+      <div class="event-card past">
+        <div class="date">
+          <div class="d">14</div>
+          <div class="m">Mar</div>
+          <div class="y">2026</div>
+        </div>
+        <div>
+          <span class="badge grey">Anniversary</span>
+          <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-weight:700; font-size:1.3rem; margin-top:10px;">PEV Squad 3rd Anniversary Ride</h3>
+          <p style="color:var(--grey); margin-top:8px;">Our biggest turnout yet — over 60 riders across three cities joined a synchronized ride to mark three years as a squad.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="images/logo.jpg" alt="PEV Squad" class="footer-logo">
+        <div class="footer-motto">WE TAKE IT <span>PERSONAL.</span></div>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="for-sale.html">For Sale</a></li>
+            <li><a href="events.html">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Squad</h4>
+          <ul>
+            <li><a href="featured-riders.html">Featured Riders</a></li>
+            <li><a href="sponsors.html">Sponsors</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Follow</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">WhatsApp Group</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 PEV SQUAD</span>
+      <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

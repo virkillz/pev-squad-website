@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Featured Riders — PEV Squad</title>
+<link rel="icon" type="image/jpeg" href="images/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('pev-theme');
+    if(!t){ t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
+    document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="logo">
+      <img src="images/logo.jpg" alt="PEV Squad" class="logo-img">
+      <span class="tag">/// EUC · SCOOTER · ESK8</span>
+    </a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="featured-riders.html" class="active">Featured Riders</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="for-sale.html">For Sale</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="sponsors.html">Sponsors</a></li>
+      </ul>
+      <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle color theme">☀</button>
+      <button class="nav-toggle" type="button">Menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="stripe-bar"></div>
+
+<section class="page-header">
+  <div class="wrap">
+    <span class="eyebrow">Verified &amp; seasoned</span>
+    <h1>Featured Riders</h1>
+    <p>Featured Riders are seasoned members with the mileage and track record to back a star rating. They're the ones whose reviews carry the most weight across the squad.</p>
+  </div>
+</section>
+
+<section class="section-alt tight">
+  <div class="wrap">
+    <div class="grid grid-3">
+      <div>
+        <span class="eyebrow">01 / Mileage</span>
+        <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-size:1.15rem; margin-top:10px; font-weight:700;">5,000km minimum</h3>
+        <p style="color:var(--grey); font-size:0.94rem; margin-top:8px;">Verified riding history on at least one performance-class PEV.</p>
+      </div>
+      <div>
+        <span class="eyebrow">02 / Time in squad</span>
+        <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-size:1.15rem; margin-top:10px; font-weight:700;">1 year active</h3>
+        <p style="color:var(--grey); font-size:0.94rem; margin-top:8px;">Consistent participation in rides, meetups, and community discussion.</p>
+      </div>
+      <div>
+        <span class="eyebrow">03 / Gear range</span>
+        <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-size:1.15rem; margin-top:10px; font-weight:700;">Multiple units owned</h3>
+        <p style="color:var(--grey); font-size:0.94rem; margin-top:8px;">Enough hands-on time across brands to rate comparatively, not just personally.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Currently featured</span>
+        <h2>Meet the Panel</h2>
+      </div>
+    </div>
+    <div class="grid grid-3">
+
+      <div class="card">
+        <div class="avatar" style="background:#3a1a0f;"><span>RG</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Rangga Wibisono</h3>
+          <div class="card-meta">Jakarta · Riding since 2018</div>
+          <p class="desc">Sherman-to-Monster convert, 14,200 km logged. Sharp on power delivery, suspension tuning, and long-range touring setups.</p>
+        </div>
+        <div class="card-foot"><span>12 reviews written</span><span class="stars">★★★★★</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#1f2a1a;"><span>DA</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Dinda Anjani</h3>
+          <div class="card-meta">Bandung · Riding since 2020</div>
+          <p class="desc">Scooter specialist covering dual-motor performance builds, battery safety practices, and real-world range testing.</p>
+        </div>
+        <div class="card-foot"><span>8 reviews written</span><span class="stars">★★★★★</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#1a2430;"><span>TM</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Teuku Maulana</h3>
+          <div class="card-meta">Surabaya · Riding since 2019</div>
+          <p class="desc">Esk8 builder turned EUC convert. Reviews lean toward ride quality, durability, and long-term reliability over spec sheets.</p>
+        </div>
+        <div class="card-foot"><span>10 reviews written</span><span class="stars">★★★★★</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#2a1a30;"><span>AY</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Ayu Kirana</h3>
+          <div class="card-meta">Jakarta · Riding since 2021</div>
+          <p class="desc">Focuses on beginner-friendly EUCs and safety gear — the go-to reviewer for riders buying their first wheel.</p>
+        </div>
+        <div class="card-foot"><span>6 reviews written</span><span class="stars">★★★★★</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#302a1a;"><span>WP</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Wahyu Pradana</h3>
+          <div class="card-meta">Semarang · Riding since 2017</div>
+          <p class="desc">Longest-tenured member on the panel — has personally owned and rated over 20 EUC models since 2017.</p>
+        </div>
+        <div class="card-foot"><span>19 reviews written</span><span class="stars">★★★★★</span></div>
+      </div>
+
+      <div class="card">
+        <div class="avatar" style="background:#1a3028;"><span>SP</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Sinta Puspita</h3>
+          <div class="card-meta">Bandung · Riding since 2022</div>
+          <p class="desc">Youngest on the panel, brings a sharp eye for app/firmware quality and companion-app usability.</p>
+        </div>
+        <div class="card-foot"><span>5 reviews written</span><span class="stars">★★★★☆</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="images/logo.jpg" alt="PEV Squad" class="footer-logo">
+        <div class="footer-motto">WE TAKE IT <span>PERSONAL.</span></div>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="for-sale.html">For Sale</a></li>
+            <li><a href="events.html">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Squad</h4>
+          <ul>
+            <li><a href="featured-riders.html">Featured Riders</a></li>
+            <li><a href="sponsors.html">Sponsors</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Follow</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">WhatsApp Group</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 PEV SQUAD</span>
+      <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

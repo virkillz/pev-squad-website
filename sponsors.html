@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sponsors — PEV Squad</title>
+<link rel="icon" type="image/jpeg" href="images/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('pev-theme');
+    if(!t){ t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
+    document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="logo">
+      <img src="images/logo.jpg" alt="PEV Squad" class="logo-img">
+      <span class="tag">/// EUC · SCOOTER · ESK8</span>
+    </a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="featured-riders.html">Featured Riders</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="for-sale.html">For Sale</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="sponsors.html" class="active">Sponsors</a></li>
+      </ul>
+      <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle color theme">☀</button>
+      <button class="nav-toggle" type="button">Menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="stripe-bar"></div>
+
+<section class="page-header">
+  <div class="wrap">
+    <span class="eyebrow">Who backs the squad</span>
+    <h1>Sponsors &amp; Collaborators</h1>
+    <p>Brands and shops that support PEV Squad through gear, event hosting, or discounts for members. Current collaborators are also featured on the homepage.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Active partnerships</span>
+        <h2>Current Collaborators</h2>
+        <p>Shown on the homepage. These partners are actively supporting the squad right now.</p>
+      </div>
+    </div>
+    <div class="grid grid-3">
+
+      <div class="collab-card">
+        <div class="collab-mark"></div>
+        <h3>Volt Rides</h3>
+        <span class="badge">Retailer Partner</span>
+        <p>Jakarta-based EUC and scooter dealer. Hosts our demo days and offers squad members a standing discount on parts.</p>
+      </div>
+
+      <div class="collab-card">
+        <div class="collab-mark"></div>
+        <h3>Kinetic Gear Co.</h3>
+        <span class="badge">Safety Gear Partner</span>
+        <p>Supplies helmets and protective gear for squad giveaways and beginner riders joining group rides.</p>
+      </div>
+
+      <div class="collab-card">
+        <div class="collab-mark"></div>
+        <h3>Nanjing Wheels ID</h3>
+        <span class="badge">Brand Partner</span>
+        <p>Official Indonesia distributor for a major EUC manufacturer. Provides review units for our Featured Rider panel.</p>
+      </div>
+
+      <div class="collab-card">
+        <div class="collab-mark"></div>
+        <h3>Asphalt Supply</h3>
+        <span class="badge">Parts &amp; Accessories</span>
+        <p>Tires, grip tape, and replacement parts shop. First call for squad members needing quick repairs.</p>
+      </div>
+
+      <div class="collab-card">
+        <div class="collab-mark"></div>
+        <h3>Torque Protective</h3>
+        <span class="badge">Apparel Partner</span>
+        <p>Riding jackets and armored apparel, co-designed a limited PEV Squad jacket drop with us in 2025.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section-alt tight">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Thank you</span>
+        <h2>Past Collaborators</h2>
+        <p>Partnerships that have wrapped up but helped build the squad along the way.</p>
+      </div>
+    </div>
+    <div class="past-collab-list">
+      <span>Jakarta E-Mobility Expo</span>
+      <span>RideSafe Indonesia</span>
+      <span>ChargeUp Stations</span>
+      <span>Sunrise Skate Co.</span>
+      <span>Bengkel Roda Listrik</span>
+      <span>Loop Battery Co.</span>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="images/logo.jpg" alt="PEV Squad" class="footer-logo">
+        <div class="footer-motto">WE TAKE IT <span>PERSONAL.</span></div>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="for-sale.html">For Sale</a></li>
+            <li><a href="events.html">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Squad</h4>
+          <ul>
+            <li><a href="featured-riders.html">Featured Riders</a></li>
+            <li><a href="sponsors.html">Sponsors</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Follow</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">WhatsApp Group</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 PEV SQUAD</span>
+      <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

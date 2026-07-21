@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEV Squad — We Take It Personal</title>
+<link rel="icon" type="image/jpeg" href="images/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('pev-theme');
+    if(!t){ t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
+    document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="logo">
+      <img src="images/logo.jpg" alt="PEV Squad" class="logo-img">
+      <span class="tag">/// EUC · SCOOTER · ESK8</span>
+    </a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="featured-riders.html">Featured Riders</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="for-sale.html">For Sale</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="sponsors.html">Sponsors</a></li>
+      </ul>
+      <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle color theme">☀</button>
+      <button class="nav-toggle" type="button">Menu</button>
+    </div>
+  </nav>
+</header>
+
+<div class="stripe-bar"></div>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Indonesia's Most Active EUC Community</span>
+    <h1>We Take It<br><span>Personal.</span></h1>
+    <p class="motto">A collective of PEV riders who love to ride fast, ride far, and ride often — mostly because it's fun. Along the way we picked up a growing list of brands, media, and personalities who ride with us.</p>
+    <div class="hero-actions">
+      <a href="community.html" class="btn btn-solid">Join the Squad</a>
+      <a href="#collaborate" class="btn btn-outline">Collaborate With Us</a>
+    </div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="grid grid-3">
+      <div>
+        <span class="eyebrow">01 / Speed</span>
+        <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-size:1.15rem; margin-top:10px; font-weight:700;">Ride Fast</h3>
+        <p style="color:var(--grey); font-size:0.94rem; margin-top:8px;">Performance EUCs, tuned scooters, the occasional esk8 — if it's got a motor and a top speed worth bragging about, we're riding it.</p>
+      </div>
+      <div>
+        <span class="eyebrow">02 / Distance</span>
+        <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-size:1.15rem; margin-top:10px; font-weight:700;">Ride Far</h3>
+        <p style="color:var(--grey); font-size:0.94rem; margin-top:8px;">Weekday commutes turn into 40km detours. Weekend rides turn into cross-city loops. Range anxiety is just a challenge.</p>
+      </div>
+      <div>
+        <span class="eyebrow">03 / Frequency</span>
+        <h3 style="font-family:'Barlow',sans-serif; text-transform:none; font-size:1.15rem; margin-top:10px; font-weight:700;">Ride Often</h3>
+        <p style="color:var(--grey); font-size:0.94rem; margin-top:8px;">Night rides, weekend meetups, spontaneous Tuesday sessions — if there's a reason to ride, we're already out the door.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt tight">
+  <div class="wrap">
+    <div class="tiles">
+      <a href="community.html" class="tile">
+        <div>
+          <span class="num">01</span>
+          <h3>Community</h3>
+          <p>Riders from every corner of the city, one shared obsession with going fast on three wheels or less.</p>
+        </div>
+        <span class="go">Meet the squad</span>
+      </a>
+      <a href="reviews.html" class="tile">
+        <div>
+          <span class="num">02</span>
+          <h3>Reviews</h3>
+          <p>Unfiltered, ridden-not-sponsored breakdowns of EUCs, scooters, and boards — rated by riders who own them.</p>
+        </div>
+        <span class="go">Read reviews</span>
+      </a>
+      <a href="for-sale.html" class="tile">
+        <div>
+          <span class="num">03</span>
+          <h3>For Sale</h3>
+          <p>Buy and sell gear inside the squad — new and second-hand units, straight from rider to rider.</p>
+        </div>
+        <span class="go">Browse listings</span>
+      </a>
+      <a href="events.html" class="tile">
+        <div>
+          <span class="num">04</span>
+          <h3>Events</h3>
+          <p>Group rides, meetups, and demo days — what we've done and what's coming up next.</p>
+        </div>
+        <span class="go">See events</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="collaborate">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">How to collaborate</span>
+        <h2>If It's Fun, We're In.</h2>
+        <p>Most of us have day jobs — this is what we do for fun. So the bar for working with PEV Squad isn't a media kit, it's one question: will it be fun? Get that right and we're already halfway there.</p>
+      </div>
+      <a href="#" class="btn btn-solid">Reach Out on WhatsApp</a>
+    </div>
+    <div class="grid grid-3">
+      <div class="collab-card">
+        <div class="collab-mark"></div>
+        <h3>Invite Us to Your Event</h3>
+        <p>A pack of one-wheeled speed junkies showing up to your meetup, race, or brand activation? Consider us there.</p>
+      </div>
+      <div class="collab-card">
+        <div class="collab-mark"></div>
+        <h3>Use Us for Content</h3>
+        <p>Need riders, footage, or a squad on camera? We're in — no fee required, just make it fun.</p>
+      </div>
+      <div class="collab-card">
+        <div class="collab-mark"></div>
+        <h3>Ask Us to Help Run It</h3>
+        <p>We once marshalled a running event purely because we thought it'd be a laugh. Ask and find out.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt tight">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Already said yes</span>
+        <h2>Current Collaborators</h2>
+      </div>
+      <a href="sponsors.html" class="btn btn-outline">All Sponsors</a>
+    </div>
+    <div class="collab-strip">
+      <span class="collab-chip">Volt&nbsp;Rides</span>
+      <span class="collab-chip">Kinetic&nbsp;Gear&nbsp;Co.</span>
+      <span class="collab-chip">Nanjing&nbsp;Wheels&nbsp;ID</span>
+      <span class="collab-chip">Asphalt&nbsp;Supply</span>
+      <span class="collab-chip">Torque&nbsp;Protective</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Verified &amp; seasoned</span>
+        <h2>Featured Rider Spotlight</h2>
+        <p>Featured Riders are seasoned members trusted to give star ratings on gear inside our reviews.</p>
+      </div>
+      <a href="featured-riders.html" class="btn btn-outline">All Featured Riders</a>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="avatar" style="background:#3a1a0f;"><span>RG</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Rangga Wibisono</h3>
+          <div class="card-meta">Jakarta · Riding since 2018</div>
+          <p class="desc">Sherman-to-Monster convert, 14,000+ km logged. Sharp on power delivery and suspension tuning.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="avatar" style="background:#1f2a1a;"><span>DA</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Dinda Anjani</h3>
+          <div class="card-meta">Bandung · Riding since 2020</div>
+          <p class="desc">Scooter specialist — dual-motor performance builds, battery safety, and range testing.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="avatar" style="background:#1a2430;"><span>TM</span></div>
+        <div class="card-body">
+          <span class="badge">★ Featured Rider</span>
+          <h3>Teuku Maulana</h3>
+          <div class="card-meta">Surabaya · Riding since 2019</div>
+          <p class="desc">Esk8 builder turned EUC convert. Reviews focus on ride quality and long-term reliability.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="images/logo.jpg" alt="PEV Squad" class="footer-logo">
+        <div class="footer-motto">WE TAKE IT <span>PERSONAL.</span></div>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="for-sale.html">For Sale</a></li>
+            <li><a href="events.html">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Squad</h4>
+          <ul>
+            <li><a href="featured-riders.html">Featured Riders</a></li>
+            <li><a href="sponsors.html">Sponsors</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Follow</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">WhatsApp Group</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 PEV SQUAD</span>
+      <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
