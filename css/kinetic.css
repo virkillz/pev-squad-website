@@ -635,7 +635,7 @@ a { color: inherit; }
 }
 
 /* ==========================================================================
-   Cards — riders, reviews, listings, sponsors
+   Cards — riders, reviews, listings
    ========================================================================== */
 
 .card {
@@ -1042,6 +1042,10 @@ a { color: inherit; }
   gap: var(--bw);
   background: var(--rule);
   border: var(--bw) solid var(--rule);
+  /* Currently a no-op — every album below is ordered so the cells pack solid.
+     Kept as a guard: if a .t-big / .t-wide is later added out of rhythm, this
+     backfills the interior hole it would otherwise punch in the grid. */
+  grid-auto-flow: dense;
 }
 
 .photo-tile {
@@ -1054,7 +1058,8 @@ a { color: inherit; }
   cursor: pointer;
 }
 
-.photo-tile.t-big { grid-column: span 2; grid-row: span 2; }
+.photo-tile.t-big  { grid-column: span 2; grid-row: span 2; }
+.photo-tile.t-wide { grid-column: span 2; aspect-ratio: 2 / 1; }
 
 .photo-tile img {
   width: 100%;
@@ -1727,7 +1732,7 @@ a { color: inherit; }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 2rem;
 }
 
