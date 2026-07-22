@@ -5,202 +5,288 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reviews — PEV Squad</title>
 <link rel="icon" type="image/jpeg" href="images/logo.jpg">
-<link rel="stylesheet" href="css/style.css">
-<script>
-(function(){
-  try{
-    var t = localStorage.getItem('pev-theme');
-    if(!t){ t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
-    document.documentElement.setAttribute('data-theme', t);
-  }catch(e){}
-})();
-</script>
+<link rel="stylesheet" href="css/kinetic.css">
 </head>
 <body>
 
-<header class="site-header">
-  <nav class="nav">
-    <a href="index.html" class="logo">
-      <img src="images/logo.jpg" alt="PEV Squad" class="logo-img">
-      <span class="tag">/// EUC · SCOOTER · ESK8</span>
-    </a>
-    <div class="nav-right">
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="community.html">Community</a></li>
-        <li><a href="featured-riders.html">Featured Riders</a></li>
-        <li><a href="reviews.html" class="active">Reviews</a></li>
-        <li><a href="for-sale.html">For Sale</a></li>
-        <li><a href="events.html">Events</a></li>
-        <li><a href="sponsors.html">Sponsors</a></li>
-      </ul>
-      <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle color theme">☀</button>
-      <button class="nav-toggle" type="button">Menu</button>
-    </div>
+<!-- MASTHEAD ============================================================== -->
+<header class="masthead">
+  <a class="brand" href="index.html">
+    <img src="images/logo.jpg" alt="" class="brand-logo">
+    <span>
+      <span class="brand-name">PEV Squad</span>
+      <span class="brand-tag">/// EUC · SCOOTER · ESK8</span>
+    </span>
+  </a>
+  <nav class="mainnav" id="mainnav">
+    <a href="index.html"><span class="nav-num">01</span>Home</a>
+    <a href="community.html"><span class="nav-num">02</span>Community</a>
+    <a href="featured-riders.html"><span class="nav-num">03</span>Riders</a>
+    <a href="gallery.html"><span class="nav-num">04</span>Gallery</a>
+    <a href="reviews.html" class="active"><span class="nav-num">05</span>Reviews</a>
+    <a href="for-sale.html"><span class="nav-num">06</span>For Sale</a>
+    <a href="events.html"><span class="nav-num">07</span>Events</a>
+    <a href="sponsors.html"><span class="nav-num">08</span>Sponsors</a>
   </nav>
+  <button class="nav-toggle" type="button" aria-controls="mainnav" aria-expanded="false">Menu</button>
 </header>
 
-<div class="stripe-bar"></div>
+<div class="hazard"></div>
 
+<!-- PAGE HEADER =========================================================== -->
 <section class="page-header">
-  <div class="wrap">
-    <span class="eyebrow">Ridden, not sponsored</span>
-    <h1>Reviews</h1>
-    <p>Honest breakdowns of EUCs, performance scooters, and esk8 gear — rated by squad members who actually own and ride them. Featured Rider reviews are marked and weighted separately from open community reviews.</p>
+  <div class="meta-row">
+    <span class="eyebrow">05 / Ridden, not sponsored</span>
+    <span class="tag-scribble">no bs</span>
   </div>
+  <h1 class="page-title">Reviews</h1>
+  <p class="page-intro">
+    Honest breakdowns of EUCs, performance scooters, and esk8 gear — rated by squad members who actually own and ride them. Featured Rider reviews are marked and weighted separately from open community reviews.
+  </p>
 </section>
 
-<section class="tight">
-  <div class="wrap">
-    <div class="filters">
-      <span class="filter-tag active">All</span>
-      <span class="filter-tag">EUC</span>
-      <span class="filter-tag">Scooter</span>
-      <span class="filter-tag">Esk8</span>
-      <span class="filter-tag">Featured Rider Only</span>
+<!-- RANKED SHEET ========================================================== -->
+<section class="band band-black">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Everything, ranked</span>
+      <h2 class="section-title">The Sheet</h2>
+      <p class="section-lede">Every unit the squad has rated, ranked by overall score — the average across all criteria on each review below.</p>
     </div>
   </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="grid grid-3">
-
-      <div class="card">
-        <div class="avatar" style="background:#241a30;"><span>EUC</span></div>
-        <div class="card-body">
-          <span class="badge">★ Featured Rider Review</span>
-          <h3>Kingsong S22 Pro</h3>
-          <div class="card-meta">EUC · Reviewed by Rangga Wibisono</div>
-          <div class="stars">★★★★★</div>
-          <p class="desc">The most planted high-speed EUC we've tested this year. Suspension handles Jakarta's broken asphalt with ease — the only knock is charge time.</p>
-          <div class="rating-row"><span class="label">Power</span><div class="rating-bar"><span style="width:94%"></span></div><span class="mono">9.4</span></div>
-          <div class="rating-row"><span class="label">Range</span><div class="rating-bar"><span style="width:88%"></span></div><span class="mono">8.8</span></div>
-          <div class="rating-row"><span class="label">Value</span><div class="rating-bar"><span style="width:74%"></span></div><span class="mono">7.4</span></div>
-        </div>
-        <div class="card-foot"><span>Verified owner · 2,100 km on unit</span></div>
-      </div>
-
-      <div class="card">
-        <div class="avatar" style="background:#1a2a30;"><span>SCT</span></div>
-        <div class="card-body">
-          <span class="badge">★ Featured Rider Review</span>
-          <h3>Dualtron Thunder 3</h3>
-          <div class="card-meta">Scooter · Reviewed by Dinda Anjani</div>
-          <div class="stars">★★★★☆</div>
-          <p class="desc">Brutal acceleration for the price, but the stock tires are a liability in the wet. Budget for an upgrade before you take it out in rain.</p>
-          <div class="rating-row"><span class="label">Power</span><div class="rating-bar"><span style="width:97%"></span></div><span class="mono">9.7</span></div>
-          <div class="rating-row"><span class="label">Build</span><div class="rating-bar"><span style="width:80%"></span></div><span class="mono">8.0</span></div>
-          <div class="rating-row"><span class="label">Value</span><div class="rating-bar"><span style="width:85%"></span></div><span class="mono">8.5</span></div>
-        </div>
-        <div class="card-foot"><span>Verified owner · 3,400 km on unit</span></div>
-      </div>
-
-      <div class="card">
-        <div class="avatar" style="background:#301a1a;"><span>EUC</span></div>
-        <div class="card-body">
-          <span class="badge">★ Featured Rider Review</span>
-          <h3>Inmotion V13</h3>
-          <div class="card-meta">EUC · Reviewed by Ayu Kirana</div>
-          <div class="stars">★★★★☆</div>
-          <p class="desc">Best beginner-to-intermediate wheel we've put someone on. Forgiving pedal response, solid app, and parts are easy to source locally.</p>
-          <div class="rating-row"><span class="label">App/FW</span><div class="rating-bar"><span style="width:90%"></span></div><span class="mono">9.0</span></div>
-          <div class="rating-row"><span class="label">Range</span><div class="rating-bar"><span style="width:76%"></span></div><span class="mono">7.6</span></div>
-          <div class="rating-row"><span class="label">Value</span><div class="rating-bar"><span style="width:91%"></span></div><span class="mono">9.1</span></div>
-        </div>
-        <div class="card-foot"><span>Verified owner · 1,240 km on unit</span></div>
-      </div>
-
-      <div class="card">
-        <div class="avatar" style="background:#2a301a;"><span>ESK8</span></div>
-        <div class="card-body">
-          <span class="badge">★ Featured Rider Review</span>
-          <h3>Custom Trampa Deck Build</h3>
-          <div class="card-meta">Esk8 · Reviewed by Teuku Maulana</div>
-          <div class="stars">★★★★★</div>
-          <p class="desc">Dual-belt build tuned for Surabaya's flat, wide roads. VESC tuning notes included for anyone building the same setup.</p>
-          <div class="rating-row"><span class="label">Power</span><div class="rating-bar"><span style="width:92%"></span></div><span class="mono">9.2</span></div>
-          <div class="rating-row"><span class="label">Build</span><div class="rating-bar"><span style="width:95%"></span></div><span class="mono">9.5</span></div>
-          <div class="rating-row"><span class="label">Value</span><div class="rating-bar"><span style="width:68%"></span></div><span class="mono">6.8</span></div>
-        </div>
-        <div class="card-foot"><span>Verified owner · Custom build</span></div>
-      </div>
-
-      <div class="card">
-        <div class="avatar" style="background:#1a2430;"><span>EUC</span></div>
-        <div class="card-body">
-          <span class="badge grey">Community Review</span>
-          <h3>Begode Master Pro</h3>
-          <div class="card-meta">EUC · Reviewed by Bimo Santoso</div>
-          <div class="stars">★★★☆☆</div>
-          <p class="desc">Torque is there but the pedals feel loose out of the box. Fine once shimmed, annoying that it's needed at all.</p>
-          <div class="rating-row"><span class="label">Power</span><div class="rating-bar"><span style="width:88%"></span></div><span class="mono">8.8</span></div>
-          <div class="rating-row"><span class="label">Build</span><div class="rating-bar"><span style="width:60%"></span></div><span class="mono">6.0</span></div>
-          <div class="rating-row"><span class="label">Value</span><div class="rating-bar"><span style="width:70%"></span></div><span class="mono">7.0</span></div>
-        </div>
-        <div class="card-foot"><span>Verified owner · 900 km on unit</span></div>
-      </div>
-
-      <div class="card">
-        <div class="avatar" style="background:#301a28;"><span>SCT</span></div>
-        <div class="card-body">
-          <span class="badge grey">Community Review</span>
-          <h3>Kaabo Wolf Warrior 11</h3>
-          <div class="card-meta">Scooter · Reviewed by Fajar Hidayat</div>
-          <div class="stars">★★★★☆</div>
-          <p class="desc">Heavy but planted at speed. Good pick if you mostly ride flat roads and don't need to carry it up stairs.</p>
-          <div class="rating-row"><span class="label">Power</span><div class="rating-bar"><span style="width:85%"></span></div><span class="mono">8.5</span></div>
-          <div class="rating-row"><span class="label">Range</span><div class="rating-bar"><span style="width:82%"></span></div><span class="mono">8.2</span></div>
-          <div class="rating-row"><span class="label">Value</span><div class="rating-bar"><span style="width:79%"></span></div><span class="mono">7.9</span></div>
-        </div>
-        <div class="card-foot"><span>Verified owner · 2,600 km on unit</span></div>
-      </div>
-
-    </div>
+  <div class="spec-scroll">
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Model</th>
+          <th scope="col">Class</th>
+          <th scope="col">Reviewer</th>
+          <th scope="col" style="text-align:right;">Power</th>
+          <th scope="col" style="text-align:right;">Value</th>
+          <th scope="col" style="text-align:right;">Overall</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="spec-rank">01</td>
+          <td class="model">Dualtron Thunder 3</td>
+          <td>Scooter</td>
+          <td>Dinda Anjani</td>
+          <td class="num">9.7</td>
+          <td class="num">8.5</td>
+          <td class="score">8.7</td>
+        </tr>
+        <tr>
+          <td class="spec-rank">02</td>
+          <td class="model">Inmotion V13</td>
+          <td>EUC</td>
+          <td>Ayu Kirana</td>
+          <td class="num">9.0</td>
+          <td class="num">9.1</td>
+          <td class="score">8.6</td>
+        </tr>
+        <tr>
+          <td class="spec-rank">03</td>
+          <td class="model"><a href="review-kingsong-s22.html">Kingsong S22 Pro ≫</a></td>
+          <td>EUC</td>
+          <td>Rangga Wibisono</td>
+          <td class="num">9.4</td>
+          <td class="num">7.4</td>
+          <td class="score">8.5</td>
+        </tr>
+        <tr>
+          <td class="spec-rank">04</td>
+          <td class="model">Custom Trampa Build</td>
+          <td>Esk8</td>
+          <td>Teuku Maulana</td>
+          <td class="num">9.2</td>
+          <td class="num">6.8</td>
+          <td class="score">8.5</td>
+        </tr>
+        <tr>
+          <td class="spec-rank">05</td>
+          <td class="model">Kaabo Wolf Warrior 11</td>
+          <td>Scooter</td>
+          <td>Fajar Hidayat</td>
+          <td class="num">8.5</td>
+          <td class="num">7.9</td>
+          <td class="score">8.2</td>
+        </tr>
+        <tr>
+          <td class="spec-rank">06</td>
+          <td class="model">Begode Master Pro</td>
+          <td>EUC</td>
+          <td>Bimo Santoso</td>
+          <td class="num">8.8</td>
+          <td class="num">7.0</td>
+          <td class="score">7.3</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
+<!-- REVIEWS =============================================================== -->
+<section class="band band-white">
+  <div class="filters">
+    <a href="#" class="filter-tag active">All</a>
+    <a href="#" class="filter-tag">EUC</a>
+    <a href="#" class="filter-tag">Scooter</a>
+    <a href="#" class="filter-tag">Esk8</a>
+    <a href="#" class="filter-tag">Featured Rider Only</a>
+  </div>
+
+  <div class="grid grid-3">
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">EUC</span>
+        <span class="badge">★ Featured Review</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Kingsong S22 Pro</h3>
+        <p class="card-meta">EUC · REVIEWED BY RANGGA WIBISONO</p>
+        <div class="stars">★★★★★</div>
+        <p class="card-desc">The most planted high-speed EUC we've tested this year. Suspension handles Jakarta's broken asphalt with ease — the only knock is charge time.</p>
+        <div class="rating-row"><span class="rating-label">Power</span><div class="rating-bar"><span style="width:94%"></span></div><span class="rating-num">9.4</span></div>
+        <div class="rating-row"><span class="rating-label">Range</span><div class="rating-bar"><span style="width:88%"></span></div><span class="rating-num">8.8</span></div>
+        <div class="rating-row"><span class="rating-label">Value</span><div class="rating-bar"><span style="width:74%"></span></div><span class="rating-num">7.4</span></div>
+        <a href="review-kingsong-s22.html" class="btn btn-outline" style="margin-top:1.25rem;">Read Full Review</a>
+      </div>
+      <div class="card-foot"><span>VERIFIED OWNER</span><span>2,100 KM ON UNIT</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">SCT</span>
+        <span class="badge">★ Featured Review</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Dualtron Thunder 3</h3>
+        <p class="card-meta">SCOOTER · REVIEWED BY DINDA ANJANI</p>
+        <div class="stars">★★★★☆</div>
+        <p class="card-desc">Brutal acceleration for the price, but the stock tires are a liability in the wet. Budget for an upgrade before you take it out in rain.</p>
+        <div class="rating-row"><span class="rating-label">Power</span><div class="rating-bar"><span style="width:97%"></span></div><span class="rating-num">9.7</span></div>
+        <div class="rating-row"><span class="rating-label">Build</span><div class="rating-bar"><span style="width:80%"></span></div><span class="rating-num">8.0</span></div>
+        <div class="rating-row"><span class="rating-label">Value</span><div class="rating-bar"><span style="width:85%"></span></div><span class="rating-num">8.5</span></div>
+      </div>
+      <div class="card-foot"><span>VERIFIED OWNER</span><span>3,400 KM ON UNIT</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">EUC</span>
+        <span class="badge">★ Featured Review</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V13</h3>
+        <p class="card-meta">EUC · REVIEWED BY AYU KIRANA</p>
+        <div class="stars">★★★★☆</div>
+        <p class="card-desc">Best beginner-to-intermediate wheel we've put someone on. Forgiving pedal response, solid app, and parts are easy to source locally.</p>
+        <div class="rating-row"><span class="rating-label">App/FW</span><div class="rating-bar"><span style="width:90%"></span></div><span class="rating-num">9.0</span></div>
+        <div class="rating-row"><span class="rating-label">Range</span><div class="rating-bar"><span style="width:76%"></span></div><span class="rating-num">7.6</span></div>
+        <div class="rating-row"><span class="rating-label">Value</span><div class="rating-bar"><span style="width:91%"></span></div><span class="rating-num">9.1</span></div>
+      </div>
+      <div class="card-foot"><span>VERIFIED OWNER</span><span>1,240 KM ON UNIT</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">ESK8</span>
+        <span class="badge">★ Featured Review</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Custom Trampa Build</h3>
+        <p class="card-meta">ESK8 · REVIEWED BY TEUKU MAULANA</p>
+        <div class="stars">★★★★★</div>
+        <p class="card-desc">Dual-belt build tuned for Surabaya's flat, wide roads. VESC tuning notes included for anyone building the same setup.</p>
+        <div class="rating-row"><span class="rating-label">Power</span><div class="rating-bar"><span style="width:92%"></span></div><span class="rating-num">9.2</span></div>
+        <div class="rating-row"><span class="rating-label">Build</span><div class="rating-bar"><span style="width:95%"></span></div><span class="rating-num">9.5</span></div>
+        <div class="rating-row"><span class="rating-label">Value</span><div class="rating-bar"><span style="width:68%"></span></div><span class="rating-num">6.8</span></div>
+      </div>
+      <div class="card-foot"><span>VERIFIED OWNER</span><span>CUSTOM BUILD</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">EUC</span>
+        <span class="badge badge-grey">Community</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Begode Master Pro</h3>
+        <p class="card-meta">EUC · REVIEWED BY BIMO SANTOSO</p>
+        <div class="stars">★★★☆☆</div>
+        <p class="card-desc">Torque is there but the pedals feel loose out of the box. Fine once shimmed, annoying that it's needed at all.</p>
+        <div class="rating-row"><span class="rating-label">Power</span><div class="rating-bar"><span style="width:88%"></span></div><span class="rating-num">8.8</span></div>
+        <div class="rating-row"><span class="rating-label">Build</span><div class="rating-bar"><span style="width:60%"></span></div><span class="rating-num">6.0</span></div>
+        <div class="rating-row"><span class="rating-label">Value</span><div class="rating-bar"><span style="width:70%"></span></div><span class="rating-num">7.0</span></div>
+      </div>
+      <div class="card-foot"><span>VERIFIED OWNER</span><span>900 KM ON UNIT</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">SCT</span>
+        <span class="badge badge-grey">Community</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Kaabo Wolf Warrior 11</h3>
+        <p class="card-meta">SCOOTER · REVIEWED BY FAJAR HIDAYAT</p>
+        <div class="stars">★★★★☆</div>
+        <p class="card-desc">Heavy but planted at speed. Good pick if you mostly ride flat roads and don't need to carry it up stairs.</p>
+        <div class="rating-row"><span class="rating-label">Power</span><div class="rating-bar"><span style="width:85%"></span></div><span class="rating-num">8.5</span></div>
+        <div class="rating-row"><span class="rating-label">Range</span><div class="rating-bar"><span style="width:82%"></span></div><span class="rating-num">8.2</span></div>
+        <div class="rating-row"><span class="rating-label">Value</span><div class="rating-bar"><span style="width:79%"></span></div><span class="rating-num">7.9</span></div>
+      </div>
+      <div class="card-foot"><span>VERIFIED OWNER</span><span>2,600 KM ON UNIT</span></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- FOOTER ================================================================ -->
 <footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <img src="images/logo.jpg" alt="PEV Squad" class="footer-logo">
-        <div class="footer-motto">WE TAKE IT <span>PERSONAL.</span></div>
-      </div>
-      <div class="footer-cols">
-        <div class="footer-col">
-          <h4>Explore</h4>
-          <ul>
-            <li><a href="community.html">Community</a></li>
-            <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="for-sale.html">For Sale</a></li>
-            <li><a href="events.html">Events</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Squad</h4>
-          <ul>
-            <li><a href="featured-riders.html">Featured Riders</a></li>
-            <li><a href="sponsors.html">Sponsors</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Follow</h4>
-          <ul>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">WhatsApp Group</a></li>
-            <li><a href="#">YouTube</a></li>
-          </ul>
-        </div>
+  <div class="footer-grid">
+    <div>
+      <h2 class="footer-big">WE TAKE IT<br><em>PERSONAL.</em></h2>
+      <div style="margin-top:3rem;">
+        <span class="eyebrow">Basecamp</span>
+        <p style="margin-top:0.5rem; line-height:1.5;">JAKARTA · BANDUNG · SURABAYA<br>SEMARANG · YOGYAKARTA · BEKASI</p>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 PEV SQUAD</span>
-      <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="for-sale.html">For Sale</a></li>
+        <li><a href="events.html">Events</a></li>
+      </ul>
     </div>
+    <div class="footer-col">
+      <h4>Squad</h4>
+      <ul>
+        <li><a href="featured-riders.html">Featured Riders</a></li>
+        <li><a href="sponsors.html">Sponsors</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Follow</h4>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 PEV SQUAD</span>
+    <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
   </div>
 </footer>
 
-<script src="js/main.js"></script>
+<script src="js/kinetic.js"></script>
 </body>
 </html>

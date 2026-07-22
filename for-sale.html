@@ -5,229 +5,526 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For Sale — PEV Squad</title>
 <link rel="icon" type="image/jpeg" href="images/logo.jpg">
-<link rel="stylesheet" href="css/style.css">
-<script>
-(function(){
-  try{
-    var t = localStorage.getItem('pev-theme');
-    if(!t){ t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
-    document.documentElement.setAttribute('data-theme', t);
-  }catch(e){}
-})();
-</script>
+<link rel="stylesheet" href="css/kinetic.css">
 </head>
 <body>
 
-<header class="site-header">
-  <nav class="nav">
-    <a href="index.html" class="logo">
-      <img src="images/logo.jpg" alt="PEV Squad" class="logo-img">
-      <span class="tag">/// EUC · SCOOTER · ESK8</span>
-    </a>
-    <div class="nav-right">
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="community.html">Community</a></li>
-        <li><a href="featured-riders.html">Featured Riders</a></li>
-        <li><a href="reviews.html">Reviews</a></li>
-        <li><a href="for-sale.html" class="active">For Sale</a></li>
-        <li><a href="events.html">Events</a></li>
-        <li><a href="sponsors.html">Sponsors</a></li>
-      </ul>
-      <button class="theme-switch" id="themeSwitch" type="button" aria-label="Toggle color theme">☀</button>
-      <button class="nav-toggle" type="button">Menu</button>
-    </div>
+<!-- MASTHEAD ============================================================== -->
+<header class="masthead">
+  <a class="brand" href="index.html">
+    <img src="images/logo.jpg" alt="" class="brand-logo">
+    <span>
+      <span class="brand-name">PEV Squad</span>
+      <span class="brand-tag">/// EUC · SCOOTER · ESK8</span>
+    </span>
+  </a>
+  <nav class="mainnav" id="mainnav">
+    <a href="index.html"><span class="nav-num">01</span>Home</a>
+    <a href="community.html"><span class="nav-num">02</span>Community</a>
+    <a href="featured-riders.html"><span class="nav-num">03</span>Riders</a>
+    <a href="gallery.html"><span class="nav-num">04</span>Gallery</a>
+    <a href="reviews.html"><span class="nav-num">05</span>Reviews</a>
+    <a href="for-sale.html" class="active"><span class="nav-num">06</span>For Sale</a>
+    <a href="events.html"><span class="nav-num">07</span>Events</a>
+    <a href="sponsors.html"><span class="nav-num">08</span>Sponsors</a>
   </nav>
+  <button class="nav-toggle" type="button" aria-controls="mainnav" aria-expanded="false">Menu</button>
 </header>
 
-<div class="stripe-bar"></div>
+<div class="hazard"></div>
 
+<!-- PAGE HEADER =========================================================== -->
 <section class="page-header">
-  <div class="wrap">
-    <span class="eyebrow">Rider to rider</span>
-    <h1>For Sale</h1>
-    <p>New and second-hand gear listed by squad members. Deals are arranged directly between buyer and seller — reach out through the contact listed on each post.</p>
+  <div class="meta-row">
+    <span class="eyebrow">06 / Rider to rider</span>
+    <span class="tag-scribble">for sale</span>
+  </div>
+  <h1 class="page-title">For Sale</h1>
+  <p class="page-intro">
+    New and second-hand gear listed by squad members. Deals are arranged directly between buyer and seller — reach out in the squad WhatsApp group.
+  </p>
+</section>
+
+<!-- JUMP LINKS ============================================================ -->
+<section class="band band-tight band-black">
+  <div class="chips">
+    <a href="#brand-new" class="chip">↓ Brand New</a>
+    <a href="#second-hand" class="chip">↓ Second Hand</a>
   </div>
 </section>
 
-<section class="tight">
-  <div class="wrap">
-    <div class="collab-strip">
-      <a href="#brand-new" class="collab-chip">↓ Brand New</a>
-      <a href="#second-hand" class="collab-chip">↓ Second Hand</a>
+<!-- BRAND NEW ============================================================= -->
+<section id="brand-new" class="band band-white">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Sealed &amp; unused</span>
+      <h2 class="section-title">Brand New</h2>
+      <p class="section-lede">Unopened units, still in the box. Ask in the group for stock, warranty, and pickup.</p>
     </div>
+    <span class="sticker">12 Sealed</span>
+  </div>
+
+  <div class="grid grid-3">
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">01</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Begode Mten5</h3>
+        <div class="price">Rp 18.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">02</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion E20</h3>
+        <div class="price">Rp 8.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">03</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V8S</h3>
+        <div class="price">Rp 16.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">04</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V9</h3>
+        <div class="price">Rp 25.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">05</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V11</h3>
+        <div class="price">Rp 29.900.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">06</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V13</h3>
+        <div class="price">Rp 55.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">07</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V13 Pro</h3>
+        <div class="price">Rp 59.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">08</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V14</h3>
+        <div class="price">Rp 47.500.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">09</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Kingsong S19</h3>
+        <div class="price">Rp 36.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">10</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Kingsong S18</h3>
+        <div class="price">Rp 29.800.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">11</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Kingsong S16 Pro</h3>
+        <div class="price">Rp 29.700.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <span class="card-initials">12</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Veteran Lynx 50S</h3>
+        <div class="price">Rp 57.500.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
   </div>
 </section>
 
-<section id="brand-new" class="tight">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <span class="eyebrow">Sealed &amp; unused</span>
-        <h2>Brand New</h2>
-        <p>Unopened units and unworn gear, sold at or below retail by members.</p>
-      </div>
+<!-- SECOND HAND =========================================================== -->
+<section id="second-hand" class="band band-orange">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Ridden, well kept</span>
+      <h2 class="section-title">Second Hand</h2>
+      <p class="section-lede">Used gear from squad members. Deals are arranged directly between buyer and seller — ask in the group for condition, mileage, and the seller's contact.</p>
     </div>
-    <div class="filters">
-      <span class="filter-tag active">All</span>
-      <span class="filter-tag">EUC</span>
-      <span class="filter-tag">Scooter</span>
-      <span class="filter-tag">Esk8</span>
-      <span class="filter-tag">Accessories</span>
-    </div>
-    <div class="grid grid-3">
+    <span class="sticker sticker-dark">20 Listings</span>
+  </div>
 
-      <div class="card">
-        <div class="avatar" style="background:#1a2a30;"><span>SCT</span></div>
-        <div class="card-body">
-          <span class="badge grey">Scooter</span>
-          <h3>Dualtron Mini Special+</h3>
-          <div class="card-meta">Sealed box · Never used</div>
-          <p class="desc">Unopened unit, bought as backup and never used. Original invoice available.</p>
-          <div class="price-tag">Rp 22.000.000</div>
-        </div>
-        <div class="card-foot"><span>Fajar H. · Bekasi</span><span>Posted 1d ago</span></div>
+  <div class="filters" data-filter-for="second-hand-grid">
+    <a href="#" class="filter-tag active" data-filter="all" style="background:var(--black); color:var(--orange); border-color:var(--black);">All</a>
+    <a href="#" class="filter-tag" data-filter="EUC">EUC</a>
+    <a href="#" class="filter-tag" data-filter="E-Bike">E-Bike</a>
+    <a href="#" class="filter-tag" data-filter="Helmet">Helmet</a>
+    <a href="#" class="filter-tag" data-filter="Accessories">Accessories</a>
+  </div>
+
+  <div class="grid grid-3" id="second-hand-grid">
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">01</span>
+        <span class="badge badge-grey">EUC</span>
       </div>
-
-      <div class="card">
-        <div class="avatar" style="background:#1a2430;"><span>ACC</span></div>
-        <div class="card-body">
-          <span class="badge grey">Accessories</span>
-          <h3>Full Face Helmet + Wrist Guards</h3>
-          <div class="card-meta">Size L · Tags attached</div>
-          <p class="desc">Bought a size too large. Never worn outdoors, tags still attached.</p>
-          <div class="price-tag">Rp 1.450.000</div>
-        </div>
-        <div class="card-foot"><span>Ayu K. · Jakarta</span><span>Posted 2d ago</span></div>
+      <div class="card-body">
+        <h3 class="card-title">Kingsong S22</h3>
+        <div class="price">Rp 25.500.000</div>
       </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
 
-      <div class="card">
-        <div class="avatar" style="background:#30241a;"><span>EUC</span></div>
-        <div class="card-body">
-          <span class="badge grey">EUC</span>
-          <h3>Veteran Sherman-S</h3>
-          <div class="card-meta">Sealed box · Import unit</div>
-          <p class="desc">Ordered two, only need one. Still in factory packaging with warranty card unregistered.</p>
-          <div class="price-tag">Rp 45.000.000</div>
-        </div>
-        <div class="card-foot"><span>Wahyu P. · Semarang</span><span>Posted 6h ago</span></div>
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">02</span>
+        <span class="badge badge-grey">EUC</span>
       </div>
+      <div class="card-body">
+        <h3 class="card-title">Kingsong F18 Full Mods</h3>
+        <p class="card-meta">BODYKIT 3D PRINT + SEAT</p>
+        <div class="price">Rp 40.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
 
-    </div>
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">03</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">E-Board B-One Titan</h3>
+        <p class="card-meta">CARBON DECK</p>
+        <div class="price">Rp 16.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="Helmet">
+      <div class="card-head">
+        <span class="card-initials">04</span>
+        <span class="badge badge-grey">Helmet</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Nolan N120-1</h3>
+        <p class="card-meta">PLUS CLAMPKIT &amp; AUDIO KIT JBL SENA 60S</p>
+        <div class="price">Rp 6.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">05</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Leaperkim Veteran Patton OG</h3>
+        <div class="price">Rp 35.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="E-Bike">
+      <div class="card-head">
+        <span class="card-initials">06</span>
+        <span class="badge badge-grey">E-Bike</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Coswheel T20 E-Bike</h3>
+        <div class="price">Rp 17.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">07</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V14</h3>
+        <div class="price">Rp 40.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="Helmet">
+      <div class="card-head">
+        <span class="card-initials">08</span>
+        <span class="badge badge-grey">Helmet</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">ICON Airflite Fortune Fullface</h3>
+        <p class="card-meta">SIZE XL</p>
+        <div class="price">Rp 3.500.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">09</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Sherman S</h3>
+        <p class="card-meta">+ PADS + JOK + FASTCHARGER HUAWEI 45A</p>
+        <div class="price">Rp 36.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">10</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Kingsong S22</h3>
+        <div class="price">Rp 25.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">11</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V13</h3>
+        <div class="price">Rp 30.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">12</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Begode Falcon</h3>
+        <div class="price">Rp 20.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">13</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Begode Mten4</h3>
+        <div class="price">Rp 10.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="Accessories">
+      <div class="card-head">
+        <span class="card-initials">14</span>
+        <span class="badge badge-grey">Accessories</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Begode XWAY Pads</h3>
+        <p class="card-meta">ORIGINAL · NEW</p>
+        <div class="price">Rp 2.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="E-Bike">
+      <div class="card-head">
+        <span class="card-initials">15</span>
+        <span class="badge badge-grey">E-Bike</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Fiido Q1</h3>
+        <div class="price">Rp 28.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">16</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V13 Pro</h3>
+        <div class="price">Rp 36.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">17</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V9</h3>
+        <div class="price">Rp 19.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">18</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V13</h3>
+        <div class="price">Rp 32.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">19</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V14</h3>
+        <div class="price">Rp 36.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
+    <article class="card" data-category="EUC">
+      <div class="card-head">
+        <span class="card-initials">20</span>
+        <span class="badge badge-grey">EUC</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Inmotion V14 50S</h3>
+        <div class="price">Rp 39.000.000</div>
+      </div>
+      <div class="card-foot"><span>Ask in group</span><span>≫</span></div>
+    </article>
+
   </div>
 </section>
 
-<section id="second-hand" class="section-alt tight">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <span class="eyebrow">Ridden, well kept</span>
-        <h2>Second Hand</h2>
-        <p>Used gear from squad members, listed with honest condition notes and mileage.</p>
-      </div>
-    </div>
-    <div class="filters">
-      <span class="filter-tag active">All</span>
-      <span class="filter-tag">EUC</span>
-      <span class="filter-tag">Scooter</span>
-      <span class="filter-tag">Esk8</span>
-      <span class="filter-tag">Accessories</span>
-    </div>
-    <div class="grid grid-3">
-
-      <div class="card">
-        <div class="avatar" style="background:#241a30;"><span>EUC</span></div>
-        <div class="card-body">
-          <span class="badge grey">EUC</span>
-          <h3>Kingsong S20 — 2023</h3>
-          <div class="card-meta">Good condition</div>
-          <p class="desc">1,800 km on the clock, battery health 96%. New tire fitted last month. Comes with case and charger.</p>
-          <div class="price-tag">Rp 18.500.000</div>
-        </div>
-        <div class="card-foot"><span>Rangga W. · Jakarta</span><span>Posted 3d ago</span></div>
-      </div>
-
-      <div class="card">
-        <div class="avatar" style="background:#2a301a;"><span>ESK8</span></div>
-        <div class="card-body">
-          <span class="badge grey">Esk8</span>
-          <h3>Trampa Deck + VESC 75/300</h3>
-          <div class="card-meta">Custom build</div>
-          <p class="desc">Hand-built dual-belt setup, well maintained. Selling to fund an EUC upgrade.</p>
-          <div class="price-tag">Rp 9.750.000</div>
-        </div>
-        <div class="card-foot"><span>Teuku M. · Surabaya</span><span>Posted 5d ago</span></div>
-      </div>
-
-      <div class="card">
-        <div class="avatar" style="background:#301a1a;"><span>EUC</span></div>
-        <div class="card-body">
-          <span class="badge grey">EUC</span>
-          <h3>Begode Master Pro</h3>
-          <div class="card-meta">Fair condition</div>
-          <p class="desc">3,200 km, shell has minor scuffs from a low-speed tip-over. Rides perfectly, no faults.</p>
-          <div class="price-tag">Rp 14.000.000</div>
-        </div>
-        <div class="card-foot"><span>Bimo S. · Yogyakarta</span><span>Posted 1w ago</span></div>
-      </div>
-
-      <div class="card">
-        <div class="avatar" style="background:#301a28;"><span>SCT</span></div>
-        <div class="card-body">
-          <span class="badge grey">Scooter</span>
-          <h3>Kaabo Wolf Warrior 11</h3>
-          <div class="card-meta">Good condition</div>
-          <p class="desc">2,600 km, new deck grip tape, battery holds full range. Local pickup only.</p>
-          <div class="price-tag">Rp 16.800.000</div>
-        </div>
-        <div class="card-foot"><span>Dinda A. · Bandung</span><span>Posted 4d ago</span></div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
+<!-- FOOTER ================================================================ -->
 <footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <img src="images/logo.jpg" alt="PEV Squad" class="footer-logo">
-        <div class="footer-motto">WE TAKE IT <span>PERSONAL.</span></div>
-      </div>
-      <div class="footer-cols">
-        <div class="footer-col">
-          <h4>Explore</h4>
-          <ul>
-            <li><a href="community.html">Community</a></li>
-            <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="for-sale.html">For Sale</a></li>
-            <li><a href="events.html">Events</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Squad</h4>
-          <ul>
-            <li><a href="featured-riders.html">Featured Riders</a></li>
-            <li><a href="sponsors.html">Sponsors</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Follow</h4>
-          <ul>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">WhatsApp Group</a></li>
-            <li><a href="#">YouTube</a></li>
-          </ul>
-        </div>
+  <div class="footer-grid">
+    <div>
+      <h2 class="footer-big">WE TAKE IT<br><em>PERSONAL.</em></h2>
+      <div style="margin-top:3rem;">
+        <span class="eyebrow">Basecamp</span>
+        <p style="margin-top:0.5rem; line-height:1.5;">JAKARTA · BANDUNG · SURABAYA<br>SEMARANG · YOGYAKARTA · BEKASI</p>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 PEV SQUAD</span>
-      <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="for-sale.html">For Sale</a></li>
+        <li><a href="events.html">Events</a></li>
+      </ul>
     </div>
+    <div class="footer-col">
+      <h4>Squad</h4>
+      <ul>
+        <li><a href="featured-riders.html">Featured Riders</a></li>
+        <li><a href="sponsors.html">Sponsors</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Follow</h4>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 PEV SQUAD</span>
+    <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
   </div>
 </footer>
 
-<script src="js/main.js"></script>
+<script src="js/kinetic.js"></script>
 </body>
 </html>
