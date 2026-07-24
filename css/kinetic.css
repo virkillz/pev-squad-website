@@ -693,6 +693,20 @@ a { color: inherit; }
   border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
+/* Member portrait sitting between the black card head and the body. */
+.card-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 30%;
+  border-bottom: var(--bw) solid var(--black);
+  filter: grayscale(1) contrast(1.08);
+  transition: filter 0.15s ease;
+}
+
+.card:hover .card-photo { filter: none; }
+
 .card-body { padding: 1.25rem; flex: 1 1 auto; }
 
 .card-title {
@@ -849,6 +863,8 @@ a { color: inherit; }
 }
 
 .event-d { font-size: 2.4rem; font-weight: 700; line-height: 0.9; letter-spacing: -0.04em; }
+/* Multi-day events print a range ("12–14"), which won't fit at the full size. */
+.event-d.is-range { font-size: 1.5rem; letter-spacing: -0.02em; }
 .event-m { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 0.3rem; }
 .event-y { font-size: 0.65rem; letter-spacing: 0.14em; opacity: 0.7; margin-top: 0.15rem; }
 
