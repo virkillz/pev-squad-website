@@ -381,3 +381,84 @@
   opacity: 0.7;
 }
 .pager-links { display: flex; flex-wrap: wrap; gap: var(--bw); }
+
+/* Home page carousel of featured photos. Captions sit in a black bar under
+   the photo rather than over it, like the rest of the site. */
+.carousel {
+  background: var(--black);
+  color: var(--white);
+  border-bottom: var(--bw) solid var(--black);
+  position: relative;
+}
+.carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track:focus-visible { outline: 3px solid var(--orange); outline-offset: -3px; }
+.carousel-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.carousel-slide img {
+  width: 100%;
+  height: min(78vh, 56vw);
+  object-fit: cover;
+  display: block;
+}
+.carousel-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1.25rem;
+  padding: 1.1rem 2rem 1.1rem;
+  padding-right: 12rem; /* room for the controls */
+  min-height: 4.25rem;
+}
+.carousel-album {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--orange);
+  text-decoration: none;
+}
+.carousel-title { font-weight: 900; text-transform: uppercase; font-size: 1.15rem; letter-spacing: -0.01em; }
+.carousel-meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+.carousel-controls {
+  position: absolute;
+  right: 2rem;
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.carousel-count { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em; }
+.carousel-count b { color: var(--orange); }
+.carousel-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.carousel-btn:hover { background: var(--orange); color: var(--black); border-color: var(--orange); }
+
+@media (max-width: 640px) {
+  .carousel-slide img { height: auto; aspect-ratio: 4 / 5; }
+  .carousel-caption { padding: 1rem; padding-bottom: 4.25rem; }
+  .carousel-controls { left: 1rem; right: auto; }
+}

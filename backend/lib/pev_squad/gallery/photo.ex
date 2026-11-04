@@ -14,6 +14,9 @@ defmodule PevSquad.Gallery.Photo do
     field :tile, Ecto.Enum, values: [:normal, :big, :wide], default: :normal
     field :position, :integer, default: 0
     field :status, Ecto.Enum, values: [:pending, :published, :rejected], default: :pending
+    # In the home page carousel; featured_at (set automatically) orders it.
+    field :featured, :boolean, default: false
+    field :featured_at, :utc_datetime
 
     # Uploader's rider profile, loaded by Gallery queries for credits.
     field :uploader_profile, :any, virtual: true
@@ -34,11 +37,20 @@ defmodule PevSquad.Gallery.Photo do
     |> validate_length(:alt, max: 200)
   end
 
-  @doc "Staff can also set the tile line, size and order."
+  @doc "Staff can also set the tile line, size, order and whether it's featured."
   def staff_changeset(photo, attrs) do
     photo
     |> details_changeset(attrs)
-    |> cast(attrs, [:meta, :tile, :position, :album_id])
+    |> cast(attrs, [:meta, :tile, :position, :album_id, :featured])
     |> validate_length(:meta, max: 80)
+    |> put_featured_at()
+  end
+
+  defp put_featured_at(changeset) do
+    case fetch_change(changeset, :featured) do
+      {:ok, true} -> put_change(changeset, :featured_at, DateTime.utc_now(:second))
+      {:ok, false} -> put_change(changeset, :featured_at, nil)
+      :error -> changeset
+    end
   end
 end

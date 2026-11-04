@@ -60,4 +60,43 @@ defmodule PevSquadWeb.GalleryLiveTest do
     html = lv |> element("#pending-#{photo.id} button", "Approve") |> render_click()
     assert html =~ "All clear"
   end
+
+  test "the home page shows featured photos as a carousel", %{conn: conn} do
+    {:ok, _lv, html} = live(conn, ~p"/")
+    refute html =~ "featured-carousel"
+    assert html =~ "/images/community.png"
+
+    album = album_fixture(%{"title" => "Night Session"})
+    staff = staff_scope_fixture()
+
+    for title <- ["Level P10", "Ramp Exit"] do
+      {:ok, _} =
+        Gallery.update_photo(staff, photo_fixture(album, %{"title" => title}), %{
+          "featured" => "true"
+        })
+    end
+
+    {:ok, lv, html} = live(conn, ~p"/")
+    assert has_element?(lv, "#featured-carousel .carousel-slide", "Level P10")
+    assert has_element?(lv, "#featured-carousel .carousel-slide", "Ramp Exit")
+    assert has_element?(lv, ~s|#featured-carousel a[href="/gallery/#{album.slug}"]|)
+    assert has_element?(lv, ".carousel-count", "02")
+    refute html =~ "/images/community.png"
+  end
+
+  test "staff feature a photo from the album editor", %{conn: conn} do
+    staff = staff_scope_fixture()
+    album = album_fixture()
+    photo = photo_fixture(album)
+
+    {:ok, lv, _html} = live(log_in_user(conn, staff.user), ~p"/admin/albums/#{album.id}/edit")
+
+    lv
+    |> form("#photo-#{photo.id}")
+    |> render_change(%{"photo_id" => "#{photo.id}", "photo" => %{"featured" => "true"}})
+
+    assert has_element?(lv, "#photo-#{photo.id}", "★ Featured")
+    assert [%{id: id}] = Gallery.list_featured_photos()
+    assert id == photo.id
+  end
 end

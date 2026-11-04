@@ -82,6 +82,7 @@ defmodule PevSquadWeb.Admin.AlbumLive.Form do
             <input type="hidden" name="photo_id" value={photo.id} />
             <img src={photo.thumb_path} alt="" style="width:100%; aspect-ratio:1; object-fit:cover;" />
             <span :if={photo.status != :published} class="badge">{photo.status}</span>
+            <span :if={photo.featured} class="badge">★ Featured</span>
             <input
               name="photo[title]"
               value={photo.title}
@@ -116,6 +117,17 @@ defmodule PevSquadWeb.Admin.AlbumLive.Form do
                 phx-debounce="600"
               />
             </div>
+            <label class="flex gap-2 items-center cursor-pointer">
+              <input type="hidden" name="photo[featured]" value="false" />
+              <input
+                type="checkbox"
+                name="photo[featured]"
+                value="true"
+                checked={photo.featured}
+                class="checkbox"
+              />
+              <span>Featured on the home page</span>
+            </label>
             <button
               type="button"
               phx-click="delete_photo"

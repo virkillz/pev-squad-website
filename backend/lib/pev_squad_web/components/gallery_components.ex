@@ -93,4 +93,58 @@ defmodule PevSquadWeb.GalleryComponents do
     </div>
     """
   end
+
+  @doc """
+  Full-width carousel of featured photos for the home page. Slides scroll
+  natively (swipe, trackpad, keyboard); the Carousel hook adds the
+  buttons, counter and a gentle autoplay.
+  """
+  attr :photos, :list, required: true
+
+  def featured_carousel(assigns) do
+    ~H"""
+    <section
+      class="carousel"
+      id="featured-carousel"
+      phx-hook="Carousel"
+      aria-roledescription="carousel"
+      aria-label="Featured photos"
+    >
+      <div class="carousel-track" tabindex="0">
+        <figure
+          :for={{photo, i} <- Enum.with_index(@photos, 1)}
+          class="carousel-slide"
+          aria-roledescription="slide"
+          aria-label={"#{i} of #{length(@photos)}"}
+        >
+          <img
+            src={photo.large_path}
+            alt={photo.alt || photo.title || photo.album.title}
+            loading={if i == 1, do: "eager", else: "lazy"}
+          />
+          <figcaption class="carousel-caption">
+            <.link navigate={~p"/gallery/#{photo.album.slug}"} class="carousel-album">
+              {photo.album.title} ≫
+            </.link>
+            <span :if={photo.title} class="carousel-title">{photo.title}</span>
+            <span :if={photo.meta || credit(photo)} class="carousel-meta">
+              {[photo.meta, credit(photo)] |> Enum.reject(&is_nil/1) |> Enum.join(" · ")}
+            </span>
+          </figcaption>
+        </figure>
+      </div>
+      <div :if={length(@photos) > 1} class="carousel-controls">
+        <button type="button" class="carousel-btn" data-carousel="prev" aria-label="Previous photo">
+          ←
+        </button>
+        <span class="carousel-count" aria-live="polite">
+          <b data-carousel="current">01</b> / {pad(length(@photos))}
+        </span>
+        <button type="button" class="carousel-btn" data-carousel="next" aria-label="Next photo">
+          →
+        </button>
+      </div>
+    </section>
+    """
+  end
 end

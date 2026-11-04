@@ -76,6 +76,25 @@ defmodule PevSquad.Gallery do
     from p in Photo, where: p.status == :published, order_by: [asc: p.position, asc: p.id]
   end
 
+  @doc """
+  Featured photos for the home page carousel, most recently featured first:
+  live photos in published albums, album preloaded. Options: `:limit`
+  (default 8), `:exclude_users`.
+  """
+  def list_featured_photos(opts \\ []) do
+    hidden = opts[:exclude_users] || []
+
+    Photo
+    |> join(:inner, [p], a in assoc(p, :album))
+    |> where([p, a], p.featured and p.status == :published and a.published)
+    |> where([p], is_nil(p.uploader_id) or p.uploader_id not in ^hidden)
+    |> order_by([p], desc: p.featured_at, desc: p.id)
+    |> limit(^Keyword.get(opts, :limit, 8))
+    |> preload([p, a], album: a)
+    |> Repo.all()
+    |> attach_profiles()
+  end
+
   def total_published_photos do
     Photo
     |> join(:inner, [p], a in assoc(p, :album))

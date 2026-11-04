@@ -80,8 +80,13 @@
     </div>
   </section>
   
-<!-- SQUAD PHOTO — full bleed, no overlay; the asset carries its own type. -->
-  <div class="bleed">
+<!-- FEATURED PHOTOS — staff pick them in the album editor. Until there are
+     any, the squad photo fills the slot (full bleed, carries its own type). -->
+  <PevSquadWeb.GalleryComponents.featured_carousel
+    :if={@featured_photos != []}
+    photos={@featured_photos}
+  />
+  <div :if={@featured_photos == []} class="bleed">
     <img
       src="/images/community.png"
       alt="PEV Squad members and their EUCs and scooters gathered in a parking garage"

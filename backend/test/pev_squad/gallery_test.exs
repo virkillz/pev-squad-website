@@ -113,4 +113,60 @@ defmodule PevSquad.GalleryTest do
     assert {:error, :not_allowed} = Gallery.delete_photo(member_with_profile(), photo)
     assert {:ok, _} = Gallery.delete_photo(owner, photo)
   end
+
+  describe "featured photos" do
+    test "only live photos in published albums, most recently featured first" do
+      staff = staff_scope_fixture()
+      album = album_fixture()
+      draft = album_fixture(%{"published" => "false"})
+
+      first = photo_fixture(album, %{"title" => "First"})
+      second = photo_fixture(album, %{"title" => "Second"})
+      _plain = photo_fixture(album)
+      in_draft = photo_fixture(draft)
+
+      {:ok, first} = Gallery.update_photo(staff, first, %{"featured" => "true"})
+      assert first.featured_at
+
+      # Featured a second later, so it leads the carousel.
+      {:ok, second} = Gallery.update_photo(staff, second, %{"featured" => "true"})
+
+      {:ok, second} =
+        second
+        |> Ecto.Changeset.change(featured_at: DateTime.add(first.featured_at, 1))
+        |> Repo.update()
+
+      {:ok, _} = Gallery.update_photo(staff, in_draft, %{"featured" => "true"})
+
+      assert [%{id: a, album: %{id: album_id}}, %{id: b}] = Gallery.list_featured_photos()
+      assert {a, b} == {second.id, first.id}
+      assert album_id == album.id
+
+      assert [_] = Gallery.list_featured_photos(limit: 1)
+
+      {:ok, unfeatured} = Gallery.update_photo(staff, first, %{"featured" => "false"})
+      assert is_nil(unfeatured.featured_at)
+      assert [%{id: ^a}] = Gallery.list_featured_photos()
+    end
+
+    test "re-saving other fields keeps the featured time" do
+      staff = staff_scope_fixture()
+
+      {:ok, photo} =
+        Gallery.update_photo(staff, photo_fixture(album_fixture()), %{"featured" => "true"})
+
+      {:ok, again} =
+        Gallery.update_photo(staff, photo, %{"featured" => "true", "title" => "Renamed"})
+
+      assert again.featured_at == photo.featured_at
+    end
+
+    test "members can't feature photos" do
+      photo = photo_fixture(album_fixture())
+
+      assert_raise PevSquad.Gallery.NotAuthorizedError, fn ->
+        Gallery.update_photo(user_scope_fixture(), photo, %{"featured" => "true"})
+      end
+    end
+  end
 end
