@@ -99,4 +99,24 @@ defmodule PevSquadWeb.GalleryLiveTest do
     assert [%{id: id}] = Gallery.list_featured_photos()
     assert id == photo.id
   end
+
+  test "staff move a photo to another album from the album editor", %{conn: conn} do
+    staff = staff_scope_fixture()
+    album = album_fixture()
+    other = album_fixture(%{"title" => "Morning Ride"})
+    photo = photo_fixture(album)
+
+    {:ok, lv, _html} = live(log_in_user(conn, staff.user), ~p"/admin/albums/#{album.id}/edit")
+    refute has_element?(lv, "#move-#{photo.id} option", album.title)
+
+    html =
+      lv
+      |> form("#move-#{photo.id}")
+      |> render_change(%{"photo_id" => "#{photo.id}", "album_id" => "#{other.id}"})
+
+    assert html =~ "Photo moved to Morning Ride."
+    refute has_element?(lv, "#photo-card-#{photo.id}")
+    assert [%{id: id}] = Gallery.get_published_album!(other.slug).photos
+    assert id == photo.id
+  end
 end

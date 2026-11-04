@@ -41,7 +41,7 @@ defmodule PevSquad.Gallery.Photo do
   def staff_changeset(photo, attrs) do
     photo
     |> details_changeset(attrs)
-    |> cast(attrs, [:meta, :tile, :position, :album_id, :featured])
+    |> cast(attrs, [:meta, :tile, :position, :featured])
     |> validate_length(:meta, max: 80)
     |> put_featured_at()
   end

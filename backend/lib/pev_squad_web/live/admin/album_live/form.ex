@@ -73,61 +73,74 @@ defmodule PevSquadWeb.Admin.AlbumLive.Form do
           </.button>
         </div>
         <div class="grid grid-3" style="gap:1rem;">
-          <form
-            :for={photo <- @album.photos}
-            id={"photo-#{photo.id}"}
-            phx-change="update_photo"
-            class="notice space-y-2"
-          >
-            <input type="hidden" name="photo_id" value={photo.id} />
-            <img src={photo.thumb_path} alt="" style="width:100%; aspect-ratio:1; object-fit:cover;" />
-            <span :if={photo.status != :published} class="badge">{photo.status}</span>
-            <span :if={photo.featured} class="badge">★ Featured</span>
-            <input
-              name="photo[title]"
-              value={photo.title}
-              class="input"
-              placeholder="Title"
-              phx-debounce="600"
-            />
-            <input
-              name="photo[meta]"
-              value={photo.meta}
-              class="input"
-              placeholder="Tile line"
-              phx-debounce="600"
-            />
-            <div class="flex gap-2">
-              <select name="photo[tile]" class="select">
-                <option
-                  :for={t <- ~w(normal big wide)}
-                  value={t}
-                  selected={to_string(photo.tile) == t}
-                >
-                  {String.capitalize(t)} tile
-                </option>
-              </select>
+          <div :for={photo <- @album.photos} id={"photo-card-#{photo.id}"} class="notice space-y-2">
+            <form id={"photo-#{photo.id}"} phx-change="update_photo" class="space-y-2">
+              <input type="hidden" name="photo_id" value={photo.id} />
+              <img
+                src={photo.thumb_path}
+                alt=""
+                style="width:100%; aspect-ratio:1; object-fit:cover;"
+              />
+              <span :if={photo.status != :published} class="badge">{photo.status}</span>
+              <span :if={photo.featured} class="badge">★ Featured</span>
               <input
-                name="photo[position]"
-                type="number"
-                value={photo.position}
+                name="photo[title]"
+                value={photo.title}
                 class="input"
-                style="width:6rem;"
-                aria-label="Position"
+                placeholder="Title"
                 phx-debounce="600"
               />
-            </div>
-            <label class="flex gap-2 items-center cursor-pointer">
-              <input type="hidden" name="photo[featured]" value="false" />
               <input
-                type="checkbox"
-                name="photo[featured]"
-                value="true"
-                checked={photo.featured}
-                class="checkbox"
+                name="photo[meta]"
+                value={photo.meta}
+                class="input"
+                placeholder="Tile line"
+                phx-debounce="600"
               />
-              <span>Featured on the home page</span>
-            </label>
+              <div class="flex gap-2">
+                <select name="photo[tile]" class="select">
+                  <option
+                    :for={t <- ~w(normal big wide)}
+                    value={t}
+                    selected={to_string(photo.tile) == t}
+                  >
+                    {String.capitalize(t)} tile
+                  </option>
+                </select>
+                <input
+                  name="photo[position]"
+                  type="number"
+                  value={photo.position}
+                  class="input"
+                  style="width:6rem;"
+                  aria-label="Position"
+                  phx-debounce="600"
+                />
+              </div>
+              <label class="flex gap-2 items-center cursor-pointer">
+                <input type="hidden" name="photo[featured]" value="false" />
+                <input
+                  type="checkbox"
+                  name="photo[featured]"
+                  value="true"
+                  checked={photo.featured}
+                  class="checkbox"
+                />
+                <span>Featured on the home page</span>
+              </label>
+            </form>
+            <form
+              :if={@move_options != []}
+              id={"move-#{photo.id}"}
+              phx-change="move_photo"
+              class="flex gap-2 items-center"
+            >
+              <input type="hidden" name="photo_id" value={photo.id} />
+              <select name="album_id" class="select" aria-label="Move to another album">
+                <option value="">Move to album…</option>
+                <option :for={{label, id} <- @move_options} value={id}>{label}</option>
+              </select>
+            </form>
             <button
               type="button"
               phx-click="delete_photo"
@@ -137,7 +150,7 @@ defmodule PevSquadWeb.Admin.AlbumLive.Form do
             >
               Delete
             </button>
-          </form>
+          </div>
         </div>
       </section>
     </Layouts.app>
@@ -159,18 +172,29 @@ defmodule PevSquadWeb.Admin.AlbumLive.Form do
     album = %Album{photos: []}
 
     socket
+    |> assign(:move_options, [])
     |> assign(:page_title, "New Album")
     |> assign(:album, album)
     |> assign(:form, to_form(Gallery.change_album(album)))
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    album = Gallery.get_album!(socket.assigns.current_scope, id)
+    scope = socket.assigns.current_scope
+    album = Gallery.get_album!(scope, id)
 
     socket
+    |> assign(:move_options, move_options(scope, album))
     |> assign(:page_title, "Edit Album")
     |> assign(:album, album)
     |> assign(:form, to_form(Gallery.change_album(album)))
+  end
+
+  # Every other album, newest first; drafts are marked.
+  defp move_options(scope, album) do
+    scope
+    |> Gallery.list_albums_for_staff()
+    |> Enum.reject(&(&1.id == album.id))
+    |> Enum.map(&{if(&1.published, do: &1.title, else: "#{&1.title} (draft)"), &1.id})
   end
 
   defp reload(socket) do
@@ -212,6 +236,29 @@ defmodule PevSquadWeb.Admin.AlbumLive.Form do
     photo = Enum.find(socket.assigns.album.photos, &(to_string(&1.id) == id))
     {:ok, _} = Gallery.update_photo(socket.assigns.current_scope, photo, attrs)
     {:noreply, reload(socket)}
+  end
+
+  def handle_event("move_photo", %{"album_id" => ""}, socket), do: {:noreply, socket}
+
+  def handle_event("move_photo", %{"photo_id" => id, "album_id" => album_id}, socket) do
+    photo = Enum.find(socket.assigns.album.photos, &(to_string(&1.id) == id))
+
+    target =
+      Enum.find(socket.assigns.move_options, fn {_label, aid} -> to_string(aid) == album_id end)
+
+    case target && Gallery.move_photo(socket.assigns.current_scope, photo, elem(target, 1)) do
+      {:ok, _photo} ->
+        {:noreply,
+         socket
+         |> put_flash(
+           :info,
+           "Photo moved to #{target |> elem(0) |> String.replace(" (draft)", "")}."
+         )
+         |> reload()}
+
+      _ ->
+        {:noreply, socket |> put_flash(:error, "Couldn't move that photo.") |> reload()}
+    end
   end
 
   def handle_event("delete_photo", %{"id" => id}, socket) do

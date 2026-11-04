@@ -169,4 +169,37 @@ defmodule PevSquad.GalleryTest do
       end
     end
   end
+
+  describe "move_photo/3" do
+    test "moves a photo to the end of another album, keeping its state" do
+      staff = staff_scope_fixture()
+      from = album_fixture()
+      to = album_fixture()
+      _existing = photo_fixture(to)
+      photo = photo_fixture(from)
+      {:ok, photo} = Gallery.update_photo(staff, photo, %{"featured" => "true"})
+
+      assert {:ok, moved} = Gallery.move_photo(staff, photo, to.id)
+      assert moved.album_id == to.id
+      assert moved.featured
+      assert moved.status == :published
+
+      assert [_, %{id: last_id}] = Gallery.get_published_album!(to.slug).photos
+      assert last_id == photo.id
+      assert Gallery.get_published_album!(from.slug).photos == []
+    end
+
+    test "refuses unknown and same albums, and members" do
+      staff = staff_scope_fixture()
+      album = album_fixture()
+      photo = photo_fixture(album)
+
+      assert {:error, :same_album} = Gallery.move_photo(staff, photo, album.id)
+      assert {:error, :not_found} = Gallery.move_photo(staff, photo, -1)
+
+      assert_raise PevSquad.Gallery.NotAuthorizedError, fn ->
+        Gallery.move_photo(user_scope_fixture(), photo, album_fixture().id)
+      end
+    end
+  end
 end

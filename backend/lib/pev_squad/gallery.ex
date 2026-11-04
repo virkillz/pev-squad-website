@@ -270,6 +270,28 @@ defmodule PevSquad.Gallery do
     photo |> Photo.staff_changeset(attrs) |> Repo.update()
   end
 
+  @doc """
+  Moves a photo to another album, at the end of its photo order. Status,
+  featured flag and files stay as they are (files aren't stored per album).
+  Returns `{:ok, photo}` or `{:error, :not_found}` / `{:error, :same_album}`.
+  """
+  def move_photo(%Scope{} = scope, %Photo{} = photo, album_id) do
+    ensure_staff!(scope)
+
+    with %Album{id: target_id} <- Repo.get(Album, album_id) || {:error, :not_found},
+         true <- target_id != photo.album_id || {:error, :same_album} do
+      last =
+        Photo
+        |> where(album_id: ^target_id)
+        |> select([p], max(p.position))
+        |> Repo.one()
+
+      photo
+      |> Ecto.Changeset.change(album_id: target_id, position: (last || 0) + 1)
+      |> Repo.update()
+    end
+  end
+
   defp ensure_staff!(scope) do
     unless Scope.staff?(scope), do: raise(PevSquad.Gallery.NotAuthorizedError)
   end
