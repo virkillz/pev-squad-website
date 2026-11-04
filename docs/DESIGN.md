@@ -313,9 +313,13 @@ With two developers, one owns backend + web and the other owns mobile from week 
 | 4 | Claiming imported profiles | The sign-up form had no email column, so imported profiles start **unclaimed**. Once a rider registers, staff link the profile to their account at `/admin/riders`. A self-service "this is me" request can come later. |
 | 5 | Avatar storage (interim) | Until the R2 media pipeline exists, avatars are processed with libvips (4:5 crop, WebP, metadata including GPS stripped) and stored on local disk (`UPLOADS_DIR`, a persistent volume on the VPS), served at `/uploads`. HEIC isn't accepted, so iPhones convert photos to JPEG on upload. |
 
+| 6 | Review criteria (default, change if needed) | **Power, Range, Comfort, Build, Value** (required) plus **App/FW** (optional), each 0–10 with one decimal. A review's overall score is the average of the criteria it scored. Taken from the prototype, with Comfort added. |
+| 7 | Featured weighting (default) | Featured reviews count **×2** in a model's overall score. The Sheet also shows the Featured and Community averages **separately**, like the prototype. "Featured" is fixed when a review is published, based on the author's badge at that moment. |
+| 8 | Review moderation | Reviews from new members wait for a moderator. **Staff and members with 2 or more published reviews publish straight away**, unless the model is new, in which case the moderator approves both together. Rejections require a reason, which is emailed to the author. Editing a rejected review sends it back to the queue. |
+
 ## 17. Open questions
 
-1. **Review criteria:** confirm the score categories (prototype shows Power / Range / Value…), and whether Featured and Community scores are shown separately or blended.
+1. **Review criteria:** confirm the defaults in decision 6 and the ×2 weighting in decision 7.
 2. **Featured Rider gate:** keep it as a manual admin grant, or let members apply through a form in the app?
 3. **Should the static prototype stay live** at `pev-squad.org` until the LiveView pages are ready, or move to `demo.pev-squad.org`?
 4. **Marketplace phase 2:** are dealers / sponsors allowed to post brand-new listings, and do they need a separate "shop" account type?

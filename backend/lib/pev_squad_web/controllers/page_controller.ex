@@ -3,7 +3,6 @@ defmodule PevSquadWeb.PageController do
 
   @sections %{
     "gallery" => {:gallery, "04", "Gallery"},
-    "reviews" => {:reviews, "05", "Reviews"},
     "for-sale" => {:for_sale, "06", "For Sale"}
   }
 

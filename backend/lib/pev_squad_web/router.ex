@@ -28,11 +28,12 @@ defmodule PevSquadWeb.Router do
       live "/community", CommunityLive.Index, :index
       live "/community/:slug", CommunityLive.Show, :show
       live "/riders", RiderLive.Featured, :index
+      live "/reviews", ReviewLive.Index, :index
+      live "/models/:slug", ModelLive.Show, :show
     end
 
     # Sections still living in the static prototype.
     get "/gallery", PageController, :coming_soon
-    get "/reviews", PageController, :coming_soon
     get "/for-sale", PageController, :coming_soon
   end
 
@@ -41,11 +42,14 @@ defmodule PevSquadWeb.Router do
 
     live_session :staff,
       on_mount: [{PevSquadWeb.UserAuth, :require_staff}] do
+      live "/", Dashboard, :index
       live "/events", EventLive.Index, :index
       live "/events/new", EventLive.Form, :new
       live "/events/:id/edit", EventLive.Form, :edit
       live "/riders", RiderLive.Index, :index
       live "/riders/:id/edit", RiderLive.Edit, :edit
+      live "/reviews", ReviewLive.Queue, :index
+      live "/models", ModelLive.Index, :index
     end
   end
 
@@ -80,10 +84,22 @@ defmodule PevSquadWeb.Router do
       on_mount: [{PevSquadWeb.UserAuth, :require_authenticated}, PevSquadWeb.AuthTitles] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/profile", UserLive.Profile, :edit
+      live "/reviews/new", ReviewLive.Form, :new
+      live "/reviews/:id/edit", ReviewLive.Form, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end
 
     post "/users/update-password", UserSessionController, :update_password
+  end
+
+  # After the authenticated routes so that /reviews/new isn't taken as an id.
+  scope "/", PevSquadWeb do
+    pipe_through :browser
+
+    live_session :public_reviews,
+      on_mount: [{PevSquadWeb.UserAuth, :mount_current_scope}] do
+      live "/reviews/:id", ReviewLive.Show, :show
+    end
   end
 
   scope "/", PevSquadWeb do

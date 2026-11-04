@@ -100,6 +100,29 @@ defmodule PevSquadWeb.UserLive.Profile do
           </.form>
         </div>
       </section>
+
+      <section :if={@profile.id} class="band band-white">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Your reviews</span>
+            <h2 class="section-title">My Reviews</h2>
+          </div>
+          <.link navigate={~p"/reviews/new"} class="btn btn-primary">Write a Review</.link>
+        </div>
+        <.table
+          :if={@my_reviews != []}
+          id="my-reviews"
+          rows={@my_reviews}
+          row_click={fn r -> JS.navigate(~p"/reviews/#{r.id}") end}
+        >
+          <:col :let={r} label="Model">{PevSquad.Reviews.PevModel.full_name(r.pev_model)}</:col>
+          <:col :let={r} label="Headline">{r.headline}</:col>
+          <:col :let={r} label="Status">{review_status(r)}</:col>
+        </.table>
+        <p :if={@my_reviews == []} class="section-lede">
+          No reviews yet. Own a wheel, board or scooter? Tell the squad how it rides.
+        </p>
+      </section>
     </Layouts.app>
     """
   end
@@ -113,6 +136,7 @@ defmodule PevSquadWeb.UserLive.Profile do
      socket
      |> assign(:page_title, "Rider profile")
      |> assign(:profile, profile)
+     |> assign(:my_reviews, PevSquad.Reviews.list_my_reviews(socket.assigns.current_scope))
      |> assign(:form, to_form(Riders.change_profile(profile)))
      |> allow_upload(:avatar,
        accept: ~w(.jpg .jpeg .png .webp),
@@ -155,6 +179,10 @@ defmodule PevSquadWeb.UserLive.Profile do
         {:noreply, assign(socket, :form, to_form(changeset))}
     end
   end
+
+  defp review_status(%{status: :published}), do: "Live"
+  defp review_status(%{status: :pending}), do: "Waiting for a moderator"
+  defp review_status(%{status: :rejected}), do: "Sent back — edit and resubmit"
 
   defp avatar_errors(form) do
     Enum.map(form.errors, fn
