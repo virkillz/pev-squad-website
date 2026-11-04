@@ -1,0 +1,171 @@
+defmodule PevSquad.RidersTest do
+  use PevSquad.DataCase
+
+  import PevSquad.AccountsFixtures
+  import PevSquad.EventsFixtures
+  import PevSquad.RidersFixtures
+
+  alias PevSquad.Riders
+  alias PevSquad.Riders.{MemberImport, RiderProfile}
+
+  describe "public listing" do
+    test "only shows riders who agreed to be listed, filterable by type" do
+      euc = rider_fixture(alias: "Wynn")
+      esk8 = rider_fixture(alias: "Ben", primary_pev_type: :esk8)
+      _hidden = rider_fixture(alias: "Shy", is_public: false)
+
+      assert Enum.map(Riders.list_public_riders(), & &1.id) |> Enum.sort() ==
+               Enum.sort([euc.id, esk8.id])
+
+      assert [%{id: id}] = Riders.list_public_riders(type: :esk8)
+      assert id == esk8.id
+      assert_raise Ecto.NoResultsError, fn -> Riders.get_public_rider!("shy") end
+    end
+
+    test "stats count riders and distinct cities" do
+      rider_fixture(city: "Jakarta")
+      rider_fixture(city: "jakarta")
+      rider_fixture(city: "Malang")
+      rider_fixture(city: "Bogor", is_public: false)
+
+      assert Riders.stats() == %{riders: 3, cities: 2}
+    end
+  end
+
+  describe "save_my_profile/3" do
+    test "creates then updates the member's own profile" do
+      scope = user_scope_fixture()
+
+      assert {:ok, profile} =
+               Riders.save_my_profile(scope, %{"alias" => "Si Ganteng", "is_public" => "true"})
+
+      assert profile.slug == "si-ganteng"
+      assert profile.user_id == scope.user.id
+
+      assert {:ok, updated} = Riders.save_my_profile(scope, %{"city" => "Bogor"})
+      assert updated.id == profile.id
+      assert updated.city == "Bogor"
+    end
+
+    test "aliases are unique regardless of case" do
+      rider_fixture(alias: "Wynn")
+
+      assert {:error, changeset} =
+               Riders.save_my_profile(user_scope_fixture(), %{"alias" => "wynn"})
+
+      assert "is already taken by another rider" in errors_on(changeset).alias
+    end
+
+    test "normalises instagram links" do
+      {:ok, p} =
+        Riders.save_my_profile(user_scope_fixture(), %{
+          "alias" => "Ig",
+          "instagram" => "https://www.instagram.com/pevsquad/"
+        })
+
+      assert p.instagram == "pevsquad"
+    end
+
+    test "stores the photo as a 4:5 WebP and replaces the old one" do
+      scope = user_scope_fixture()
+
+      {:ok, first} = Riders.save_my_profile(scope, %{"alias" => "Photo Guy"}, image_fixture())
+      assert first.avatar_path =~ ~r{^/uploads/avatars/photo-guy-.+\.webp$}
+
+      stored = PevSquad.Uploads.path(String.trim_leading(first.avatar_path, "/uploads/"))
+      {:ok, image} = Image.open(stored)
+      assert {Image.width(image), Image.height(image)} == {800, 1000}
+
+      {:ok, second} = Riders.save_my_profile(scope, %{}, image_fixture())
+      refute second.avatar_path == first.avatar_path
+      refute File.exists?(stored)
+    end
+  end
+
+  describe "staff" do
+    test "link_to_member/3 lets a registered member claim an imported profile" do
+      staff = staff_scope_fixture()
+      rider = rider_fixture()
+      member = user_fixture()
+
+      assert {:error, :no_such_user} = Riders.link_to_member(staff, rider, "nobody@example.com")
+      assert {:ok, linked} = Riders.link_to_member(staff, rider, member.email)
+      assert linked.user_id == member.id
+      assert {:error, :already_claimed} = Riders.link_to_member(staff, linked, member.email)
+
+      other = rider_fixture()
+      assert {:error, :member_has_profile} = Riders.link_to_member(staff, other, member.email)
+    end
+
+    test "featured riders" do
+      staff = staff_scope_fixture()
+      rider = rider_fixture()
+
+      {:ok, rider} = Riders.set_featured(staff, rider, true)
+      assert [%{id: id}] = Riders.list_public_riders(featured: true)
+      assert id == rider.id
+
+      {:ok, _} = Riders.set_featured(staff, rider, false)
+      assert Riders.list_public_riders(featured: true) == []
+    end
+
+    test "members are refused" do
+      assert_raise PevSquad.Riders.NotAuthorizedError, fn ->
+        Riders.list_all_riders(user_scope_fixture())
+      end
+    end
+  end
+
+  describe "MemberImport" do
+    setup do
+      dir = Path.join(System.tmp_dir!(), "pev-import-#{System.unique_integer([:positive])}")
+      File.mkdir_p!(Path.join(dir, "photos"))
+      File.cp!(image_fixture(), Path.join(dir, "photos/siganteng.png"))
+
+      File.write!(Path.join(dir, "members.csv"), """
+      ﻿Timestamp,Nama,Alias (yang akan dicantumkan di website),PEV Utama,Model PEV yang dipakai (ie. Veteran Sherman L),Kota Domisili,Bio (bakal ditulis ulang pakai AI),Foto,Bersedia dicantumkan di website?
+      2026/01/01,Budi Santoso,Si Ganteng,EUC,Veteran Lynx,Kota Bogor,"Rider paling ganteng, katanya",,Ya
+      2026/01/02,Andi,Ben Esk8,Eboard,Acedeck Ares X1,Jakarta,Shred,,Tidak
+      2026/01/03,Andi,Ben Esk8,Eboard,Acedeck Ares X1,Jakarta,Duplicate row,,Ya
+      """)
+
+      File.write!(Path.join(dir, "community.html"), """
+      <h3 class="card-title">Si Ganteng</h3>
+      <p class="card-meta">KOTA BOGOR · VETERAN LYNX</p>
+      <p class="card-desc">Bogor&#39;s self-declared best-looking EUC rider.</p>
+      """)
+
+      %{dir: dir}
+    end
+
+    test "imports consenting riders publicly, others hidden, with photos and card bios", %{
+      dir: dir
+    } do
+      results =
+        MemberImport.run(Path.join(dir, "members.csv"),
+          photos: Path.join(dir, "photos"),
+          cards: Path.join(dir, "community.html")
+        )
+
+      assert [
+               {:imported, "Si Ganteng", "with photo"},
+               {:imported, "Ben Esk8", "no photo"},
+               {:skipped, "Ben Esk8", _}
+             ] = results
+
+      ganteng = Repo.get_by!(RiderProfile, alias: "Si Ganteng")
+      assert ganteng.is_public
+      assert ganteng.full_name == "Budi Santoso"
+      assert ganteng.bio == "Bogor's self-declared best-looking EUC rider."
+      assert ganteng.main_ride == "Veteran Lynx"
+      assert ganteng.source == :import
+      assert ganteng.avatar_path
+      assert is_nil(ganteng.user_id)
+
+      ben = Repo.get_by!(RiderProfile, alias: "Ben Esk8")
+      refute ben.is_public
+      assert ben.primary_pev_type == :esk8
+      assert ben.bio == "Shred"
+    end
+  end
+end

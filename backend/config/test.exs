@@ -42,3 +42,6 @@ config :phoenix_live_view,
 # Sort query params output of verified routes for robust url comparisons
 config :phoenix,
   sort_verified_routes_query_params: true
+
+# Keep test uploads out of the dev uploads folder.
+config :pev_squad, :uploads_dir, Path.expand("../tmp/test_uploads", __DIR__)

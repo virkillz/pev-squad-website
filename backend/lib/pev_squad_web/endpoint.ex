@@ -27,6 +27,12 @@ defmodule PevSquadWeb.Endpoint do
     only: PevSquadWeb.static_paths(),
     raise_on_missing_only: code_reloading?
 
+  # Member uploads (avatars), stored outside the release — see PevSquad.Uploads.
+  plug Plug.Static,
+    at: "/uploads",
+    from: {PevSquad.Uploads, :dir, []},
+    gzip: false
+
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do

@@ -67,7 +67,7 @@ defmodule PevSquadWeb.Layouts do
         </.link>
         <%= if @current_scope do %>
           <.link
-            navigate={~p"/users/settings"}
+            navigate={~p"/users/profile"}
             class={["nav-account", @active == :account && "active"]}
           >
             Account

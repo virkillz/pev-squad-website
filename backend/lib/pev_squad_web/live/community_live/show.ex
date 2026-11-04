@@ -1,0 +1,85 @@
+defmodule PevSquadWeb.CommunityLive.Show do
+  use PevSquadWeb, :live_view
+
+  alias PevSquad.Riders
+
+  import PevSquadWeb.RiderComponents
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <Layouts.app flash={@flash} current_scope={@current_scope} active={:community}>
+      <section class="page-header">
+        <div class="meta-row">
+          <span class="eyebrow">
+            <.link navigate={~p"/community"} style="text-decoration:none;">02 / Community</.link>
+          </span>
+          <span class="badge" style="background:var(--black); color:var(--orange);">
+            {type_label(@rider.primary_pev_type)}
+          </span>
+        </div>
+        <h1 class="event-detail-title">{@rider.alias}</h1>
+        <p
+          class="page-intro"
+          style="font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.06em;"
+        >
+          {card_meta(@rider)}
+        </p>
+      </section>
+
+      <section class="band band-black">
+        <div class="event-detail-grid">
+          <div class="space-y-8">
+            <span :if={@rider.featured_since} class="badge">★ Featured Rider</span>
+            <div :if={@rider.bio} class="prose-body">
+              <p>{@rider.bio}</p>
+            </div>
+            <ul class="event-facts">
+              <li :if={@rider.city}><span class="k">Based in</span><span>{@rider.city}</span></li>
+              <li :if={@rider.main_ride}>
+                <span class="k">Rides</span><span>{@rider.main_ride}</span>
+              </li>
+              <li><span class="k">Type</span><span>{type_label(@rider.primary_pev_type)}</span></li>
+              <li :if={@rider.instagram}>
+                <span class="k">Instagram</span>
+                <a
+                  href={"https://instagram.com/#{@rider.instagram}"}
+                  class="link-orange"
+                  rel="noopener"
+                  target="_blank"
+                >
+                  @{@rider.instagram}
+                </a>
+              </li>
+            </ul>
+            <.link :if={@own?} navigate={~p"/users/profile"} class="btn btn-outline">
+              Edit my profile
+            </.link>
+          </div>
+          <div>
+            <img
+              :if={@rider.avatar_path}
+              src={@rider.avatar_path}
+              alt={@rider.alias}
+              style="width:100%; aspect-ratio:4/5; object-fit:cover; border:var(--bw) solid var(--white);"
+            />
+          </div>
+        </div>
+      </section>
+    </Layouts.app>
+    """
+  end
+
+  @impl true
+  def mount(%{"slug" => slug}, _session, socket) do
+    rider = Riders.get_public_rider!(slug)
+    scope = socket.assigns.current_scope
+
+    {:ok,
+     socket
+     |> assign(:page_title, rider.alias)
+     |> assign(:page_description, rider.bio || "#{rider.alias} rides with PEV Squad.")
+     |> assign(:rider, rider)
+     |> assign(:own?, scope != nil and rider.user_id == scope.user.id)}
+  end
+end

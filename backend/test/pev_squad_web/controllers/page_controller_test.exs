@@ -7,7 +7,7 @@ defmodule PevSquadWeb.PageControllerTest do
   end
 
   test "unported sections show a placeholder", %{conn: conn} do
-    conn = get(conn, ~p"/reviews")
+    conn = get(conn, ~p"/gallery")
     assert html_response(conn, 200) =~ "Under construction"
   end
 end

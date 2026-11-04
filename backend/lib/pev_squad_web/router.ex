@@ -25,11 +25,12 @@ defmodule PevSquadWeb.Router do
       live "/", HomeLive.Index, :index
       live "/events", EventLive.Index, :index
       live "/events/:slug", EventLive.Show, :show
+      live "/community", CommunityLive.Index, :index
+      live "/community/:slug", CommunityLive.Show, :show
+      live "/riders", RiderLive.Featured, :index
     end
 
     # Sections still living in the static prototype.
-    get "/community", PageController, :coming_soon
-    get "/riders", PageController, :coming_soon
     get "/gallery", PageController, :coming_soon
     get "/reviews", PageController, :coming_soon
     get "/for-sale", PageController, :coming_soon
@@ -43,6 +44,8 @@ defmodule PevSquadWeb.Router do
       live "/events", EventLive.Index, :index
       live "/events/new", EventLive.Form, :new
       live "/events/:id/edit", EventLive.Form, :edit
+      live "/riders", RiderLive.Index, :index
+      live "/riders/:id/edit", RiderLive.Edit, :edit
     end
   end
 
@@ -76,6 +79,7 @@ defmodule PevSquadWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{PevSquadWeb.UserAuth, :require_authenticated}, PevSquadWeb.AuthTitles] do
       live "/users/settings", UserLive.Settings, :edit
+      live "/users/profile", UserLive.Profile, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end
 

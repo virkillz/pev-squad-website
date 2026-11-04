@@ -35,3 +35,6 @@ pev_squad-*.tar
 npm-debug.log
 /assets/node_modules/
 
+
+# Member uploads (avatars) written by the dev server and tests.
+/priv/uploads/

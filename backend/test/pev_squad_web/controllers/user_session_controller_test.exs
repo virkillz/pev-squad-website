@@ -24,7 +24,7 @@ defmodule PevSquadWeb.UserSessionControllerTest do
       conn = get(conn, ~p"/")
       response = html_response(conn, 200)
       assert response =~ ~p"/users/log-out"
-      assert response =~ ~p"/users/settings"
+      assert response =~ ~p"/users/profile"
       assert response =~ ~p"/users/log-out"
     end
 
@@ -88,7 +88,7 @@ defmodule PevSquadWeb.UserSessionControllerTest do
       conn = get(conn, ~p"/")
       response = html_response(conn, 200)
       assert response =~ ~p"/users/log-out"
-      assert response =~ ~p"/users/settings"
+      assert response =~ ~p"/users/profile"
       assert response =~ ~p"/users/log-out"
     end
 
@@ -112,7 +112,7 @@ defmodule PevSquadWeb.UserSessionControllerTest do
       conn = get(conn, ~p"/")
       response = html_response(conn, 200)
       assert response =~ ~p"/users/log-out"
-      assert response =~ ~p"/users/settings"
+      assert response =~ ~p"/users/profile"
       assert response =~ ~p"/users/log-out"
     end
 

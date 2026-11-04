@@ -24,6 +24,11 @@ config :pev_squad, PevSquadWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
 if config_env() == :prod do
+  # Persistent directory for member uploads (a mounted volume on the VPS).
+  config :pev_squad,
+         :uploads_dir,
+         System.get_env("UPLOADS_DIR") || raise("environment variable UPLOADS_DIR is missing.")
+
   database_url =
     System.get_env("DATABASE_URL") ||
       raise """

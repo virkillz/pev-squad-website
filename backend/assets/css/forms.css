@@ -243,3 +243,12 @@
 
 /* Dev-only "local mail adapter" notice sits inside the auth panel */
 .panel .alert { box-shadow: none; margin-bottom: 1.5rem; }
+
+/* Checkbox rows: box + label on one line */
+.fieldset .label:has(> .checkbox) {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  color: inherit;
+}

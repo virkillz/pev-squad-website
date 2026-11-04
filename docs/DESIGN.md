@@ -310,6 +310,9 @@ With two developers, one owns backend + web and the other owns mobile from week 
 | 2 | Moderators | **arifcamp (admin) plus selected members** as moderators. Admins promote members to the moderator role in `/admin`. |
 | 3 | Limited-slot RSVP | **First come, first served.** When `capacity` is set, a `going` RSVP is accepted while seats remain; after that it becomes `waitlist`. When someone cancels, the earliest waitlisted RSVP gets promoted automatically and notified. The seat check runs inside a DB transaction with a row lock on the event, so two people can't take the last seat. |
 
+| 4 | Claiming imported profiles | The sign-up form had no email column, so imported profiles start **unclaimed**. Once a rider registers, staff link the profile to their account at `/admin/riders`. A self-service "this is me" request can come later. |
+| 5 | Avatar storage (interim) | Until the R2 media pipeline exists, avatars are processed with libvips (4:5 crop, WebP, metadata including GPS stripped) and stored on local disk (`UPLOADS_DIR`, a persistent volume on the VPS), served at `/uploads`. HEIC isn't accepted, so iPhones convert photos to JPEG on upload. |
+
 ## 17. Open questions
 
 1. **Review criteria:** confirm the score categories (prototype shows Power / Range / Value…), and whether Featured and Community scores are shown separately or blended.
