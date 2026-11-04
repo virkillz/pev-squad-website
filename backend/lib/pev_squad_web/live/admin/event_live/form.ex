@@ -2,6 +2,7 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
   use PevSquadWeb, :live_view
 
   alias PevSquad.Events
+  alias PevSquad.Partners
   alias PevSquad.Events.Event
 
   import PevSquadWeb.EventComponents
@@ -40,11 +41,29 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
                 options={[{"Draft", :draft}, {"Published", :published}, {"Cancelled", :cancelled}]}
               />
             </div>
+            <fieldset :if={@all_partners != []} class="fieldset space-y-2" id="event-partners">
+              <span class="label">
+                Partners (<.link navigate={~p"/admin/partners"} class="link-orange">manage</.link>)
+              </span>
+              <input type="hidden" name="partner_ids[]" value="" />
+              <div class="flex flex-wrap gap-x-6 gap-y-2">
+                <label :for={p <- @all_partners} class="flex gap-2 items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="partner_ids[]"
+                    value={p.id}
+                    checked={MapSet.member?(@partner_ids, p.id)}
+                    class="checkbox"
+                  />
+                  <span>{p.name}</span>
+                </label>
+              </div>
+            </fieldset>
             <.input
               field={@form[:partners]}
               type="text"
-              label="Partners / sponsors"
-              placeholder="East Electric, Le Victoria"
+              label="Other partners (not in the directory)"
+              placeholder="Le Victoria, Aruna Coffee"
             />
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -129,7 +148,11 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
 
   @impl true
   def mount(params, _session, socket) do
-    {:ok, apply_action(socket, socket.assigns.live_action, params)}
+    {:ok,
+     socket
+     |> assign(:all_partners, Partners.list_all_partners(socket.assigns.current_scope))
+     |> assign(:partner_ids, MapSet.new())
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :new, _params) do
@@ -154,6 +177,10 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
 
   defp edit_official(socket, event) do
     socket
+    |> assign(
+      :partner_ids,
+      event |> Partners.list_event_partners(all: true) |> MapSet.new(& &1.id)
+    )
     |> assign(:page_title, "Edit Event")
     |> assign(:event, event)
     |> assign(:tz, event.timezone)
@@ -173,18 +200,38 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
   end
 
   @impl true
-  def handle_event("validate", %{"event" => params}, socket) do
+  def handle_event("validate", %{"event" => params} = all_params, socket) do
     params = to_utc_params(params)
     changeset = Events.change_event(socket.assigns.event, params)
 
     {:noreply,
      socket
+     |> assign(:partner_ids, partner_ids(all_params))
      |> assign(:tz, params["timezone"] || socket.assigns.tz)
      |> assign(:form, to_form(changeset, action: :validate))}
   end
 
-  def handle_event("save", %{"event" => params}, socket) do
+  def handle_event("save", %{"event" => params} = all_params, socket) do
+    socket = assign(socket, :partner_ids, partner_ids(all_params))
     save_event(socket, socket.assigns.live_action, to_utc_params(params))
+  end
+
+  defp partner_ids(params) do
+    params
+    |> Map.get("partner_ids", [])
+    |> Enum.reject(&(&1 == ""))
+    |> MapSet.new(&String.to_integer/1)
+  end
+
+  defp link_partners(socket, event) do
+    {:ok, _} =
+      Partners.set_event_partners(
+        socket.assigns.current_scope,
+        event,
+        MapSet.to_list(socket.assigns.partner_ids)
+      )
+
+    event
   end
 
   defp save_event(socket, :edit, params) do
@@ -195,6 +242,8 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
            &event_url/1
          ) do
       {:ok, event} ->
+        link_partners(socket, event)
+
         {:noreply,
          socket
          |> put_flash(:info, "Event saved.")
@@ -208,6 +257,8 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
   defp save_event(socket, :new, params) do
     case Events.create_event(socket.assigns.current_scope, params) do
       {:ok, event} ->
+        link_partners(socket, event)
+
         {:noreply,
          socket
          |> put_flash(:info, "Event created.")

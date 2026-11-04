@@ -4,6 +4,7 @@ defmodule PevSquadWeb.EventLive.Show do
   alias PevSquad.Events
 
   import PevSquadWeb.EventComponents
+  import PevSquadWeb.PartnerComponents, only: [initials: 1]
 
   @impl true
   def render(assigns) do
@@ -75,9 +76,22 @@ defmodule PevSquadWeb.EventLive.Show do
               <li :if={!@group?}>
                 <span class="k">Run by</span>
                 <span>
-                  {if @event.role == :organizer, do: "PEV Squad", else: "PEV Squad as collaborator"}<span :if={
-                    @event.partners
-                  }> · with {@event.partners}</span>
+                  {if @event.role == :organizer, do: "PEV Squad", else: "PEV Squad as collaborator"}
+                </span>
+              </li>
+              <li :if={@linked_partners != [] or @event.partners}>
+                <span class="k">With</span>
+                <span class="partner-chips" id="event-partners">
+                  <.link
+                    :for={p <- @linked_partners}
+                    navigate={~p"/partners/#{p.slug}"}
+                    class="partner-chip"
+                  >
+                    <img :if={p.logo_path} src={p.logo_path} alt="" />
+                    <span :if={!p.logo_path} class="chip-initials">{initials(p.name)}</span>
+                    {p.name}
+                  </.link>
+                  <span :if={@event.partners} style="align-self:center;">{@event.partners}</span>
                 </span>
               </li>
               <li :if={@event.rsvp_deadline}>
@@ -187,6 +201,7 @@ defmodule PevSquadWeb.EventLive.Show do
      socket
      |> assign(:page_title, event.title)
      |> assign(:page_description, description(event))
+     |> assign(:linked_partners, PevSquad.Partners.list_event_partners(event))
      |> assign(:group?, event.category == :group_ride)
      |> assign(:host?, Events.host?(scope, event))
      |> assign(:can_manage?, Events.can_manage?(scope, event))

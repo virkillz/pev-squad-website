@@ -55,6 +55,12 @@ defmodule PevSquadWeb.Admin.Dashboard do
             <div class="index-desc">The EUCs, scooters and boards riders can review.</div>
             <div class="index-meta">CATALOG</div>
           </.link>
+          <.link class="index-row" navigate={~p"/admin/partners"}>
+            <div class="index-num">07</div>
+            <div class="index-title">Partners</div>
+            <div class="index-desc">Partner communities and brand partners, with logos.</div>
+            <div class="index-meta">NETWORK</div>
+          </.link>
         </div>
       </section>
     </Layouts.app>

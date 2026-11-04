@@ -72,6 +72,17 @@ defmodule PevSquad.Events do
     |> Repo.all()
   end
 
+  @doc "Published events linked to a partner, most recent first, with seat counts."
+  def list_partner_events(partner_id) do
+    published()
+    |> join(:inner, [e], ep in "event_partners", on: ep.event_id == e.id)
+    |> where([e, ep], ep.partner_id == ^partner_id)
+    |> order_by([e], desc: e.starts_at)
+    |> with_counts()
+    |> with_host()
+    |> Repo.all()
+  end
+
   defp filter_category(query, nil), do: query
   defp filter_category(query, category), do: where(query, [e], e.category == ^category)
 

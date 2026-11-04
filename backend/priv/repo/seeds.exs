@@ -8,6 +8,7 @@
 #   * two DEMO upcoming rides with limited seats — one already full
 #   * the PEV model catalog and six DEMO reviews (prototype placeholder text)
 #   * two DEMO group rides hosted by demo reviewers
+#   * partner communities and brand partners, linked to past events
 
 if System.get_env("MIX_ENV") == "prod" do
   raise "priv/repo/seeds.exs creates demo accounts and content — never run it in production"
@@ -315,6 +316,92 @@ for {host_name, slug, attrs} <- [
     }
     |> Event.group_ride_changeset(attrs)
     |> Repo.insert!()
+end
+
+# --- Partners ---------------------------------------------------------------
+# Communities named by the squad; brands taken from the event history above.
+# Only what we know for sure — staff fill in logos, descriptions and links.
+
+alias PevSquad.Partners.Partner
+
+partner_seeds = [
+  {%{
+     kind: :community,
+     name: "REJS",
+     tagline: "EUC Rider Jakarta Selatan",
+     region: "Jakarta Selatan",
+     vehicle_focus: :euc,
+     position: 1
+   }, []},
+  {%{
+     kind: :community,
+     name: "Eastlectric",
+     tagline: "Group rides around Surabaya and Malang",
+     region: "Surabaya & Malang",
+     position: 2
+   }, ["Ngeride ke Bromo"]},
+  {%{
+     kind: :community,
+     name: "Jogwheel",
+     tagline: "Group rides in Yogyakarta",
+     region: "Yogyakarta",
+     position: 3
+   }, []},
+  {%{
+     kind: :community,
+     name: "SNOI",
+     tagline: "Electric scooter community",
+     vehicle_focus: :escooter,
+     position: 4
+   }, ["Ngabuburide", "Hyundai Showroom Visit"]},
+  {%{
+     kind: :community,
+     name: "Eboard Indonesia",
+     tagline: "Electric skateboard community",
+     vehicle_focus: :esk8,
+     instagram: "eboardindonesia",
+     position: 5
+   }, ["Perklindo EV Show"]},
+  {%{kind: :brand, name: "Taco Bell", collaboration_types: [:food_drink, :venue], position: 1},
+   ["Taco Bell Ride", "Taco Bell Ride Vol. 2"]},
+  {%{kind: :brand, name: "Wheelsxtreme", collaboration_types: [:event_partner], position: 2},
+   ["Taco Bell Ride"]},
+  {%{kind: :brand, name: "Hyundai", collaboration_types: [:venue], position: 3},
+   ["Hyundai Showroom Visit"]},
+  {%{kind: :brand, name: "Rinso", collaboration_types: [:event_partner], position: 4},
+   ["Rinso Promo Event"]},
+  {%{kind: :brand, name: "TV One", collaboration_types: [:media], position: 5},
+   ["TV One Interview"]}
+]
+
+# Free-text names that now have a partner page ("East Electric" is the old
+# spelling of Eastlectric in the event history).
+aliases = %{"East Electric" => "Eastlectric", "eboardindonesia" => "Eboard Indonesia"}
+
+for {attrs, event_titles} <- partner_seeds do
+  slug = Event.slugify(attrs.name, nil)
+
+  partner =
+    Repo.get_by(Partner, slug: slug) ||
+      %Partner{} |> Partner.changeset(attrs) |> Repo.insert!()
+
+  for title <- event_titles, event = Repo.get_by(Event, title: title) do
+    Repo.insert_all("event_partners", [%{event_id: event.id, partner_id: partner.id}],
+      on_conflict: :nothing
+    )
+
+    # Drop the linked name from the free-text list so it isn't shown twice.
+    leftover =
+      (event.partners || "")
+      |> String.split(",", trim: true)
+      |> Enum.map(&String.trim/1)
+      |> Enum.reject(&(Map.get(aliases, &1, &1) == partner.name))
+      |> Enum.join(", ")
+
+    event
+    |> Ecto.Changeset.change(partners: if(leftover == "", do: nil, else: leftover))
+    |> Repo.update!()
+  end
 end
 
 IO.puts("""

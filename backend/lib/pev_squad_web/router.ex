@@ -27,6 +27,7 @@ defmodule PevSquadWeb.Router do
       live "/events/:slug", EventLive.Show, :show
       live "/community", CommunityLive.Index, :index
       live "/community/:slug", CommunityLive.Show, :show
+      live "/partners/:slug", PartnerLive.Show, :show
       live "/riders", RiderLive.Featured, :index
       live "/reviews", ReviewLive.Index, :index
       live "/gallery", GalleryLive.Index, :index
@@ -55,6 +56,9 @@ defmodule PevSquadWeb.Router do
       live "/albums/:id/edit", AlbumLive.Form, :edit
       live "/photos", PhotoLive.Queue, :index
       live "/reports", ReportLive.Index, :index
+      live "/partners", PartnerLive.Index, :index
+      live "/partners/new", PartnerLive.Form, :new
+      live "/partners/:id/edit", PartnerLive.Form, :edit
     end
   end
 

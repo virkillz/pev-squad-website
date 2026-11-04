@@ -1,9 +1,10 @@
 defmodule PevSquadWeb.CommunityLive.Index do
   use PevSquadWeb, :live_view
 
-  alias PevSquad.{Events, Riders}
+  alias PevSquad.{Events, Partners, Riders}
 
   import PevSquadWeb.RiderComponents
+  import PevSquadWeb.PartnerComponents, only: [partner_card: 1]
 
   @filters [
     {"All", nil},
@@ -86,6 +87,36 @@ defmodule PevSquadWeb.CommunityLive.Index do
         <p :if={@riders == []} class="section-lede">No riders here yet.</p>
       </section>
 
+      <section :if={@communities != []} class="band band-black" id="partner-communities">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">The network</span>
+            <h2 class="section-title">Partner<br />Communities</h2>
+            <p class="section-lede">
+              Local crews and single-vehicle groups we ride with. They run their own group rides; we team up for the big ones and keep the PEV network connected across Indonesia.
+            </p>
+          </div>
+        </div>
+        <div class="grid grid-3">
+          <.partner_card :for={partner <- @communities} partner={partner} />
+        </div>
+      </section>
+
+      <section :if={@brands != []} class="band band-white" id="brand-partners">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Who backs the rides</span>
+            <h2 class="section-title">Brand<br />Partners</h2>
+            <p class="section-lede">
+              Brands that have ridden, hosted, fed or filmed with us. Want to be on this list? Reach out on WhatsApp — if it's fun, we're in.
+            </p>
+          </div>
+        </div>
+        <div class="grid grid-3">
+          <.partner_card :for={partner <- @brands} partner={partner} />
+        </div>
+      </section>
+
       <section class="band band-orange">
         <div class="section-head">
           <div>
@@ -111,12 +142,14 @@ defmodule PevSquadWeb.CommunityLive.Index do
      |> assign(:page_title, "Community")
      |> assign(
        :page_description,
-       "The riders of PEV Squad — EUC, scooter, esk8 and e-bike riders across Indonesia."
+       "The riders of PEV Squad — EUC, scooter, esk8 and e-bike riders across Indonesia — plus the communities and brands we ride with."
      )
      |> assign(:filters, @filters)
      |> assign(:stats, Riders.stats())
      |> assign(:meetups_held, length(Events.list_past_events(category: :official)))
-     |> assign(:upcoming, length(Events.list_upcoming_events()))}
+     |> assign(:upcoming, length(Events.list_upcoming_events()))
+     |> assign(:communities, Partners.list_partners(:community))
+     |> assign(:brands, Partners.list_partners(:brand))}
   end
 
   @impl true
