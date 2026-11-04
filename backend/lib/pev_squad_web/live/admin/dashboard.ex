@@ -63,13 +63,13 @@ defmodule PevSquadWeb.Admin.Dashboard do
 
   @impl true
   def mount(_params, _session, socket) do
+    scope = socket.assigns.current_scope
+
     {:ok,
      socket
      |> assign(:page_title, "Admin")
-     |> assign(:pending, Reviews.count_pending(socket.assigns.current_scope))
-     |> assign(
-       :pending_photos,
-       PevSquad.Gallery.count_pending_photos(socket.assigns.current_scope)
-     )}
+     |> assign(:open_reports, PevSquad.Safety.count_open(scope))
+     |> assign(:pending, Reviews.count_pending(scope))
+     |> assign(:pending_photos, PevSquad.Gallery.count_pending_photos(scope))}
   end
 end
