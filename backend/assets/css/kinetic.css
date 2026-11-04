@@ -1753,7 +1753,7 @@ a { color: inherit; }
 
 .footer-big {
   font-family: var(--font-stencil);
-  font-size: 6.5vw;
+  font-size: clamp(2rem, 3.2vw, 3rem);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0;
@@ -1832,7 +1832,7 @@ button:focus-visible {
   .poster-grid { grid-template-columns: repeat(3, 1fr); }
   .statbar { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
-  .footer-big { font-size: 9vw; }
+  .footer-big { font-size: clamp(2rem, 6vw, 2.75rem); }
 }
 
 @media (max-width: 900px) {
