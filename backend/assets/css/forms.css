@@ -405,10 +405,13 @@
   display: flex;
   flex-direction: column;
 }
+/* Whole photo, never cropped: the frame keeps one height so slides don't
+   jump, and portrait or panoramic shots sit on black at full height/width. */
 .carousel-slide img {
   width: 100%;
   height: min(78vh, 56vw);
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--black);
   display: block;
 }
 .carousel-caption {
@@ -458,7 +461,7 @@
 .carousel-btn:hover { background: var(--orange); color: var(--black); border-color: var(--orange); }
 
 @media (max-width: 640px) {
-  .carousel-slide img { height: auto; aspect-ratio: 4 / 5; }
+  .carousel-slide img { height: auto; aspect-ratio: 4 / 5; }  /* still contain: nothing cropped */
   .carousel-caption { padding: 1rem; padding-bottom: 4.25rem; }
   .carousel-controls { left: 1rem; right: auto; }
 }
