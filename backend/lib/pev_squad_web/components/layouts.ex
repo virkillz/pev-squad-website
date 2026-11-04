@@ -15,10 +15,11 @@ defmodule PevSquadWeb.Layouts do
     {:gallery, "03", "Gallery", "/gallery"},
     {:reviews, "04", "Reviews", "/reviews"},
     {:for_sale, "05", "For Sale", "/for-sale"},
-    {:events, "06", "Events", "/events"}
+    {:events, "06", "Events", "/events"},
+    {:about, "07", "About", "/about"}
   ]
 
-  @default_description "PEV Squad — Indonesia's most active EUC community. Ride fast, ride far, ride often."
+  @default_description "PEV Squad — speed, adventure, freedom. Indonesia's personal electric vehicle community: racing, touring and commuting on EUCs, scooters and boards."
 
   def default_description, do: @default_description
 
@@ -122,6 +123,7 @@ defmodule PevSquadWeb.Layouts do
             <li><.link navigate={~p"/reviews"}>Reviews</.link></li>
             <li><.link navigate={~p"/for-sale"}>For Sale</.link></li>
             <li><.link navigate={~p"/events"}>Events</.link></li>
+            <li><.link navigate={~p"/about"}>About</.link></li>
           </ul>
         </div>
         <div class="footer-col">

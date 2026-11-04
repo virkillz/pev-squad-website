@@ -25,6 +25,7 @@ defmodule PevSquadWeb.Router do
       live "/", HomeLive.Index, :index
       live "/events", EventLive.Index, :index
       live "/events/:slug", EventLive.Show, :show
+      live "/about", AboutLive.Index, :index
       live "/community", CommunityLive.Index, :index
       live "/community/:slug", CommunityLive.Show, :show
       live "/partners/:slug", PartnerLive.Show, :show
