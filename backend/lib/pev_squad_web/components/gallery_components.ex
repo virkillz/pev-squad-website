@@ -41,6 +41,7 @@ defmodule PevSquadWeb.GalleryComponents do
     <a
       class={["photo-tile", @photo.tile == :big && "t-big", @photo.tile == :wide && "t-wide"]}
       href={@photo.large_path}
+      data-report={~p"/report/photo/#{@photo.id}"}
       data-title={@photo.title}
       data-desc={@photo.caption}
       data-meta={
@@ -87,6 +88,7 @@ defmodule PevSquadWeb.GalleryComponents do
         <h2 class="lb-title"></h2>
         <p class="lb-desc"></p>
         <div class="lb-meta"></div>
+        <a class="lb-report" href="#">Report this photo</a>
       </div>
     </div>
     """

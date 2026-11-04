@@ -18,6 +18,7 @@ export const Lightbox = {
     this.metaEl = this.box.querySelector(".lb-meta")
     this.countEl = this.box.querySelector(".lb-count")
     this.closeBtn = this.box.querySelector(".lb-close")
+    this.reportEl = this.box.querySelector(".lb-report")
 
     this.onTileClick = e => {
       const tile = e.target.closest(".photo-tile")
@@ -82,6 +83,7 @@ export const Lightbox = {
     this.descEl.textContent = desc
     this.descEl.hidden = !desc
     this.countEl.textContent = pad(this.current + 1) + " / " + pad(tiles.length)
+    if (this.reportEl) this.reportEl.href = tile.dataset.report || "#"
   },
 
   open(i) {

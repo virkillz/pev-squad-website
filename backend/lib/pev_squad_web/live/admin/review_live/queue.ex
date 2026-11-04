@@ -41,7 +41,7 @@ defmodule PevSquadWeb.Admin.ReviewLive.Queue do
             <p :if={review.the_catch}><strong>The Catch:</strong> {review.the_catch}</p>
             <p class="meta-text">
               {Enum.map_join(Review.scores(review), " · ", fn {l, s} -> "#{l} #{fmt(s)}" end)}
-              <span :if={review.km_on_unit}> ·   {review.km_on_unit} km</span>
+              <span :if={review.km_on_unit}>{" · #{review.km_on_unit} km"}</span>
             </p>
             <div class="flex flex-wrap gap-3 items-end">
               <.button phx-click="approve" phx-value-id={review.id} variant="primary">

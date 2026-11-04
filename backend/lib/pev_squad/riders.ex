@@ -18,15 +18,21 @@ defmodule PevSquad.Riders do
 
   ## Public
 
-  @doc "Public profiles, optionally filtered by `:type` or `featured: true`. Photos first, then by alias."
+  @doc "Public profiles, optionally filtered by `:type` or `featured: true`, minus `:exclude_users` (blocked members). Photos first, then by alias."
   def list_public_riders(opts \\ []) do
     RiderProfile
     |> where(is_public: true)
     |> filter_type(opts[:type])
     |> filter_featured(opts[:featured])
+    |> exclude_users(opts[:exclude_users])
     |> order_by([r], asc: is_nil(r.avatar_path), asc: fragment("lower(?)", r.alias))
     |> Repo.all()
   end
+
+  defp exclude_users(query, ids) when ids in [nil, []], do: query
+
+  defp exclude_users(query, ids),
+    do: where(query, [r], is_nil(r.user_id) or r.user_id not in ^ids)
 
   defp filter_featured(query, true), do: where(query, [r], not is_nil(r.featured_since))
   defp filter_featured(query, _), do: query

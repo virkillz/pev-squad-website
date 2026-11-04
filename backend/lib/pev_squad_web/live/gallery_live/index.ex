@@ -80,7 +80,13 @@ defmodule PevSquadWeb.GalleryLive.Index do
        "Photos from PEV Squad rides — car parks, volcanoes and coffee stops."
      )
      |> assign(:preview, @preview)
-     |> assign(:albums, Gallery.list_published_albums(preview: @preview))
+     |> assign(
+       :albums,
+       Gallery.list_published_albums(
+         preview: @preview,
+         exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
+       )
+     )
      |> assign(:total, Gallery.total_published_photos())}
   end
 end

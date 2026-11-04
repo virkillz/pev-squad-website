@@ -124,7 +124,15 @@ defmodule PevSquadWeb.CommunityLive.Index do
     type = parse_type(params["type"])
 
     {:noreply,
-     socket |> assign(:type, type) |> assign(:riders, Riders.list_public_riders(type: type))}
+     socket
+     |> assign(:type, type)
+     |> assign(
+       :riders,
+       Riders.list_public_riders(
+         type: type,
+         exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
+       )
+     )}
   end
 
   defp parse_type(type) do

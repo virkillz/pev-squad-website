@@ -1,7 +1,7 @@
 defmodule PevSquadWeb.CommunityLive.Show do
   use PevSquadWeb, :live_view
 
-  alias PevSquad.Riders
+  alias PevSquad.{Riders, Safety}
 
   import PevSquadWeb.RiderComponents
 
@@ -25,6 +25,13 @@ defmodule PevSquadWeb.CommunityLive.Show do
         >
           {card_meta(@rider)}
         </p>
+      </section>
+
+      <section :if={@blocked?} class="band band-tight band-white">
+        <div class="notice flex flex-wrap gap-4 items-center justify-between">
+          <span>You've blocked {@rider.alias}. Their reviews and photos are hidden from you.</span>
+          <.button phx-click="unblock">Unblock</.button>
+        </div>
       </section>
 
       <section class="band band-black">
@@ -55,6 +62,18 @@ defmodule PevSquadWeb.CommunityLive.Show do
             <.link :if={@own?} navigate={~p"/users/profile"} class="btn btn-outline">
               Edit my profile
             </.link>
+            <div :if={!@own? && @current_scope} class="flex flex-wrap gap-3 items-center">
+              <.link navigate={~p"/report/profile/#{@rider.id}"} class="btn btn-outline">
+                Report
+              </.link>
+              <.button
+                :if={@rider.user_id && !@blocked?}
+                phx-click="block"
+                data-confirm={"Block #{@rider.alias}? You won't see their profile, reviews or photos."}
+              >
+                Block
+              </.button>
+            </div>
           </div>
           <div>
             <img
@@ -80,6 +99,22 @@ defmodule PevSquadWeb.CommunityLive.Show do
      |> assign(:page_title, rider.alias)
      |> assign(:page_description, rider.bio || "#{rider.alias} rides with PEV Squad.")
      |> assign(:rider, rider)
-     |> assign(:own?, scope != nil and rider.user_id == scope.user.id)}
+     |> assign(:own?, scope != nil and rider.user_id == scope.user.id)
+     |> assign(:blocked?, rider.user_id != nil and Safety.blocked?(scope, rider.user_id))}
+  end
+
+  @impl true
+  def handle_event("block", _params, socket) do
+    {:ok, _} = Safety.block(socket.assigns.current_scope, socket.assigns.rider.user_id)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Blocked #{socket.assigns.rider.alias}.")
+     |> push_navigate(to: ~p"/community")}
+  end
+
+  def handle_event("unblock", _params, socket) do
+    :ok = Safety.unblock(socket.assigns.current_scope, socket.assigns.rider.user_id)
+    {:noreply, socket |> put_flash(:info, "Unblocked.") |> assign(:blocked?, false)}
   end
 end

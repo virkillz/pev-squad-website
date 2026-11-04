@@ -54,6 +54,7 @@ defmodule PevSquadWeb.Router do
       live "/albums/new", AlbumLive.Form, :new
       live "/albums/:id/edit", AlbumLive.Form, :edit
       live "/photos", PhotoLive.Queue, :index
+      live "/reports", ReportLive.Index, :index
     end
   end
 
@@ -91,6 +92,7 @@ defmodule PevSquadWeb.Router do
       live "/reviews/new", ReviewLive.Form, :new
       live "/reviews/:id/edit", ReviewLive.Form, :edit
       live "/gallery/:slug/upload", GalleryLive.Upload, :new
+      live "/report/:type/:id", ReportLive.New, :new
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end
 

@@ -123,6 +123,23 @@ defmodule PevSquadWeb.UserLive.Profile do
           No reviews yet. Own a wheel, board or scooter? Tell the squad how it rides.
         </p>
       </section>
+
+      <section :if={@blocked != []} class="band band-black">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Hidden from you</span>
+            <h2 class="section-title">Blocked Riders</h2>
+          </div>
+        </div>
+        <ul class="attendee-list" id="blocked">
+          <li :for={b <- @blocked} class="flex gap-3 items-center">
+            {b.alias || "Member without a profile"}
+            <button type="button" phx-click="unblock" phx-value-id={b.user_id} class="link-orange">
+              Unblock
+            </button>
+          </li>
+        </ul>
+      </section>
     </Layouts.app>
     """
   end
@@ -137,6 +154,7 @@ defmodule PevSquadWeb.UserLive.Profile do
      |> assign(:page_title, "Rider profile")
      |> assign(:profile, profile)
      |> assign(:my_reviews, PevSquad.Reviews.list_my_reviews(socket.assigns.current_scope))
+     |> assign(:blocked, PevSquad.Safety.list_blocked(socket.assigns.current_scope))
      |> assign(:form, to_form(Riders.change_profile(profile)))
      |> allow_upload(:avatar,
        accept: ~w(.jpg .jpeg .png .webp),
@@ -149,6 +167,12 @@ defmodule PevSquadWeb.UserLive.Profile do
   def handle_event("validate", %{"rider_profile" => params}, socket) do
     changeset = Riders.change_profile(socket.assigns.profile, params)
     {:noreply, assign(socket, :form, to_form(changeset, action: :validate))}
+  end
+
+  def handle_event("unblock", %{"id" => id}, socket) do
+    scope = socket.assigns.current_scope
+    :ok = PevSquad.Safety.unblock(scope, String.to_integer(id))
+    {:noreply, assign(socket, :blocked, PevSquad.Safety.list_blocked(scope))}
   end
 
   def handle_event("save", %{"rider_profile" => params}, socket) do

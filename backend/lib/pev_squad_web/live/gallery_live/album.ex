@@ -65,7 +65,10 @@ defmodule PevSquadWeb.GalleryLive.Album do
 
   @impl true
   def mount(%{"slug" => slug}, _session, socket) do
-    album = Gallery.get_published_album!(slug)
+    album =
+      Gallery.get_published_album!(slug,
+        exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
+      )
 
     {:ok,
      socket

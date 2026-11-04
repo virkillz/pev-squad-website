@@ -89,7 +89,16 @@ defmodule PevSquadWeb.ReviewLive.Index do
      socket
      |> assign(:filter, filter)
      |> assign(:sheet, Reviews.sheet(opts))
-     |> assign(:reviews, Reviews.list_published_reviews(Keyword.put(opts, :limit, 30)))}
+     |> assign(
+       :reviews,
+       Reviews.list_published_reviews(
+         opts ++
+           [
+             limit: 30,
+             exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
+           ]
+       )
+     )}
   end
 
   defp filter_opts("all"), do: []

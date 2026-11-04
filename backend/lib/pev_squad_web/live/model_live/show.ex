@@ -75,6 +75,11 @@ defmodule PevSquadWeb.ModelLive.Show do
      )
      |> assign(:model, model)
      |> assign(:row, row)
-     |> assign(:reviews, Reviews.list_model_reviews(model))}
+     |> assign(
+       :reviews,
+       Reviews.list_model_reviews(model,
+         exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
+       )
+     )}
   end
 end

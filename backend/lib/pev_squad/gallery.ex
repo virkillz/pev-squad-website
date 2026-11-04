@@ -25,11 +25,16 @@ defmodule PevSquad.Gallery do
   """
   def list_published_albums(opts \\ []) do
     preview = Keyword.get(opts, :preview, 8)
+    hidden = opts[:exclude_users] || []
 
     albums =
       Album
       |> where(published: true)
-      |> join(:inner, [a], p in Photo, on: p.album_id == a.id and p.status == :published)
+      |> join(:inner, [a], p in Photo,
+        on:
+          p.album_id == a.id and p.status == :published and
+            (is_nil(p.uploader_id) or p.uploader_id not in ^hidden)
+      )
       |> group_by([a], a.id)
       |> select_merge([a, p], %{photo_count: count(p.id)})
       |> order_by([a], desc_nulls_last: a.taken_on, desc: a.id)
@@ -39,7 +44,9 @@ defmodule PevSquad.Gallery do
 
     previews =
       from(p in Photo,
-        where: p.album_id in ^ids and p.status == :published,
+        where:
+          p.album_id in ^ids and p.status == :published and
+            (is_nil(p.uploader_id) or p.uploader_id not in ^hidden),
         select: %{p | position: over(row_number(), :w)},
         windows: [w: [partition_by: p.album_id, order_by: [asc: p.position, asc: p.id]]]
       )
@@ -52,11 +59,16 @@ defmodule PevSquad.Gallery do
     Enum.map(albums, &%{&1 | photos: Map.get(previews, &1.id, [])})
   end
 
-  def get_published_album!(slug) do
+  def get_published_album!(slug, opts \\ []) do
+    hidden = opts[:exclude_users] || []
+
     Album
     |> where(slug: ^slug, published: true)
     |> Repo.one!()
-    |> Repo.preload(photos: {published_photos(), []})
+    |> Repo.preload(
+      photos:
+        where(published_photos(), [p], is_nil(p.uploader_id) or p.uploader_id not in ^hidden)
+    )
     |> then(&%{&1 | photos: attach_profiles(&1.photos)})
   end
 

@@ -25,12 +25,13 @@ defmodule PevSquad.Reviews do
 
   ## Public
 
-  @doc "Published reviews, newest first. Options: `:type`, `featured: true`, `:limit`."
+  @doc "Published reviews, newest first. Options: `:type`, `featured: true`, `:limit`, `:exclude_users`."
   def list_published_reviews(opts \\ []) do
     published()
     |> join(:inner, [r], m in assoc(r, :pev_model), as: :model)
     |> filter_type(opts[:type])
     |> filter_featured(opts[:featured])
+    |> exclude_authors(opts[:exclude_users])
     |> order_by([r], desc: r.published_at, desc: r.id)
     |> maybe_limit(opts[:limit])
     |> preload([model: m], pev_model: m)
@@ -45,6 +46,9 @@ defmodule PevSquad.Reviews do
 
   defp filter_featured(query, true), do: where(query, featured: true)
   defp filter_featured(query, _), do: query
+
+  defp exclude_authors(query, ids) when ids in [nil, []], do: query
+  defp exclude_authors(query, ids), do: where(query, [r], r.author_id not in ^ids)
 
   defp maybe_limit(query, nil), do: query
   defp maybe_limit(query, n), do: limit(query, ^n)
@@ -95,9 +99,10 @@ defmodule PevSquad.Reviews do
     {model, row}
   end
 
-  def list_model_reviews(%PevModel{id: id}) do
+  def list_model_reviews(%PevModel{id: id}, opts \\ []) do
     published()
     |> where(pev_model_id: ^id)
+    |> exclude_authors(opts[:exclude_users])
     |> order_by([r], desc: r.featured, desc: r.published_at)
     |> preload(:pev_model)
     |> Repo.all()

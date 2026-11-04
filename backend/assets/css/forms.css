@@ -256,3 +256,15 @@
 
 /* Member-written headlines can be long; scale them down from 11vw. */
 .detail-headline-long { font-size: clamp(2.6rem, 6vw, 6.5rem); }
+
+/* Lightbox report link — quiet, under the meta line */
+.lb-report {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.lb-report:hover { color: var(--orange); }

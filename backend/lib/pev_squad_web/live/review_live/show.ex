@@ -119,6 +119,14 @@ defmodule PevSquadWeb.ReviewLive.Show do
             <div :if={@can_edit?} class="flex gap-3" style="margin-top:1rem;">
               <.link navigate={~p"/reviews/#{@review.id}/edit"} class="btn btn-outline">Edit</.link>
             </div>
+            <.link
+              :if={!@can_edit? && @review.status == :published}
+              navigate={~p"/report/review/#{@review.id}"}
+              class="meta-text"
+              style="display:inline-block; margin-top:1rem; text-decoration:underline;"
+            >
+              Report this review
+            </.link>
             <div class="cross cross-b"></div>
           </div>
         </div>
@@ -163,7 +171,10 @@ defmodule PevSquadWeb.ReviewLive.Show do
     review = Reviews.get_review!(scope, id)
 
     more =
-      Reviews.list_published_reviews(limit: 4)
+      Reviews.list_published_reviews(
+        limit: 4,
+        exclude_users: PevSquad.Safety.hidden_user_ids(scope)
+      )
       |> Enum.reject(&(&1.id == review.id))
       |> Enum.take(3)
 

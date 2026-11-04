@@ -69,6 +69,12 @@ defmodule PevSquadWeb.RiderLive.Featured do
     {:ok,
      socket
      |> assign(:page_title, "Featured Riders")
-     |> assign(:riders, Riders.list_public_riders(featured: true))}
+     |> assign(
+       :riders,
+       Riders.list_public_riders(
+         featured: true,
+         exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
+       )
+     )}
   end
 end

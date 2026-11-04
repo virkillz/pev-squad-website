@@ -13,6 +13,12 @@ defmodule PevSquadWeb.Admin.Dashboard do
       </section>
       <section class="band band-black">
         <div class="index-list">
+          <.link class="index-row" navigate={~p"/admin/reports"}>
+            <div class="index-num">00</div>
+            <div class="index-title">Reports</div>
+            <div class="index-desc">Members flagging reviews, photos or profiles.</div>
+            <div class="index-meta">{@open_reports} OPEN</div>
+          </.link>
           <.link class="index-row" navigate={~p"/admin/reviews"}>
             <div class="index-num">01</div>
             <div class="index-title">Review Queue</div>
