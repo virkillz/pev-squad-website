@@ -13,7 +13,7 @@ defmodule PevSquad.Safety.Report do
   ]
 
   schema "reports" do
-    field :target_type, Ecto.Enum, values: [:review, :photo, :profile]
+    field :target_type, Ecto.Enum, values: [:review, :photo, :event, :profile]
     field :target_id, :integer
     field :reason, Ecto.Enum, values: Keyword.keys(@reasons)
     field :notes, :string

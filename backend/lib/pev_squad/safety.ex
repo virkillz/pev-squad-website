@@ -3,17 +3,19 @@ defmodule PevSquad.Safety do
   Reporting and blocking — required for any app with member-written content
   (Apple App Review 1.2, Google Play UGC policy).
 
-  * Members report a review, photo or rider profile with a reason.
-  * When 3 different members have open reports on the same review or
-    photo, it is pulled back into the moderation queue automatically until
-    staff look at it. Profiles are only flagged, never auto-hidden.
-  * Blocking a member hides their profile, reviews and photos from you.
+  * Members report a review, photo, group ride or rider profile with a reason.
+  * When 3 different members have open reports on the same review, photo
+    or group ride, it is hidden automatically until staff look at it.
+    Profiles are only flagged, never auto-hidden.
+  * Blocking a member hides their profile, reviews, photos and group rides
+    from you.
   * Staff resolve reports by dismissing them or removing the content.
   """
 
   import Ecto.Query, warn: false
 
   alias PevSquad.Accounts.Scope
+  alias PevSquad.Events.Event
   alias PevSquad.Gallery
   alias PevSquad.Gallery.Photo
   alias PevSquad.Repo
@@ -44,6 +46,14 @@ defmodule PevSquad.Safety do
     end
   end
 
+  # Only member-hosted rides; official events are PEV Squad's own.
+  def get_target(:event, id) do
+    case Repo.get(Event, id) do
+      %Event{category: :group_ride, status: :published} = e -> {:ok, e}
+      _ -> {:error, :not_found}
+    end
+  end
+
   def get_target(:profile, id) do
     case Repo.get(RiderProfile, id) do
       %RiderProfile{is_public: true} = p -> {:ok, p}
@@ -54,8 +64,9 @@ defmodule PevSquad.Safety do
   def target_user_id(%Review{author_id: id}), do: id
   def target_user_id(%Photo{uploader_id: id}), do: id
   def target_user_id(%RiderProfile{user_id: id}), do: id
+  def target_user_id(%Event{created_by_id: id}), do: id
 
-  def parse_type(type) when type in ~w(review photo profile),
+  def parse_type(type) when type in ~w(review photo event profile),
     do: {:ok, String.to_existing_atom(type)}
 
   def parse_type(_), do: :error
@@ -86,7 +97,7 @@ defmodule PevSquad.Safety do
     end
   end
 
-  defp maybe_auto_hide(type, target) when type in [:review, :photo] do
+  defp maybe_auto_hide(type, target) when type in [:review, :photo, :event] do
     reporters =
       Report
       |> where(target_type: ^type, target_id: ^target.id, status: :open)
@@ -94,13 +105,17 @@ defmodule PevSquad.Safety do
       |> Repo.one()
 
     if reporters >= @auto_hide_after do
-      target |> Ecto.Changeset.change(status: :pending) |> Repo.update!()
+      target |> Ecto.Changeset.change(status: hidden_status(type)) |> Repo.update!()
     end
 
     :ok
   end
 
   defp maybe_auto_hide(:profile, _target), do: :ok
+
+  # Reviews and photos go back to the moderation queue; events have no queue.
+  defp hidden_status(:event), do: :hidden
+  defp hidden_status(_type), do: :pending
 
   ## Blocking
 
@@ -180,6 +195,7 @@ defmodule PevSquad.Safety do
   defp load_any(:review, id), do: Review |> Repo.get(id) |> Repo.preload(:pev_model)
   defp load_any(:photo, id), do: Photo |> Repo.get(id) |> Repo.preload(:album)
   defp load_any(:profile, id), do: Repo.get(RiderProfile, id)
+  defp load_any(:event, id), do: Repo.get(Event, id)
 
   @doc "Closes all open reports on an item without action; restores auto-hidden content."
   def dismiss(%Scope{} = scope, type, id) do
@@ -191,6 +207,9 @@ defmodule PevSquad.Safety do
       %struct{status: :pending} = target when struct in [Review, Photo] ->
         target |> Ecto.Changeset.change(status: :published) |> Repo.update!()
 
+      %Event{status: :hidden} = event ->
+        event |> Ecto.Changeset.change(status: :published) |> Repo.update!()
+
       _ ->
         :ok
     end
@@ -200,7 +219,8 @@ defmodule PevSquad.Safety do
 
   @doc """
   Removes the reported content: a review is sent back to its author with
-  `note`, a photo is deleted, a profile is hidden from the public site.
+  `note`, a photo is deleted, a group ride stays hidden, a profile is
+  hidden from the public site.
   """
   def remove_content(%Scope{} = scope, type, id, note, review_edit_url_fun) do
     ensure_staff!(scope)
@@ -218,6 +238,9 @@ defmodule PevSquad.Safety do
 
       %RiderProfile{} = p ->
         p |> Ecto.Changeset.change(is_public: false) |> Repo.update!()
+
+      %Event{} = event ->
+        event |> Ecto.Changeset.change(status: :hidden) |> Repo.update!()
     end
 
     close_reports(scope, type, id, :resolved, note)

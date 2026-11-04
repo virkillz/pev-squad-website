@@ -1,6 +1,7 @@
 defmodule PevSquadWeb.ReportLive.New do
   use PevSquadWeb, :live_view
 
+  alias PevSquad.Events.Event
   alias PevSquad.Gallery.Photo
   alias PevSquad.Reviews.{PevModel, Review}
   alias PevSquad.Riders.RiderProfile
@@ -49,7 +50,9 @@ defmodule PevSquadWeb.ReportLive.New do
 
             <label :if={@owner_id} class="flex gap-2 items-center cursor-pointer">
               <input type="checkbox" name="block" value="true" class="checkbox" />
-              <span>Also block this rider — hide their profile, reviews and photos from me</span>
+              <span>
+                Also block this rider — hide their profile, reviews, photos and rides from me
+              </span>
             </label>
 
             <div class="flex gap-3 pt-2">
@@ -120,8 +123,10 @@ defmodule PevSquadWeb.ReportLive.New do
     do: "A photo#{if p.title, do: " (“#{p.title}”)"} in #{p.album.title}"
 
   defp describe(%RiderProfile{} = p), do: "#{p.alias}'s rider profile"
+  defp describe(%Event{} = e), do: "The group ride “#{e.title}”"
 
   defp return_to(%Review{id: id}), do: ~p"/reviews/#{id}"
   defp return_to(%Photo{album: album}), do: ~p"/gallery/#{album.slug}"
   defp return_to(%RiderProfile{slug: slug}), do: ~p"/community/#{slug}"
+  defp return_to(%Event{slug: slug}), do: ~p"/events/#{slug}"
 end

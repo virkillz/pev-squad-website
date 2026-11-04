@@ -43,7 +43,7 @@ defmodule PevSquad.EventsTest do
       assert {:ok, %{status: :waitlist} = rsvp_c} = Events.rsvp(c, event)
       assert Events.waitlist_position(rsvp_c) == 1
 
-      event = Events.reload_counts(event)
+      event = Events.reload_event(event)
       assert {event.going_count, event.waitlist_count} == {2, 1}
       assert Events.seats_left(event) == 0
     end
@@ -63,7 +63,7 @@ defmodule PevSquad.EventsTest do
       assert {:ok, first} = Events.rsvp(scope, event)
       assert {:ok, again} = Events.rsvp(scope, event)
       assert first.id == again.id
-      assert Events.reload_counts(event).going_count == 1
+      assert Events.reload_event(event).going_count == 1
     end
 
     test "is closed after the deadline, for past events and for cancelled events" do

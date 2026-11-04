@@ -6,9 +6,6 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
 
   import PevSquadWeb.EventComponents
 
-  # datetime-local inputs are in the event's own timezone; the DB is UTC.
-  @datetime_fields ~w(starts_at ends_at rsvp_deadline)
-
   @impl true
   def render(assigns) do
     ~H"""
@@ -53,14 +50,14 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <.input
                 field={@form[:starts_at]}
-                value={local_value(@form[:starts_at], @tz)}
+                value={local_input_value(@form[:starts_at], @tz)}
                 type="datetime-local"
                 label="Starts"
                 required
               />
               <.input
                 field={@form[:ends_at]}
-                value={local_value(@form[:ends_at], @tz)}
+                value={local_input_value(@form[:ends_at], @tz)}
                 type="datetime-local"
                 label="Ends (optional)"
               />
@@ -95,7 +92,7 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
               />
               <.input
                 field={@form[:rsvp_deadline]}
-                value={local_value(@form[:rsvp_deadline], @tz)}
+                value={local_input_value(@form[:rsvp_deadline], @tz)}
                 type="datetime-local"
                 label="RSVP deadline (optional)"
               />
@@ -148,6 +145,14 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
   defp apply_action(socket, :edit, %{"id" => id}) do
     event = Events.get_event!(socket.assigns.current_scope, id)
 
+    if event.category == :group_ride do
+      push_navigate(socket, to: ~p"/group-rides/#{event.id}/edit")
+    else
+      edit_official(socket, event)
+    end
+  end
+
+  defp edit_official(socket, event) do
     socket
     |> assign(:page_title, "Edit Event")
     |> assign(:event, event)
@@ -169,7 +174,7 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
 
   @impl true
   def handle_event("validate", %{"event" => params}, socket) do
-    params = to_utc(params)
+    params = to_utc_params(params)
     changeset = Events.change_event(socket.assigns.event, params)
 
     {:noreply,
@@ -179,7 +184,7 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
   end
 
   def handle_event("save", %{"event" => params}, socket) do
-    save_event(socket, socket.assigns.live_action, to_utc(params))
+    save_event(socket, socket.assigns.live_action, to_utc_params(params))
   end
 
   defp save_event(socket, :edit, params) do
@@ -214,54 +219,4 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
   end
 
   defp event_url(event), do: url(~p"/events/#{event.slug}")
-
-  defp timezone_options do
-    [
-      {"WIB — Jakarta", "Asia/Jakarta"},
-      {"WITA — Makassar", "Asia/Makassar"},
-      {"WIT — Jayapura", "Asia/Jayapura"}
-    ]
-  end
-
-  # "2026-11-15T20:00" in the chosen zone -> UTC ISO 8601.
-  defp to_utc(params) do
-    tz = params["timezone"] || "Asia/Jakarta"
-
-    Enum.reduce(@datetime_fields, params, fn field, acc ->
-      with value when is_binary(value) and value != "" <- acc[field],
-           {:ok, naive} <- NaiveDateTime.from_iso8601(pad_seconds(value)),
-           {:ok, dt} <- DateTime.from_naive(naive, tz) do
-        Map.put(acc, field, dt |> DateTime.shift_zone!("Etc/UTC") |> DateTime.to_iso8601())
-      else
-        _ -> acc
-      end
-    end)
-  end
-
-  defp pad_seconds(<<_::binary-size(16)>> = value), do: value <> ":00"
-  defp pad_seconds(value), do: value
-
-  # The inverse, for displaying the form value.
-  defp local_value(%Phoenix.HTML.FormField{value: value}, tz) do
-    case value do
-      %DateTime{} = dt ->
-        dt |> local(tz) |> DateTime.to_naive() |> to_input()
-
-      value when is_binary(value) and value != "" ->
-        case DateTime.from_iso8601(value) do
-          {:ok, dt, _offset} -> dt |> local(tz) |> DateTime.to_naive() |> to_input()
-          _ -> value
-        end
-
-      _ ->
-        nil
-    end
-  end
-
-  defp to_input(naive),
-    do:
-      naive
-      |> NaiveDateTime.truncate(:second)
-      |> NaiveDateTime.to_iso8601()
-      |> String.slice(0, 16)
 end

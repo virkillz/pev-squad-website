@@ -9,6 +9,8 @@ defmodule PevSquad.Events.Rsvp do
   # first-come-first-served tiebreaker for waitlist promotion.
   schema "event_rsvps" do
     field :status, Ecto.Enum, values: [:going, :waitlist]
+    # The rider's alias, filled by Events.list_rsvps/2 — hosts see this, not emails.
+    field :rider_alias, :string, virtual: true
 
     belongs_to :event, Event
     belongs_to :user, User

@@ -135,7 +135,8 @@ defmodule PevSquadWeb.Admin.AlbumLive.Form do
   @impl true
   def mount(params, _session, socket) do
     events =
-      (Events.list_upcoming_events() ++ Events.list_past_events())
+      (Events.list_upcoming_events(category: :official) ++
+         Events.list_past_events(category: :official))
       |> Enum.map(&{"#{&1.title} (#{&1.starts_at.year})", &1.id})
 
     {:ok,

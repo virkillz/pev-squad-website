@@ -115,7 +115,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
      )
      |> assign(:filters, @filters)
      |> assign(:stats, Riders.stats())
-     |> assign(:meetups_held, length(Events.list_past_events()))
+     |> assign(:meetups_held, length(Events.list_past_events(category: :official)))
      |> assign(:upcoming, length(Events.list_upcoming_events()))}
   end
 

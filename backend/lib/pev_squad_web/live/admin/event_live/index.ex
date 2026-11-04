@@ -21,13 +21,18 @@ defmodule PevSquadWeb.Admin.EventLive.Index do
         <.table
           id="events"
           rows={@streams.events}
-          row_click={fn {_id, event} -> JS.navigate(~p"/admin/events/#{event}/edit") end}
+          row_click={fn {_id, event} -> JS.navigate(edit_path(event)) end}
         >
           <:col :let={{_id, event}} label="Date">
             {Calendar.strftime(local(event.starts_at, event.timezone), "%d %b %Y")}
           </:col>
           <:col :let={{_id, event}} label="Title">{event.title}</:col>
-          <:col :let={{_id, event}} label="Kind">{kind_label(event.kind)}</:col>
+          <:col :let={{_id, event}} label="Kind">
+            {kind_label(event.kind)}
+            <span :if={event.category == :group_ride} class="meta-text">
+              · {hosted_by(event)}
+            </span>
+          </:col>
           <:col :let={{_id, event}} label="Status">{event.status}</:col>
           <:col :let={{_id, event}} label="Seats">{seats_label(event)}</:col>
           <:action :let={{_id, event}}>
@@ -55,6 +60,9 @@ defmodule PevSquadWeb.Admin.EventLive.Index do
      |> assign(:page_title, "Admin · Events")
      |> stream(:events, Events.list_events_for_staff(socket.assigns.current_scope))}
   end
+
+  defp edit_path(%{category: :group_ride, id: id}), do: ~p"/group-rides/#{id}/edit"
+  defp edit_path(event), do: ~p"/admin/events/#{event}/edit"
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do

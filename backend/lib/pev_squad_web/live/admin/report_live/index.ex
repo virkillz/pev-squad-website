@@ -1,6 +1,7 @@
 defmodule PevSquadWeb.Admin.ReportLive.Index do
   use PevSquadWeb, :live_view
 
+  alias PevSquad.Events.Event
   alias PevSquad.Gallery.Photo
   alias PevSquad.Reviews.{PevModel, Review}
   alias PevSquad.Riders.RiderProfile
@@ -17,7 +18,7 @@ defmodule PevSquadWeb.Admin.ReportLive.Index do
             <span class="eyebrow">Admin · Safety</span>
             <h1 class="section-title">Reports</h1>
             <p class="section-lede">
-              Grouped by item, oldest first. Reviews and photos with 3+ reports are hidden automatically until you decide.
+              Grouped by item, oldest first. Reviews, photos and group rides with 3+ reports are hidden automatically until you decide.
             </p>
           </div>
         </div>
@@ -55,6 +56,7 @@ defmodule PevSquadWeb.Admin.ReportLive.Index do
                 <p><strong>{describe(g.target)}</strong></p>
                 <p :if={match?(%Review{}, g.target)}>{g.target.summary}</p>
                 <p :if={match?(%RiderProfile{}, g.target)}>{g.target.bio}</p>
+                <p :if={match?(%Event{}, g.target)}>{g.target.description}</p>
                 <.link :if={link = view_link(g.target)} navigate={link} class="link-orange">
                   Open
                 </.link>
@@ -121,19 +123,23 @@ defmodule PevSquadWeb.Admin.ReportLive.Index do
   end
 
   defp hidden?(%{status: :pending}), do: true
+  defp hidden?(%Event{status: :hidden}), do: true
   defp hidden?(_), do: false
 
   defp describe(nil), do: "Already deleted"
   defp describe(%Review{} = r), do: "#{PevModel.full_name(r.pev_model)} — “#{r.headline}”"
   defp describe(%Photo{} = p), do: "#{p.title || "Untitled photo"} · #{p.album.title}"
   defp describe(%RiderProfile{} = p), do: "Profile: #{p.alias}"
+  defp describe(%Event{} = e), do: "Group ride: #{e.title} · #{e.location_name}"
 
   defp view_link(%Review{id: id}), do: ~p"/reviews/#{id}"
   defp view_link(%Photo{album: album}), do: ~p"/gallery/#{album.slug}"
   defp view_link(%RiderProfile{is_public: true, slug: slug}), do: ~p"/community/#{slug}"
+  defp view_link(%Event{slug: slug}), do: ~p"/events/#{slug}"
   defp view_link(_), do: nil
 
   defp remove_label(%Review{}), do: "Send review back"
   defp remove_label(%Photo{}), do: "Delete photo"
   defp remove_label(%RiderProfile{}), do: "Hide profile"
+  defp remove_label(%Event{}), do: "Take ride down"
 end

@@ -28,4 +28,34 @@ defmodule PevSquad.EventsFixtures do
 
     event
   end
+
+  @doc "A member with a public rider profile, so they can host group rides."
+  def host_scope_fixture(alias_name \\ nil) do
+    scope = user_scope_fixture()
+
+    {:ok, _profile} =
+      PevSquad.Riders.save_my_profile(scope, %{
+        alias: alias_name || "Host #{System.unique_integer([:positive])}",
+        primary_pev_type: :euc,
+        is_public: true
+      })
+
+    scope
+  end
+
+  def group_ride_fixture(scope, attrs \\ %{}) do
+    {:ok, ride} =
+      PevSquad.Events.create_group_ride(
+        scope,
+        Enum.into(attrs, %{
+          title: "Sunday Loop",
+          kind: :ride,
+          capacity: 10,
+          starts_at: DateTime.add(DateTime.utc_now(:second), 3, :day),
+          location_name: "Senayan, Jakarta"
+        })
+      )
+
+    ride
+  end
 end

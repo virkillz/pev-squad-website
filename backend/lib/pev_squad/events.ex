@@ -2,6 +2,12 @@ defmodule PevSquad.Events do
   @moduledoc """
   Rides, tours and meetups, plus RSVPs.
 
+  Events come in two categories. `:official` events are run by PEV Squad
+  (as organizer or collaborator) and managed by staff. `:group_ride`s are
+  hosted by members: any member with a rider profile can post one, it goes
+  live immediately, and the host (or staff) manages it. Reports are the
+  safety net — see `PevSquad.Safety`.
+
   RSVPs are first come, first served: while an event has free seats an RSVP
   is `:going`, after that it is `:waitlist`. When a going rider cancels, the
   earliest waitlisted rider is promoted. Seat checks run inside a transaction
@@ -13,6 +19,9 @@ defmodule PevSquad.Events do
   alias PevSquad.Accounts.Scope
   alias PevSquad.Events.{Event, Notifier, Rsvp}
   alias PevSquad.Repo
+  alias PevSquad.Riders.RiderProfile
+
+  @max_upcoming_per_host 3
 
   ## PubSub
 
@@ -29,29 +38,58 @@ defmodule PevSquad.Events do
 
   @doc """
   Published events that haven't finished yet, soonest first.
+
+  Options: `:category` (`:official` or `:group_ride`; both when nil),
+  `:exclude_users` (group rides hosted by these users are left out — blocked
+  members) and `:now`.
   """
-  def list_upcoming_events(now \\ DateTime.utc_now()) do
+  def list_upcoming_events(opts \\ []) do
+    now = opts[:now] || DateTime.utc_now()
+
     published()
     |> where([e], coalesce(e.ends_at, e.starts_at) >= ^now)
+    |> filter_category(opts[:category])
+    |> exclude_hosts(opts[:exclude_users])
     |> order_by([e], asc: e.starts_at)
     |> with_counts()
+    |> with_host()
     |> Repo.all()
   end
 
   @doc """
-  Published events that have finished, most recent first.
+  Published events that have finished, most recent first. Takes the same
+  options as `list_upcoming_events/1`.
   """
-  def list_past_events(now \\ DateTime.utc_now()) do
+  def list_past_events(opts \\ []) do
+    now = opts[:now] || DateTime.utc_now()
+
     published()
     |> where([e], coalesce(e.ends_at, e.starts_at) < ^now)
+    |> filter_category(opts[:category])
+    |> exclude_hosts(opts[:exclude_users])
     |> order_by([e], desc: e.starts_at)
+    |> with_host()
     |> Repo.all()
   end
 
-  @doc "The next published event, for the home page. Returns nil if none."
+  defp filter_category(query, nil), do: query
+  defp filter_category(query, category), do: where(query, [e], e.category == ^category)
+
+  # Official events are never hidden by a block; group rides by that host are.
+  defp exclude_hosts(query, ids) when ids in [nil, []], do: query
+
+  defp exclude_hosts(query, ids) do
+    where(
+      query,
+      [e],
+      e.category == :official or is_nil(e.created_by_id) or e.created_by_id not in ^ids
+    )
+  end
+
+  @doc "The next official event, for the home page. Returns nil if none."
   def next_event(now \\ DateTime.utc_now()) do
     published()
-    |> where([e], e.starts_at >= ^now)
+    |> where([e], e.category == :official and e.starts_at >= ^now)
     |> order_by([e], asc: e.starts_at)
     |> limit(1)
     |> Repo.one()
@@ -59,23 +97,27 @@ defmodule PevSquad.Events do
 
   @doc """
   Fetches a published (or cancelled) event by slug, with seat counts.
-  Drafts are only visible to staff.
+  Drafts are only visible to staff; a hidden group ride to staff and its host.
   """
   def get_public_event!(scope, slug) do
-    visible = if Scope.staff?(scope), do: Event.statuses(), else: [:published, :cancelled]
+    event =
+      Event
+      |> where([e], e.slug == ^slug)
+      |> with_counts()
+      |> with_host()
+      |> Repo.one!()
 
-    Event
-    |> where([e], e.slug == ^slug and e.status in ^visible)
-    |> with_counts()
-    |> Repo.one!()
+    if event.status in [:published, :cancelled] or Scope.staff?(scope) or
+         (event.status == :hidden and host?(scope, event)) do
+      event
+    else
+      raise Ecto.NoResultsError, queryable: Event
+    end
   end
 
-  @doc "Reloads seat counts for an event (after a PubSub notification)."
-  def reload_counts(%Event{id: id} = event) do
-    %{going_count: going, waitlist_count: waitlist} =
-      Event |> where(id: ^id) |> with_counts() |> Repo.one!()
-
-    %{event | going_count: going, waitlist_count: waitlist}
+  @doc "Reloads an event and its seat counts (after a PubSub notification)."
+  def reload_event(%Event{id: id}) do
+    Event |> where(id: ^id) |> with_counts() |> with_host() |> Repo.one!()
   end
 
   defp published, do: where(Event, [e], e.status == :published)
@@ -99,6 +141,30 @@ defmodule PevSquad.Events do
       }
   end
 
+  defp with_host(query) do
+    from e in query,
+      left_join: p in RiderProfile,
+      on: p.user_id == e.created_by_id and e.category == :group_ride,
+      select_merge: %{host_alias: p.alias, host_slug: p.slug}
+  end
+
+  ## Permissions
+
+  @doc "Whether the scope's user hosts this group ride."
+  def host?(nil, _event), do: false
+
+  def host?(%Scope{user: user}, %Event{category: :group_ride, created_by_id: id}),
+    do: id == user.id
+
+  def host?(_scope, _event), do: false
+
+  @doc "Staff manage every event; hosts manage their own group rides."
+  def can_manage?(scope, %Event{} = event), do: Scope.staff?(scope) or host?(scope, event)
+
+  defp ensure_can_manage!(scope, event) do
+    unless can_manage?(scope, event), do: raise(PevSquad.Events.NotAuthorizedError)
+  end
+
   ## Staff management
 
   @doc "All events for the admin list, newest first."
@@ -108,12 +174,20 @@ defmodule PevSquad.Events do
     Event
     |> order_by([e], desc: e.starts_at)
     |> with_counts()
+    |> with_host()
     |> Repo.all()
   end
 
   def get_event!(%Scope{} = scope, id) do
     ensure_staff!(scope)
-    Event |> where(id: ^id) |> with_counts() |> Repo.one!()
+    Event |> where(id: ^id) |> with_counts() |> with_host() |> Repo.one!()
+  end
+
+  @doc "An event the scope may edit: any for staff, their own group rides for hosts."
+  def get_manageable_event!(%Scope{} = scope, id) do
+    event = Event |> where(id: ^id) |> with_counts() |> with_host() |> Repo.one!()
+    ensure_can_manage!(scope, event)
+    event
   end
 
   def create_event(%Scope{} = scope, attrs) do
@@ -129,13 +203,13 @@ defmodule PevSquad.Events do
   riders are promoted into the new seats in RSVP order and emailed.
   """
   def update_event(%Scope{} = scope, %Event{} = event, attrs, event_url_fun \\ nil) do
-    ensure_staff!(scope)
+    ensure_can_manage!(scope, event)
 
     result =
       Repo.transact(fn ->
         _locked = lock_event!(event.id)
 
-        with {:ok, updated} <- event |> Event.changeset(attrs) |> Repo.update() do
+        with {:ok, updated} <- event |> change_event(attrs) |> Repo.update() do
           {:ok, {updated, fill_open_seats(updated, [])}}
         end
       end)
@@ -169,21 +243,103 @@ defmodule PevSquad.Events do
     Repo.delete(event)
   end
 
-  def change_event(%Event{} = event, attrs \\ %{}), do: Event.changeset(event, attrs)
+  def change_event(event, attrs \\ %{})
 
-  @doc "Going riders first (in RSVP order), then the waitlist. Staff only."
-  def list_rsvps(%Scope{} = scope, %Event{id: event_id}) do
-    ensure_staff!(scope)
+  def change_event(%Event{category: :group_ride} = event, attrs),
+    do: Event.group_ride_changeset(event, attrs)
 
-    Rsvp
-    |> where(event_id: ^event_id)
-    |> order_by([r], asc: r.status, asc: r.inserted_at, asc: r.id)
-    |> preload(:user)
+  def change_event(%Event{} = event, attrs), do: Event.changeset(event, attrs)
+
+  @doc "Going riders first (in RSVP order), then the waitlist. Staff and the host."
+  def list_rsvps(%Scope{} = scope, %Event{id: event_id} = event) do
+    ensure_can_manage!(scope, event)
+
+    from(r in Rsvp,
+      where: r.event_id == ^event_id,
+      left_join: p in RiderProfile,
+      on: p.user_id == r.user_id,
+      order_by: [asc: r.status, asc: r.inserted_at, asc: r.id],
+      select_merge: %{rider_alias: p.alias},
+      preload: :user
+    )
     |> Repo.all()
   end
 
   defp ensure_staff!(scope) do
     unless Scope.staff?(scope), do: raise(PevSquad.Events.NotAuthorizedError)
+  end
+
+  ## Group rides
+
+  def max_upcoming_per_host, do: @max_upcoming_per_host
+
+  @doc "A blank group ride for the host form."
+  def new_group_ride, do: %Event{category: :group_ride, kind: :ride, status: :published}
+
+  @doc """
+  Whether the member can post another group ride. Returns `:ok`,
+  `{:error, :no_profile}` (they need a rider profile so riders know who's
+  hosting) or `{:error, :limit}` (already hosting the maximum upcoming rides).
+  """
+  def can_host?(%Scope{user: user} = scope, now \\ DateTime.utc_now()) do
+    cond do
+      Scope.staff?(scope) ->
+        :ok
+
+      is_nil(Repo.get_by(RiderProfile, user_id: user.id)) ->
+        {:error, :no_profile}
+
+      upcoming_hosted_count(user.id, now) >= @max_upcoming_per_host ->
+        {:error, :limit}
+
+      true ->
+        :ok
+    end
+  end
+
+  defp upcoming_hosted_count(user_id, now) do
+    Event
+    |> where(
+      [e],
+      e.category == :group_ride and e.created_by_id == ^user_id and
+        e.status in [:published, :hidden] and e.starts_at >= ^now
+    )
+    |> Repo.aggregate(:count)
+  end
+
+  @doc """
+  Posts a group ride hosted by the scope's user. It goes live immediately.
+  Returns `{:ok, event}`, `{:error, :no_profile}`, `{:error, :limit}` or
+  `{:error, changeset}`.
+  """
+  def create_group_ride(%Scope{user: user} = scope, attrs) do
+    with :ok <- can_host?(scope) do
+      %Event{category: :group_ride, status: :published, created_by_id: user.id}
+      |> Event.group_ride_changeset(attrs)
+      |> Repo.insert()
+    end
+  end
+
+  @doc """
+  Cancels an event and emails everyone who RSVP'd (going and waitlist).
+  Staff or the host. RSVPs are kept so riders still see it on their list.
+  """
+  def cancel_event(%Scope{} = scope, %Event{} = event, event_url_fun) do
+    ensure_can_manage!(scope, event)
+
+    with {:ok, cancelled} <- event |> Ecto.Changeset.change(status: :cancelled) |> Repo.update() do
+      broadcast_rsvps_changed(cancelled)
+
+      Rsvp
+      |> where(event_id: ^event.id)
+      |> preload(:user)
+      |> Repo.all()
+      |> Enum.each(
+        &Notifier.deliver_event_cancelled(&1.user, cancelled, event_url_fun.(cancelled))
+      )
+
+      {:ok, cancelled}
+    end
   end
 
   ## RSVPs

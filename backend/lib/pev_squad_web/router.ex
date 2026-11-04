@@ -90,6 +90,8 @@ defmodule PevSquadWeb.Router do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/profile", UserLive.Profile, :edit
       live "/reviews/new", ReviewLive.Form, :new
+      live "/group-rides/new", GroupRideLive.Form, :new
+      live "/group-rides/:id/edit", GroupRideLive.Form, :edit
       live "/reviews/:id/edit", ReviewLive.Form, :edit
       live "/gallery/:slug/upload", GalleryLive.Upload, :new
       live "/report/:type/:id", ReportLive.New, :new

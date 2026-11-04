@@ -32,6 +32,70 @@ defmodule PevSquadWeb.EventComponents do
   def kind_label(kind), do: Map.fetch!(@kind_labels, kind)
 
   def kind_options, do: Enum.map(Event.kinds(), &{kind_label(&1), &1})
+  def group_ride_kind_options, do: Enum.map(Event.group_ride_kinds(), &{kind_label(&1), &1})
+
+  @doc "\"Group ride · hosted by @alias\", or nil for official events."
+  def hosted_by(%Event{category: :group_ride, host_alias: nil}), do: "Group ride"
+
+  def hosted_by(%Event{category: :group_ride, host_alias: host}),
+    do: "Group ride · hosted by #{host}"
+
+  def hosted_by(%Event{}), do: nil
+
+  ## Form helpers — datetime-local inputs are in the event's own timezone,
+  ## the DB is UTC.
+
+  @datetime_fields ~w(starts_at ends_at rsvp_deadline)
+
+  def timezone_options do
+    [
+      {"WIB — Jakarta", "Asia/Jakarta"},
+      {"WITA — Makassar", "Asia/Makassar"},
+      {"WIT — Jayapura", "Asia/Jayapura"}
+    ]
+  end
+
+  @doc "Converts \"2026-11-15T20:00\" in the chosen zone to UTC ISO 8601."
+  def to_utc_params(params) do
+    tz = params["timezone"] || "Asia/Jakarta"
+
+    Enum.reduce(@datetime_fields, params, fn field, acc ->
+      with value when is_binary(value) and value != "" <- acc[field],
+           {:ok, naive} <- NaiveDateTime.from_iso8601(pad_seconds(value)),
+           {:ok, dt} <- DateTime.from_naive(naive, tz) do
+        Map.put(acc, field, dt |> DateTime.shift_zone!("Etc/UTC") |> DateTime.to_iso8601())
+      else
+        _ -> acc
+      end
+    end)
+  end
+
+  defp pad_seconds(<<_::binary-size(16)>> = value), do: value <> ":00"
+  defp pad_seconds(value), do: value
+
+  @doc "The inverse of `to_utc_params/1`, for a datetime-local input's value."
+  def local_input_value(%Phoenix.HTML.FormField{value: value}, tz) do
+    case value do
+      %DateTime{} = dt ->
+        dt |> local(tz) |> DateTime.to_naive() |> to_input()
+
+      value when is_binary(value) and value != "" ->
+        case DateTime.from_iso8601(value) do
+          {:ok, dt, _offset} -> dt |> local(tz) |> DateTime.to_naive() |> to_input()
+          _ -> value
+        end
+
+      _ ->
+        nil
+    end
+  end
+
+  defp to_input(naive),
+    do:
+      naive
+      |> NaiveDateTime.truncate(:second)
+      |> NaiveDateTime.to_iso8601()
+      |> String.slice(0, 16)
 
   def local(nil, _tz), do: nil
   def local(%DateTime{} = dt, tz), do: DateTime.shift_zone!(dt, tz)
@@ -102,7 +166,7 @@ defmodule PevSquadWeb.EventComponents do
     ~H"""
     <.link
       navigate={~p"/events/#{@event.slug}"}
-      class={["event-row", @past && "past"]}
+      class={["event-row", @past && "past", @event.category == :group_ride && "is-group"]}
       style="text-decoration:none;"
     >
       <div class="event-date">
@@ -116,6 +180,13 @@ defmodule PevSquadWeb.EventComponents do
           style={@past && "color:var(--black); border-color:var(--black);"}
         >
           {kind_label(@event.kind)}
+        </span>
+        <span
+          :if={@event.category == :group_ride}
+          class="badge badge-host"
+          style="margin-left:0.35rem;"
+        >
+          {hosted_by(@event)}
         </span>
         <span :if={@event.status == :cancelled} class="badge" style="margin-left:0.35rem;">
           Cancelled

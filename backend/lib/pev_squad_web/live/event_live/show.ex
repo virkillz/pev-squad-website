@@ -1,7 +1,6 @@
 defmodule PevSquadWeb.EventLive.Show do
   use PevSquadWeb, :live_view
 
-  alias PevSquad.Accounts.Scope
   alias PevSquad.Events
 
   import PevSquadWeb.EventComponents
@@ -18,6 +17,7 @@ defmodule PevSquadWeb.EventLive.Show do
           <span class="badge" style="background:var(--black); color:var(--orange);">
             {kind_label(@event.kind)}
           </span>
+          <span :if={@group?} class="badge badge-host">{hosted_by(@event)}</span>
         </div>
         <h1 class="event-detail-title">{@event.title}</h1>
         <p
@@ -37,6 +37,12 @@ defmodule PevSquadWeb.EventLive.Show do
             <div :if={@event.status == :draft} class="notice">
               Draft — only staff can see this page until it's published.
             </div>
+            <div :if={@event.status == :hidden} class="notice">
+              Hidden after reports from members — only you and the moderators can see it until they've looked.
+            </div>
+            <p :if={@group?} class="host-note" id="group-ride-note">
+              A group ride hosted by a member, not organized by PEV Squad. Ride within your limits and wear your gear.
+            </p>
 
             <div :if={@event.description} class="prose-body">
               <p :for={para <- paragraphs(@event.description)}>{para}</p>
@@ -53,7 +59,20 @@ defmodule PevSquadWeb.EventLive.Show do
               <li :if={@event.meeting_point}>
                 <span class="k">Meet at</span><span>{@event.meeting_point}</span>
               </li>
-              <li>
+              <li :if={@group?}>
+                <span class="k">Hosted by</span>
+                <span>
+                  <.link
+                    :if={@event.host_slug}
+                    navigate={~p"/community/#{@event.host_slug}"}
+                    class="link-orange"
+                  >
+                    {@event.host_alias}
+                  </.link>
+                  <span :if={is_nil(@event.host_slug)}>A PEV Squad member</span>
+                </span>
+              </li>
+              <li :if={!@group?}>
                 <span class="k">Run by</span>
                 <span>
                   {if @event.role == :organizer, do: "PEV Squad", else: "PEV Squad as collaborator"}<span :if={
@@ -129,11 +148,26 @@ defmodule PevSquadWeb.EventLive.Show do
             <% end %>
 
             <.link
-              :if={@staff?}
+              :if={@can_manage? and @group?}
+              navigate={~p"/group-rides/#{@event.id}/edit"}
+              class="btn btn-ghost w-full text-center"
+            >
+              Edit ride · see riders
+            </.link>
+            <.link
+              :if={@can_manage? and !@group?}
               navigate={~p"/admin/events/#{@event.id}/edit"}
               class="btn btn-ghost w-full text-center"
             >
               Edit event · see riders
+            </.link>
+            <.link
+              :if={((@group? and @current_scope) && !@host?) and @event.status == :published}
+              navigate={~p"/report/event/#{@event.id}"}
+              class="lb-report"
+              style="color:inherit; opacity:0.6;"
+            >
+              Report this ride
             </.link>
           </aside>
         </div>
@@ -153,7 +187,9 @@ defmodule PevSquadWeb.EventLive.Show do
      socket
      |> assign(:page_title, event.title)
      |> assign(:page_description, description(event))
-     |> assign(:staff?, Scope.staff?(scope))
+     |> assign(:group?, event.category == :group_ride)
+     |> assign(:host?, Events.host?(scope, event))
+     |> assign(:can_manage?, Events.can_manage?(scope, event))
      |> assign_event(event)}
   end
 
@@ -191,7 +227,7 @@ defmodule PevSquadWeb.EventLive.Show do
   @impl true
   def handle_info({:rsvps_changed, _event_id}, socket), do: {:noreply, refresh(socket)}
 
-  defp refresh(socket), do: assign_event(socket, Events.reload_counts(socket.assigns.event))
+  defp refresh(socket), do: assign_event(socket, Events.reload_event(socket.assigns.event))
 
   defp assign_event(socket, event) do
     rsvp = Events.get_rsvp(socket.assigns.current_scope, event)

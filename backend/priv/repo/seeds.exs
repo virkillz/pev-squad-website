@@ -7,6 +7,7 @@
 #   * the real event history from the prototype (events.md / events.html)
 #   * two DEMO upcoming rides with limited seats — one already full
 #   * the PEV model catalog and six DEMO reviews (prototype placeholder text)
+#   * two DEMO group rides hosted by demo reviewers
 
 if System.get_env("MIX_ENV") == "prod" do
   raise "priv/repo/seeds.exs creates demo accounts and content — never run it in production"
@@ -273,6 +274,46 @@ for {name, featured?, model_name, headline, summary, the_catch, km, {pw, rg, cf,
       score_value: vl,
       score_app: ap
     })
+    |> Repo.insert!()
+end
+
+# --- DEMO group rides (member-hosted) -------------------------------------
+# Hosted by demo reviewers, who have rider profiles by now.
+
+for {host_name, slug, attrs} <- [
+      {"rangga", "demo-cfd-senayan-cruise",
+       %{
+         title: "Car-Free-Day Senayan Cruise",
+         kind: :ride,
+         starts_at: in_days.(5, {6, 0}),
+         location_name: "Senayan, Jakarta",
+         meeting_point: "FX Sudirman, lobby parking",
+         capacity: 12,
+         description:
+           "DEMO GROUP RIDE. Slow cruise around Senayan before the CFD crowd gets big, then coffee. Beginners welcome — we wait for everyone."
+       }},
+      {"dinda", "demo-bsd-trail-practice",
+       %{
+         title: "BSD Trail Practice",
+         kind: :trail_ride,
+         starts_at: in_days.(13, {7, 30}),
+         location_name: "BSD, Tangerang",
+         meeting_point: "The Breeze, east parking",
+         capacity: 8,
+         description:
+           "DEMO GROUP RIDE. Dirt and gravel practice on the empty lots. Knobby tyres recommended, full gear required."
+       }}
+    ] do
+  host = upsert_user.("#{host_name}@demo.pev-squad.org", :member)
+
+  Repo.get_by(Event, slug: slug) ||
+    %Event{
+      slug: slug,
+      category: :group_ride,
+      status: :published,
+      created_by_id: host.id
+    }
+    |> Event.group_ride_changeset(attrs)
     |> Repo.insert!()
 end
 

@@ -268,3 +268,24 @@
   color: rgba(255, 255, 255, 0.55);
 }
 .lb-report:hover { color: var(--orange); }
+
+/* Group rides: member-hosted, so drawn in outline rather than solid orange */
+.badge-host {
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+}
+.event-row.is-group .event-date {
+  background: transparent;
+  color: var(--orange);
+  border-color: var(--orange);
+  border-style: dashed;
+}
+.event-row.is-group:hover .event-date { color: var(--black); border-color: var(--black); }
+.host-note {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}

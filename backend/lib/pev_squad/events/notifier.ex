@@ -31,4 +31,28 @@ defmodule PevSquad.Events.Notifier do
       {:ok, email}
     end
   end
+
+  def deliver_event_cancelled(user, %Event{} = event, url) do
+    email =
+      new()
+      |> to(user.email)
+      |> from({"PEV Squad", "noreply@pev-squad.org"})
+      |> subject("Cancelled: #{event.title}")
+      |> text_body("""
+
+      ==============================
+
+      #{event.title} has been cancelled, so your RSVP no longer applies.
+
+      #{url}
+
+      Keep an eye on the events page for the next one.
+
+      ==============================
+      """)
+
+    with {:ok, _metadata} <- Mailer.deliver(email) do
+      {:ok, email}
+    end
+  end
 end
