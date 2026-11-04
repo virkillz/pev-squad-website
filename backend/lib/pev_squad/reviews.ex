@@ -8,8 +8,9 @@ defmodule PevSquad.Reviews do
     with at least 2 published reviews ("trusted"), publish straight away.
     A review of a model that isn't approved yet always waits, since the
     moderator approves the model along with it.
-  * A review written while its author holds the Featured badge is marked
-    `featured` when it is published, and counts double in model averages.
+  * Every published review counts equally in model averages. (The
+    `featured` column is left over from the Featured Rider badge, which is
+    switched off for now — see DESIGN.md decision 14.)
   """
 
   import Ecto.Query, warn: false
@@ -21,16 +22,14 @@ defmodule PevSquad.Reviews do
   alias PevSquad.Riders.RiderProfile
 
   @trusted_after 2
-  @featured_weight 2
 
   ## Public
 
-  @doc "Published reviews, newest first. Options: `:type`, `featured: true`, `:limit`, `:exclude_users`."
+  @doc "Published reviews, newest first. Options: `:type`, `:limit`, `:exclude_users`."
   def list_published_reviews(opts \\ []) do
     published()
     |> join(:inner, [r], m in assoc(r, :pev_model), as: :model)
     |> filter_type(opts[:type])
-    |> filter_featured(opts[:featured])
     |> exclude_authors(opts[:exclude_users])
     |> order_by([r], desc: r.published_at, desc: r.id)
     |> maybe_limit(opts[:limit])
@@ -44,9 +43,6 @@ defmodule PevSquad.Reviews do
   defp filter_type(query, nil), do: query
   defp filter_type(query, type), do: where(query, [model: m], m.pev_type == ^type)
 
-  defp filter_featured(query, true), do: where(query, featured: true)
-  defp filter_featured(query, _), do: query
-
   defp exclude_authors(query, ids) when ids in [nil, []], do: query
   defp exclude_authors(query, ids), do: where(query, [r], r.author_id not in ^ids)
 
@@ -55,37 +51,21 @@ defmodule PevSquad.Reviews do
 
   @doc """
   "The Sheet": approved models with at least one published review, ranked by
-  weighted overall score (Featured reviews count #{@featured_weight}×). Each row has
-  `:model`, `:reviews`, `:overall`, `:featured_avg` and `:community_avg`.
+  average overall score. Each row has `:model`, `:reviews` and `:overall`.
   """
   def sheet(opts \\ []) do
     published()
     |> join(:inner, [r], m in assoc(r, :pev_model), as: :model)
     |> where([model: m], m.approved)
     |> filter_type(opts[:type])
-    |> filter_featured(opts[:featured])
     |> group_by([model: m], m.id)
     |> select([r, model: m], %{
       model: m,
       reviews: count(r.id),
-      weighted_sum:
-        sum(
-          fragment("? * CASE WHEN ? THEN ? ELSE 1 END", r.overall, r.featured, ^@featured_weight)
-        ),
-      weights: sum(fragment("CASE WHEN ? THEN ? ELSE 1 END", r.featured, ^@featured_weight)),
-      featured_avg: type(filter(avg(r.overall), r.featured), :decimal),
-      community_avg: type(filter(avg(r.overall), not r.featured), :decimal)
+      overall: type(avg(r.overall), :decimal)
     })
     |> Repo.all()
-    |> Enum.map(fn row ->
-      %{
-        model: row.model,
-        reviews: row.reviews,
-        overall: tenths(Decimal.div(row.weighted_sum, row.weights)),
-        featured_avg: row.featured_avg && tenths(row.featured_avg),
-        community_avg: row.community_avg && tenths(row.community_avg)
-      }
-    end)
+    |> Enum.map(&%{&1 | overall: tenths(&1.overall)})
     |> Enum.sort_by(&{-&1.overall, -&1.reviews, PevModel.full_name(&1.model)})
   end
 
@@ -103,7 +83,7 @@ defmodule PevSquad.Reviews do
     published()
     |> where(pev_model_id: ^id)
     |> exclude_authors(opts[:exclude_users])
-    |> order_by([r], desc: r.featured, desc: r.published_at)
+    |> order_by([r], desc: r.published_at)
     |> preload(:pev_model)
     |> Repo.all()
     |> attach_profiles()
@@ -189,7 +169,7 @@ defmodule PevSquad.Reviews do
 
         %Review{author_id: user.id}
         |> Review.changeset(attrs)
-        |> put_publication(scope, profile)
+        |> put_publication(scope)
       end)
       |> Repo.transact()
       |> case do
@@ -211,11 +191,9 @@ defmodule PevSquad.Reviews do
   """
   def update_review(%Scope{user: user} = scope, %Review{author_id: author_id} = review, attrs)
       when author_id == user.id do
-    profile = Repo.get_by(RiderProfile, user_id: user.id)
-
     review
     |> Review.changeset(attrs)
-    |> put_publication(scope, profile)
+    |> put_publication(scope)
     |> Repo.update()
   end
 
@@ -228,24 +206,22 @@ defmodule PevSquad.Reviews do
   end
 
   # Decides :published vs :pending for a member submission.
-  defp put_publication(%Ecto.Changeset{valid?: false} = changeset, _scope, _profile),
-    do: changeset
+  defp put_publication(%Ecto.Changeset{valid?: false} = changeset, _scope), do: changeset
 
-  defp put_publication(changeset, scope, profile) do
+  defp put_publication(changeset, scope) do
     model_id = Ecto.Changeset.get_field(changeset, :pev_model_id)
     model_approved? = model_id && Repo.exists?(where(PevModel, id: ^model_id, approved: true))
 
     if model_approved? and trusted?(scope) do
-      publish(changeset, profile, nil)
+      publish(changeset, nil)
     else
       Ecto.Changeset.change(changeset, status: :pending, published_at: nil, rejection_reason: nil)
     end
   end
 
-  defp publish(changeset, profile, moderator_id) do
+  defp publish(changeset, moderator_id) do
     Ecto.Changeset.change(changeset,
       status: :published,
-      featured: not is_nil(profile && profile.featured_since),
       published_at:
         Ecto.Changeset.get_field(changeset, :published_at) || DateTime.utc_now(:second),
       rejection_reason: nil,
@@ -280,7 +256,6 @@ defmodule PevSquad.Reviews do
   @doc "Publishes a review (approving its model too) and emails the author."
   def approve_review(%Scope{} = scope, %Review{} = review, review_url_fun) do
     ensure_staff!(scope)
-    profile = Repo.get_by(RiderProfile, user_id: review.author_id)
 
     result =
       Repo.transact(fn ->
@@ -288,7 +263,7 @@ defmodule PevSquad.Reviews do
 
         review
         |> Ecto.Changeset.change()
-        |> publish(profile, scope.user.id)
+        |> publish(scope.user.id)
         |> Repo.update()
       end)
 

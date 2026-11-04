@@ -13,7 +13,7 @@ defmodule PevSquadWeb.EventLive.Index do
     <Layouts.app flash={@flash} current_scope={@current_scope} active={:events}>
       <section class="page-header">
         <div class="meta-row">
-          <span class="eyebrow">07 / Group rides &amp; meetups</span>
+          <span class="eyebrow">06 / Group rides &amp; meetups</span>
           <span class="tag-scribble">roll out</span>
         </div>
         <h1 class="page-title">Events</h1>

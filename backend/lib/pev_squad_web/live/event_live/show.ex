@@ -13,7 +13,7 @@ defmodule PevSquadWeb.EventLive.Show do
       <section class="page-header">
         <div class="meta-row">
           <span class="eyebrow">
-            <.link navigate={~p"/events"} style="text-decoration:none;">07 / Events</.link>
+            <.link navigate={~p"/events"} style="text-decoration:none;">06 / Events</.link>
           </span>
           <span class="badge" style="background:var(--black); color:var(--orange);">
             {kind_label(@event.kind)}

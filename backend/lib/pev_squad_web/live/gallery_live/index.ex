@@ -13,7 +13,7 @@ defmodule PevSquadWeb.GalleryLive.Index do
     <Layouts.app flash={@flash} current_scope={@current_scope} active={:gallery}>
       <section class="page-header">
         <div class="meta-row">
-          <span class="eyebrow">04 / The Archive</span>
+          <span class="eyebrow">03 / The Archive</span>
           <span class="tag-scribble">caught on camera</span>
         </div>
         <h1 class="page-title">Gallery</h1>

@@ -12,11 +12,10 @@ defmodule PevSquadWeb.Layouts do
   @nav [
     {:home, "01", "Home", "/"},
     {:community, "02", "Community", "/community"},
-    {:riders, "03", "Riders", "/riders"},
-    {:gallery, "04", "Gallery", "/gallery"},
-    {:reviews, "05", "Reviews", "/reviews"},
-    {:for_sale, "06", "For Sale", "/for-sale"},
-    {:events, "07", "Events", "/events"}
+    {:gallery, "03", "Gallery", "/gallery"},
+    {:reviews, "04", "Reviews", "/reviews"},
+    {:for_sale, "05", "For Sale", "/for-sale"},
+    {:events, "06", "Events", "/events"}
   ]
 
   @default_description "PEV Squad — Indonesia's most active EUC community. Ride fast, ride far, ride often."
@@ -119,7 +118,6 @@ defmodule PevSquadWeb.Layouts do
           <h4>Explore</h4>
           <ul>
             <li><.link navigate={~p"/community"}>Community</.link></li>
-            <li><.link navigate={~p"/riders"}>Featured Riders</.link></li>
             <li><.link navigate={~p"/gallery"}>Gallery</.link></li>
             <li><.link navigate={~p"/reviews"}>Reviews</.link></li>
             <li><.link navigate={~p"/for-sale"}>For Sale</.link></li>

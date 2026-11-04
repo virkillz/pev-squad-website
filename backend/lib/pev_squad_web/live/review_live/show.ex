@@ -30,8 +30,7 @@ defmodule PevSquadWeb.ReviewLive.Show do
         <div class="detail-cell detail-rail">
           <div class="detail-rail-inner">
             <span class="meta-text">
-              Review {String.pad_leading(to_string(@review.id), 2, "0")}{if @review.featured,
-                do: " // Featured"}
+              Review {String.pad_leading(to_string(@review.id), 2, "0")}
             </span>
             <span class="detail-rail-title">{model_name(@review.pev_model)}</span>
             <span class="meta-text">{type_label(@review.pev_model.pev_type)}</span>
@@ -42,9 +41,7 @@ defmodule PevSquadWeb.ReviewLive.Show do
           <span class="detail-badge">Overall: {fmt(@review.overall)} / 10</span>
           <div>
             <span class="eyebrow">
-              {if @review.featured, do: "★ Featured Rider Review", else: "Community Review"} · {model_name(
-                @review.pev_model
-              )}
+              Rider Review · {model_name(@review.pev_model)}
             </span>
             <h1 class={[
               "detail-headline",
@@ -91,7 +88,7 @@ defmodule PevSquadWeb.ReviewLive.Show do
                   :if={@review.author_profile && @review.author_profile.is_public}
                   navigate={~p"/community/#{@review.author_profile.slug}"}
                 >
-                  {author_name(@review)}{if @review.featured, do: " ★"}
+                  {author_name(@review)}
                 </.link>
                 <span :if={!(@review.author_profile && @review.author_profile.is_public)}>
                   {author_name(@review)}

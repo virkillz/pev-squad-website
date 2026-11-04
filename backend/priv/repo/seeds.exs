@@ -238,15 +238,14 @@ demo_reviews = [
    "The weight.", 1500, {8.5, 8.2, 8.0, 8.1, 7.9, nil}}
 ]
 
-for {name, featured?, model_name, headline, summary, the_catch, km, {pw, rg, cf, bd, vl, ap}} <-
+for {name, _featured?, model_name, headline, summary, the_catch, km, {pw, rg, cf, bd, vl, ap}} <-
       demo_reviews do
   user = upsert_user.("#{String.downcase(name)}@demo.pev-squad.org", :member)
 
   Repo.get_by(RiderProfile, user_id: user.id) ||
     %RiderProfile{
       user_id: user.id,
-      is_public: true,
-      featured_since: if(featured?, do: now)
+      is_public: true
     }
     |> RiderProfile.changeset(%{alias: name, city: "Jakarta", main_ride: model_name})
     |> Repo.insert!()
@@ -257,7 +256,6 @@ for {name, featured?, model_name, headline, summary, the_catch, km, {pw, rg, cf,
     %Review{
       author_id: user.id,
       status: :published,
-      featured: featured?,
       published_at: now,
       moderated_by_id: admin.id
     }
@@ -409,5 +407,5 @@ IO.puts("""
 Seeded. Log in at http://localhost:4000/users/log-in with:
   admin@pev-squad.org / #{password}   (admin)
   alwi@demo.pev-squad.org / #{password}  (member; also rendi, awang, kuntz, shaz)
-  rangga@demo.pev-squad.org / #{password}  (Featured Rider with a published review)
+  rangga@demo.pev-squad.org / #{password}  (member with a published review)
 """)

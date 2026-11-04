@@ -42,10 +42,6 @@ defmodule PevSquadWeb.ReviewComponents do
     <article class="card">
       <div class="card-head">
         <span class="card-initials">{type_label(@review.pev_model.pev_type)}</span>
-        <span :if={@review.featured} class="badge">★ Featured Review</span>
-        <span :if={!@review.featured} class="badge badge-grey">
-          Community Review
-        </span>
       </div>
       <div class="card-body">
         <h3 class="card-title">{model_name(@review.pev_model)}</h3>
@@ -85,8 +81,6 @@ defmodule PevSquadWeb.ReviewComponents do
             <th scope="col">Model</th>
             <th scope="col">Class</th>
             <th scope="col" style="text-align:right;">Reviews</th>
-            <th scope="col" style="text-align:right;">★ Featured</th>
-            <th scope="col" style="text-align:right;">Community</th>
             <th scope="col" style="text-align:right;">Overall</th>
           </tr>
         </thead>
@@ -98,8 +92,6 @@ defmodule PevSquadWeb.ReviewComponents do
             </td>
             <td>{type_label(row.model.pev_type)}</td>
             <td class="num">{row.reviews}</td>
-            <td class="num">{fmt(row.featured_avg)}</td>
-            <td class="num">{fmt(row.community_avg)}</td>
             <td class="score">{fmt(row.overall)}</td>
           </tr>
         </tbody>

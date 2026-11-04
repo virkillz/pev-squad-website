@@ -37,7 +37,6 @@ defmodule PevSquadWeb.CommunityLive.Show do
       <section class="band band-black">
         <div class="event-detail-grid">
           <div class="space-y-8">
-            <span :if={@rider.featured_since} class="badge">★ Featured Rider</span>
             <div :if={@rider.bio} class="prose-body">
               <p>{@rider.bio}</p>
             </div>

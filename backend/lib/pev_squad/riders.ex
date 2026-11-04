@@ -18,12 +18,11 @@ defmodule PevSquad.Riders do
 
   ## Public
 
-  @doc "Public profiles, optionally filtered by `:type` or `featured: true`, minus `:exclude_users` (blocked members). Photos first, then by alias."
+  @doc "Public profiles, optionally filtered by `:type`, minus `:exclude_users` (blocked members). Photos first, then by alias."
   def list_public_riders(opts \\ []) do
     RiderProfile
     |> where(is_public: true)
     |> filter_type(opts[:type])
-    |> filter_featured(opts[:featured])
     |> exclude_users(opts[:exclude_users])
     |> order_by([r], asc: is_nil(r.avatar_path), asc: fragment("lower(?)", r.alias))
     |> Repo.all()
@@ -33,9 +32,6 @@ defmodule PevSquad.Riders do
 
   defp exclude_users(query, ids),
     do: where(query, [r], is_nil(r.user_id) or r.user_id not in ^ids)
-
-  defp filter_featured(query, true), do: where(query, [r], not is_nil(r.featured_since))
-  defp filter_featured(query, _), do: query
 
   defp filter_type(query, nil), do: query
   defp filter_type(query, type), do: where(query, primary_pev_type: ^type)
@@ -121,12 +117,6 @@ defmodule PevSquad.Riders do
   def unlink_member(%Scope{} = scope, %RiderProfile{} = profile) do
     ensure_staff!(scope)
     profile |> Ecto.Changeset.change(user_id: nil) |> Repo.update()
-  end
-
-  def set_featured(%Scope{} = scope, %RiderProfile{} = profile, featured?) do
-    ensure_staff!(scope)
-    featured_since = if featured?, do: profile.featured_since || DateTime.utc_now(:second)
-    profile |> Ecto.Changeset.change(featured_since: featured_since) |> Repo.update()
   end
 
   defp ensure_staff!(scope) do

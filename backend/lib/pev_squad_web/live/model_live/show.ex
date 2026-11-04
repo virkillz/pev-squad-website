@@ -13,7 +13,7 @@ defmodule PevSquadWeb.ModelLive.Show do
       <section class="page-header">
         <div class="meta-row">
           <span class="eyebrow">
-            <.link navigate={~p"/reviews"} style="text-decoration:none;">05 / Reviews</.link>
+            <.link navigate={~p"/reviews"} style="text-decoration:none;">04 / Reviews</.link>
           </span>
           <span class="badge" style="background:var(--black); color:var(--orange);">
             {type_label(@model.pev_type)}
@@ -27,14 +27,6 @@ defmodule PevSquadWeb.ModelLive.Show do
           <div class="stat">
             <div class="stat-n">{fmt(@row.overall)}</div>
             <div class="stat-l">Overall</div>
-          </div>
-          <div class="stat">
-            <div class="stat-n">{fmt(@row.featured_avg)}</div>
-            <div class="stat-l">★ Featured avg</div>
-          </div>
-          <div class="stat">
-            <div class="stat-n">{fmt(@row.community_avg)}</div>
-            <div class="stat-l">Community avg</div>
           </div>
           <div class="stat">
             <div class="stat-n">{@row.reviews}</div>

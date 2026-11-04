@@ -6,8 +6,6 @@ defmodule PevSquadWeb.CommunityLiveTest do
   import PevSquad.EventsFixtures
   import PevSquad.RidersFixtures
 
-  alias PevSquad.Riders
-
   test "roster shows public riders and filters by type", %{conn: conn} do
     rider_fixture(alias: "Wynn", main_ride: "Sherman OG")
     rider_fixture(alias: "Ben Esk8", primary_pev_type: :esk8)
@@ -39,14 +37,8 @@ defmodule PevSquadWeb.CommunityLiveTest do
     assert html =~ "instagram.com/siganteng"
   end
 
-  test "featured riders page lists only badge holders", %{conn: conn} do
-    featured = rider_fixture(alias: "Arif")
-    rider_fixture(alias: "Newbie")
-    {:ok, _} = Riders.set_featured(staff_scope_fixture(), featured, true)
-
-    {:ok, _lv, html} = live(conn, ~p"/riders")
-    assert html =~ "Arif"
-    refute html =~ "Newbie"
+  test "the old Featured Riders link goes to the community page", %{conn: conn} do
+    assert redirected_to(get(conn, ~p"/riders")) == ~p"/community"
   end
 
   describe "my profile" do
@@ -99,9 +91,6 @@ defmodule PevSquadWeb.CommunityLiveTest do
 
       html = lv |> form("#link-form", email: member.email) |> render_submit()
       assert html =~ "Linked to #{member.email}"
-
-      html = lv |> element("button", "Make Featured") |> render_click()
-      assert html =~ "Featured Rider since"
     end
 
     test "members can't open it", %{conn: conn} do

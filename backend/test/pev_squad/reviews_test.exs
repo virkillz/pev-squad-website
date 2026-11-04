@@ -11,13 +11,12 @@ defmodule PevSquad.ReviewsTest do
   defp url(review), do: "http://localhost/reviews/#{review.id}"
 
   # A member with a rider profile (reviews are shown under the alias).
-  defp rider_scope(opts \\ []) do
+  defp rider_scope do
     scope = user_scope_fixture()
 
-    {:ok, profile} =
+    {:ok, _profile} =
       Riders.save_my_profile(scope, %{"alias" => "R#{System.unique_integer([:positive])}"})
 
-    if opts[:featured], do: {:ok, _} = Riders.set_featured(staff_scope_fixture(), profile, true)
     scope
   end
 
@@ -180,14 +179,14 @@ defmodule PevSquad.ReviewsTest do
   end
 
   describe "sheet/1" do
-    test "ranks models by weighted overall, Featured reviews counting double" do
+    test "ranks models by average overall, every review counting equally" do
       wheel = model_fixture(%{"brand" => "Inmotion", "name" => "V13"})
 
       scooter =
         model_fixture(%{"pev_type" => "escooter", "brand" => "Kaabo", "name" => "Wolf 11"})
 
-      # Inmotion: featured 9.0 (x2) + community 6.0 -> (180 + 60) / 3 = 8.0
-      publish!(rider_scope(featured: true), wheel, %{
+      # Inmotion: 9.0 and 6.0 -> 7.5
+      publish!(rider_scope(), wheel, %{
         "score_power" => "9",
         "score_range" => "9",
         "score_comfort" => "9",
@@ -209,16 +208,11 @@ defmodule PevSquad.ReviewsTest do
       assert [first, second] = Reviews.sheet()
       assert {first.model.id, first.overall} == {scooter.id, 8.6}
       assert second.model.id == wheel.id
-      assert second.overall == 8.0
-      assert second.featured_avg == 9.0
-      assert second.community_avg == 6.0
+      assert second.overall == 7.5
       assert second.reviews == 2
 
       assert [%{model: %{id: id}}] = Reviews.sheet(type: :escooter)
       assert id == scooter.id
-
-      wheel_id = wheel.id
-      assert [%{model: %{id: ^wheel_id}, overall: 9.0}] = Reviews.sheet(featured: true)
     end
   end
 end

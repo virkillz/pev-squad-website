@@ -2,7 +2,7 @@ defmodule PevSquadWeb.PageController do
   use PevSquadWeb, :controller
 
   @sections %{
-    "for-sale" => {:for_sale, "06", "For Sale"}
+    "for-sale" => {:for_sale, "05", "For Sale"}
   }
 
   def coming_soon(conn, _params) do
@@ -10,4 +10,6 @@ defmodule PevSquadWeb.PageController do
 
     render(conn, :coming_soon, active: active, num: num, title: title, page_title: title)
   end
+
+  def riders(conn, _params), do: redirect(conn, to: ~p"/community")
 end

@@ -53,21 +53,6 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
             <% end %>
           </div>
 
-          <div class="notice flex gap-4 items-center justify-between">
-            <p :if={@rider.featured_since}>
-              ★ Featured Rider since {Calendar.strftime(@rider.featured_since, "%d %b %Y")}
-            </p>
-            <p :if={!@rider.featured_since}>
-              Not a Featured Rider. The bar: 5,000 km, a year riding with the squad, several units owned.
-            </p>
-            <.button
-              phx-click="toggle_featured"
-              variant={if is_nil(@rider.featured_since), do: "primary"}
-            >
-              {if @rider.featured_since, do: "Remove badge", else: "Make Featured"}
-            </.button>
-          </div>
-
           <.form for={@form} id="rider-form" phx-change="validate" phx-submit="save" class="space-y-2">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <.input field={@form[:alias]} type="text" label="Alias" required />
@@ -145,15 +130,6 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
   def handle_event("unlink", _params, socket) do
     {:ok, _} = Riders.unlink_member(socket.assigns.current_scope, socket.assigns.rider)
     {:noreply, socket |> put_flash(:info, "Unlinked.") |> reload()}
-  end
-
-  def handle_event("toggle_featured", _params, socket) do
-    rider = socket.assigns.rider
-
-    {:ok, _} =
-      Riders.set_featured(socket.assigns.current_scope, rider, is_nil(rider.featured_since))
-
-    {:noreply, reload(socket)}
   end
 
   defp link_error(:no_such_user), do: "No member has registered with that email yet."

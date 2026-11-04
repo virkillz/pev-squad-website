@@ -30,7 +30,6 @@ defmodule PevSquadWeb.Admin.RiderLive.Index do
             {if rider.user, do: rider.user.email, else: "— unclaimed"}
           </:col>
           <:col :let={rider} label="Public">{if rider.is_public, do: "Yes", else: "Hidden"}</:col>
-          <:col :let={rider} label="Featured">{if rider.featured_since, do: "★", else: ""}</:col>
           <:col :let={rider} label="Photo">{if rider.avatar_path, do: "✓", else: ""}</:col>
         </.table>
       </section>

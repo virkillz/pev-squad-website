@@ -12,7 +12,7 @@ defmodule PevSquadWeb.GalleryLive.Album do
       <section class="page-header">
         <div class="meta-row">
           <span class="eyebrow">
-            <.link navigate={~p"/gallery"} style="text-decoration:none;">04 / The Archive</.link>
+            <.link navigate={~p"/gallery"} style="text-decoration:none;">03 / The Archive</.link>
           </span>
           <span class="sticker">{pad(length(@album.photos))} Frames</span>
         </div>

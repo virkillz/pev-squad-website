@@ -97,18 +97,6 @@ defmodule PevSquad.RidersTest do
       assert {:error, :member_has_profile} = Riders.link_to_member(staff, other, member.email)
     end
 
-    test "featured riders" do
-      staff = staff_scope_fixture()
-      rider = rider_fixture()
-
-      {:ok, rider} = Riders.set_featured(staff, rider, true)
-      assert [%{id: id}] = Riders.list_public_riders(featured: true)
-      assert id == rider.id
-
-      {:ok, _} = Riders.set_featured(staff, rider, false)
-      assert Riders.list_public_riders(featured: true) == []
-    end
-
     test "members are refused" do
       assert_raise PevSquad.Riders.NotAuthorizedError, fn ->
         Riders.list_all_riders(user_scope_fixture())

@@ -28,7 +28,6 @@ defmodule PevSquadWeb.Router do
       live "/community", CommunityLive.Index, :index
       live "/community/:slug", CommunityLive.Show, :show
       live "/partners/:slug", PartnerLive.Show, :show
-      live "/riders", RiderLive.Featured, :index
       live "/reviews", ReviewLive.Index, :index
       live "/gallery", GalleryLive.Index, :index
       live "/models/:slug", ModelLive.Show, :show
@@ -36,6 +35,9 @@ defmodule PevSquadWeb.Router do
 
     # Sections still living in the static prototype.
     get "/for-sale", PageController, :coming_soon
+
+    # The Featured Riders page is switched off for now (DESIGN.md decision 14).
+    get "/riders", PageController, :riders
   end
 
   scope "/admin", PevSquadWeb.Admin, as: :admin do

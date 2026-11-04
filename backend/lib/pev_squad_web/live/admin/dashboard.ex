@@ -46,7 +46,7 @@ defmodule PevSquadWeb.Admin.Dashboard do
           <.link class="index-row" navigate={~p"/admin/riders"}>
             <div class="index-num">05</div>
             <div class="index-title">Riders</div>
-            <div class="index-desc">Link imported profiles to members, Featured badges.</div>
+            <div class="index-desc">Edit profiles and link imported ones to members.</div>
             <div class="index-meta">PROFILES</div>
           </.link>
           <.link class="index-row" navigate={~p"/admin/models"}>

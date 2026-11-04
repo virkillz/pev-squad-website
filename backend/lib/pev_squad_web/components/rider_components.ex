@@ -44,9 +44,6 @@ defmodule PevSquadWeb.RiderComponents do
       <div class="card-body">
         <h3 class="card-title">
           {@rider.alias}
-          <span :if={@rider.featured_since} class="badge" style="vertical-align:middle;">
-            ★ Featured
-          </span>
         </h3>
         <p class="card-meta">{card_meta(@rider)}</p>
         <p :if={@rider.bio} class="card-desc">{@rider.bio}</p>

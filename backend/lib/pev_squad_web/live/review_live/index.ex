@@ -10,8 +10,7 @@ defmodule PevSquadWeb.ReviewLive.Index do
     {"EUC", "euc"},
     {"Scooter", "escooter"},
     {"Esk8", "esk8"},
-    {"E-Bike", "ebike"},
-    {"Featured Rider Only", "featured"}
+    {"E-Bike", "ebike"}
   ]
 
   @impl true
@@ -20,12 +19,12 @@ defmodule PevSquadWeb.ReviewLive.Index do
     <Layouts.app flash={@flash} current_scope={@current_scope} active={:reviews}>
       <section class="page-header">
         <div class="meta-row">
-          <span class="eyebrow">05 / Ridden, not sponsored</span>
+          <span class="eyebrow">04 / Ridden, not sponsored</span>
           <span class="tag-scribble">no bs</span>
         </div>
         <h1 class="page-title">Reviews</h1>
         <p class="page-intro">
-          Honest breakdowns of EUCs, performance scooters, and esk8 gear — rated by squad members who actually own and ride them. Featured Rider reviews are marked and count double in the overall score.
+          Honest breakdowns of EUCs, performance scooters, and esk8 gear — rated by squad members who actually own and ride them.
         </p>
       </section>
 
@@ -35,7 +34,7 @@ defmodule PevSquadWeb.ReviewLive.Index do
             <span class="eyebrow">Everything, ranked</span>
             <h2 class="section-title">The Sheet</h2>
             <p class="section-lede">
-              Every model the squad has rated, ranked by overall score. Featured Rider reviews count twice; both averages are shown so you can judge for yourself.
+              Every model the squad has rated, ranked by the average of its riders' overall scores.
             </p>
           </div>
           <.link navigate={~p"/reviews/new"} class="btn btn-solid">Write a Review</.link>
@@ -102,6 +101,5 @@ defmodule PevSquadWeb.ReviewLive.Index do
   end
 
   defp filter_opts("all"), do: []
-  defp filter_opts("featured"), do: [featured: true]
   defp filter_opts(type), do: [type: String.to_existing_atom(type)]
 end
