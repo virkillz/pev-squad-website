@@ -363,3 +363,21 @@
 .about-event-kind { grid-column: 2; }
 .about-pillar-cta { text-decoration: none; display: block; transition: background 0.15s ease, color 0.15s ease; }
 .about-pillar-cta:hover { background: var(--orange); color: var(--black); }
+
+/* Community roster pagination */
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.pager-count {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.pager-links { display: flex; flex-wrap: wrap; gap: var(--bw); }

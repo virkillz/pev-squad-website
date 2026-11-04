@@ -23,6 +23,28 @@ defmodule PevSquadWeb.CommunityLiveTest do
     refute html =~ "Wynn"
   end
 
+  test "the roster shows 9 riders a page", %{conn: conn} do
+    for i <- 1..10, do: rider_fixture(alias: "Rider #{String.pad_leading("#{i}", 2, "0")}")
+
+    {:ok, lv, _html} = live(conn, ~p"/community")
+    assert has_element?(lv, "#roster", "Rider 09")
+    refute has_element?(lv, "#roster", "Rider 10")
+    assert has_element?(lv, "#roster-pager", "1–9 of 10 riders")
+
+    lv |> element("#roster-pager a", "Next") |> render_click()
+    assert_patch(lv, "/community?page=2")
+    assert has_element?(lv, "#roster", "Rider 10")
+    refute has_element?(lv, "#roster", "Rider 01")
+    assert has_element?(lv, "#roster-pager", "10–10 of 10 riders")
+
+    # Filtering goes back to page 1; no pager when it all fits.
+    lv |> element(".filter-tag", "Esk8") |> render_click()
+    refute has_element?(lv, "#roster-pager")
+
+    {:ok, lv, _html} = live(conn, ~p"/community?page=abc")
+    assert has_element?(lv, "#roster", "Rider 01")
+  end
+
   test "rider page", %{conn: conn} do
     rider =
       rider_fixture(

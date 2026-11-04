@@ -6,6 +6,8 @@ defmodule PevSquadWeb.CommunityLive.Index do
   import PevSquadWeb.RiderComponents
   import PevSquadWeb.PartnerComponents, only: [partner_card: 1]
 
+  @per_page 9
+
   @filters [
     {"All", nil},
     {"EUC", :euc},
@@ -57,7 +59,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
         </div>
       </section>
 
-      <section class="band band-white">
+      <section class="band band-white" id="squad">
         <div class="section-head">
           <div>
             <span class="eyebrow">Rider roster</span>
@@ -74,7 +76,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
         <div class="filters" style="margin-bottom:2rem;">
           <.link
             :for={{label, type} <- @filters}
-            patch={if type, do: ~p"/community?type=#{type}", else: ~p"/community"}
+            patch={roster_path(type, 1)}
             class={["filter-tag", @type == type && "active"]}
           >
             {label}
@@ -82,9 +84,41 @@ defmodule PevSquadWeb.CommunityLive.Index do
         </div>
 
         <div class="grid grid-3" id="roster">
-          <.rider_card :for={rider <- @riders} rider={rider} />
+          <.rider_card :for={rider <- @roster.entries} rider={rider} />
         </div>
-        <p :if={@riders == []} class="section-lede">No riders here yet.</p>
+        <p :if={@roster.entries == []} class="section-lede">No riders here yet.</p>
+
+        <nav :if={@roster.total_pages > 1} class="pager" id="roster-pager" aria-label="Roster pages">
+          <span class="pager-count">
+            {range_label(@roster)} of {@roster.total} riders
+          </span>
+          <div class="pager-links">
+            <.link
+              :if={@roster.page > 1}
+              patch={roster_path(@type, @roster.page - 1)}
+              class="filter-tag"
+              rel="prev"
+            >
+              ← Prev
+            </.link>
+            <.link
+              :for={n <- 1..@roster.total_pages}
+              patch={roster_path(@type, n)}
+              class={["filter-tag", n == @roster.page && "active"]}
+              aria-current={n == @roster.page && "page"}
+            >
+              {String.pad_leading(to_string(n), 2, "0")}
+            </.link>
+            <.link
+              :if={@roster.page < @roster.total_pages}
+              patch={roster_path(@type, @roster.page + 1)}
+              class="filter-tag"
+              rel="next"
+            >
+              Next →
+            </.link>
+          </div>
+        </nav>
       </section>
 
       <section :if={@communities != []} class="band band-black" id="partner-communities">
@@ -160,12 +194,37 @@ defmodule PevSquadWeb.CommunityLive.Index do
      socket
      |> assign(:type, type)
      |> assign(
-       :riders,
-       Riders.list_public_riders(
+       :roster,
+       Riders.paginate_public_riders(
          type: type,
+         page: parse_page(params["page"]),
+         per_page: @per_page,
          exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
        )
      )}
+  end
+
+  defp parse_page(page) do
+    case Integer.parse(page || "") do
+      {n, ""} when n > 0 -> n
+      _ -> 1
+    end
+  end
+
+  # Page 1 and "All" are left out of the URL; #squad keeps the roster in view.
+  defp roster_path(type, page) do
+    query =
+      Enum.reject([type: type, page: page != 1 && page], fn {_k, v} -> v in [nil, false] end)
+
+    case query do
+      [] -> "/community#squad"
+      query -> "/community?" <> URI.encode_query(query) <> "#squad"
+    end
+  end
+
+  defp range_label(%{page: page, per_page: per_page, entries: entries}) do
+    first = (page - 1) * per_page + 1
+    "#{first}–#{first + length(entries) - 1}"
   end
 
   defp parse_type(type) do

@@ -22,6 +22,25 @@ defmodule PevSquad.RidersTest do
       assert_raise Ecto.NoResultsError, fn -> Riders.get_public_rider!("shy") end
     end
 
+    test "paginates, keeping filters and clamping past the last page" do
+      riders =
+        for i <- 1..11, do: rider_fixture(alias: "Rider #{String.pad_leading("#{i}", 2, "0")}")
+
+      _esk8 = rider_fixture(alias: "Zed", primary_pev_type: :esk8)
+
+      page1 = Riders.paginate_public_riders(type: :euc, per_page: 9)
+      assert %{page: 1, total: 11, total_pages: 2} = page1
+      assert length(page1.entries) == 9
+
+      page2 = Riders.paginate_public_riders(type: :euc, per_page: 9, page: 2)
+      assert length(page2.entries) == 2
+
+      assert Enum.map(page1.entries ++ page2.entries, & &1.id) == Enum.map(riders, & &1.id)
+
+      assert %{page: 2} = Riders.paginate_public_riders(type: :euc, per_page: 9, page: 99)
+      assert %{page: 1, total_pages: 1, entries: []} = Riders.paginate_public_riders(type: :ebike)
+    end
+
     test "stats count riders and distinct cities" do
       rider_fixture(city: "Jakarta")
       rider_fixture(city: "jakarta")

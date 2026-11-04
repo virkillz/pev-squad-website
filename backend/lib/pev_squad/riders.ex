@@ -20,12 +20,37 @@ defmodule PevSquad.Riders do
 
   @doc "Public profiles, optionally filtered by `:type`, minus `:exclude_users` (blocked members). Photos first, then by alias."
   def list_public_riders(opts \\ []) do
+    opts |> public_riders_query() |> Repo.all()
+  end
+
+  @doc """
+  One page of `list_public_riders/1` (same options, plus `:page` and
+  `:per_page`). Returns `%{entries, page, per_page, total, total_pages}`.
+  A page past the end is clamped to the last page.
+  """
+  def paginate_public_riders(opts \\ []) do
+    per_page = opts[:per_page] || 9
+    query = public_riders_query(opts)
+    total = query |> exclude(:order_by) |> Repo.aggregate(:count)
+    total_pages = max(ceil(total / per_page), 1)
+    page = (opts[:page] || 1) |> max(1) |> min(total_pages)
+
+    entries =
+      query
+      |> limit(^per_page)
+      |> offset(^((page - 1) * per_page))
+      |> Repo.all()
+
+    %{entries: entries, page: page, per_page: per_page, total: total, total_pages: total_pages}
+  end
+
+  # The id tiebreak keeps pages stable when two aliases sort the same.
+  defp public_riders_query(opts) do
     RiderProfile
     |> where(is_public: true)
     |> filter_type(opts[:type])
     |> exclude_users(opts[:exclude_users])
-    |> order_by([r], asc: is_nil(r.avatar_path), asc: fragment("lower(?)", r.alias))
-    |> Repo.all()
+    |> order_by([r], asc: is_nil(r.avatar_path), asc: fragment("lower(?)", r.alias), asc: r.id)
   end
 
   defp exclude_users(query, ids) when ids in [nil, []], do: query
