@@ -19,20 +19,32 @@ defmodule PevSquadWeb.Admin.Dashboard do
             <div class="index-desc">Approve or send back member reviews.</div>
             <div class="index-meta">{@pending} WAITING</div>
           </.link>
-          <.link class="index-row" navigate={~p"/admin/events"}>
+          <.link class="index-row" navigate={~p"/admin/photos"}>
             <div class="index-num">02</div>
+            <div class="index-title">Photo Queue</div>
+            <div class="index-desc">Approve or reject member gallery uploads.</div>
+            <div class="index-meta">{@pending_photos} WAITING</div>
+          </.link>
+          <.link class="index-row" navigate={~p"/admin/albums"}>
+            <div class="index-num">03</div>
+            <div class="index-title">Albums</div>
+            <div class="index-desc">Create albums, open them for uploads, arrange photos.</div>
+            <div class="index-meta">GALLERY</div>
+          </.link>
+          <.link class="index-row" navigate={~p"/admin/events"}>
+            <div class="index-num">04</div>
             <div class="index-title">Events</div>
             <div class="index-desc">Create rides, set seats, see who's going.</div>
             <div class="index-meta">RSVP · WAITLIST</div>
           </.link>
           <.link class="index-row" navigate={~p"/admin/riders"}>
-            <div class="index-num">03</div>
+            <div class="index-num">05</div>
             <div class="index-title">Riders</div>
             <div class="index-desc">Link imported profiles to members, Featured badges.</div>
             <div class="index-meta">PROFILES</div>
           </.link>
           <.link class="index-row" navigate={~p"/admin/models"}>
-            <div class="index-num">04</div>
+            <div class="index-num">06</div>
             <div class="index-title">Model Catalog</div>
             <div class="index-desc">The EUCs, scooters and boards riders can review.</div>
             <div class="index-meta">CATALOG</div>
@@ -48,6 +60,10 @@ defmodule PevSquadWeb.Admin.Dashboard do
     {:ok,
      socket
      |> assign(:page_title, "Admin")
-     |> assign(:pending, Reviews.count_pending(socket.assigns.current_scope))}
+     |> assign(:pending, Reviews.count_pending(socket.assigns.current_scope))
+     |> assign(
+       :pending_photos,
+       PevSquad.Gallery.count_pending_photos(socket.assigns.current_scope)
+     )}
   end
 end

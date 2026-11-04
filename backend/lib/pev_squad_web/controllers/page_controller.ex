@@ -2,7 +2,6 @@ defmodule PevSquadWeb.PageController do
   use PevSquadWeb, :controller
 
   @sections %{
-    "gallery" => {:gallery, "04", "Gallery"},
     "for-sale" => {:for_sale, "06", "For Sale"}
   }
 

@@ -29,11 +29,11 @@ defmodule PevSquadWeb.Router do
       live "/community/:slug", CommunityLive.Show, :show
       live "/riders", RiderLive.Featured, :index
       live "/reviews", ReviewLive.Index, :index
+      live "/gallery", GalleryLive.Index, :index
       live "/models/:slug", ModelLive.Show, :show
     end
 
     # Sections still living in the static prototype.
-    get "/gallery", PageController, :coming_soon
     get "/for-sale", PageController, :coming_soon
   end
 
@@ -50,6 +50,10 @@ defmodule PevSquadWeb.Router do
       live "/riders/:id/edit", RiderLive.Edit, :edit
       live "/reviews", ReviewLive.Queue, :index
       live "/models", ModelLive.Index, :index
+      live "/albums", AlbumLive.Index, :index
+      live "/albums/new", AlbumLive.Form, :new
+      live "/albums/:id/edit", AlbumLive.Form, :edit
+      live "/photos", PhotoLive.Queue, :index
     end
   end
 
@@ -86,6 +90,7 @@ defmodule PevSquadWeb.Router do
       live "/users/profile", UserLive.Profile, :edit
       live "/reviews/new", ReviewLive.Form, :new
       live "/reviews/:id/edit", ReviewLive.Form, :edit
+      live "/gallery/:slug/upload", GalleryLive.Upload, :new
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end
 
@@ -99,6 +104,7 @@ defmodule PevSquadWeb.Router do
     live_session :public_reviews,
       on_mount: [{PevSquadWeb.UserAuth, :mount_current_scope}] do
       live "/reviews/:id", ReviewLive.Show, :show
+      live "/gallery/:slug", GalleryLive.Album, :show
     end
   end
 

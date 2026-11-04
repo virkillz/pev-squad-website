@@ -316,6 +316,7 @@ With two developers, one owns backend + web and the other owns mobile from week 
 | 6 | Review criteria (default, change if needed) | **Power, Range, Comfort, Build, Value** (required) plus **App/FW** (optional), each 0–10 with one decimal. A review's overall score is the average of the criteria it scored. Taken from the prototype, with Comfort added. |
 | 7 | Featured weighting (default) | Featured reviews count **×2** in a model's overall score. The Sheet also shows the Featured and Community averages **separately**, like the prototype. "Featured" is fixed when a review is published, based on the author's badge at that moment. |
 | 8 | Review moderation | Reviews from new members wait for a moderator. **Staff and members with 2 or more published reviews publish straight away**, unless the model is new, in which case the moderator approves both together. Rejections require a reason, which is emailed to the author. Editing a rejected review sends it back to the queue. |
+| 9 | Gallery moderation | Staff create albums and choose which are open for member uploads. Members' photos wait for a moderator until they have **3 approved photos**, then go live straight away. **A rejected photo is deleted** (row and files) rather than kept. Uploads are processed into a 2048px large and an 800px thumb, both WebP with metadata stripped. Tiles can be normal, big (2×2) or wide (2×1), as in the prototype. |
 
 ## 17. Open questions
 
