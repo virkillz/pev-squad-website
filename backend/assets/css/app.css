@@ -1,0 +1,27 @@
+/* PEV Squad — Tailwind supplies layout utilities only (flex, gap, spacing).
+   All visual styling comes from the Kinetic design system ported from the
+   static prototype (kinetic.css), plus forms.css for app-only UI
+   (inputs, flashes, tables) that the prototype never needed. */
+
+@import "tailwindcss" source(none);
+
+/* In the components layer: they win over Tailwind's preflight (base),
+   while spacing utilities (mt-2, space-y-4, ...) still win over them. */
+@import "./kinetic.css" layer(components);
+@import "./forms.css" layer(components);
+@source "../css";
+@source "../js";
+@source "../../lib/pev_squad_web";
+
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The heroicons installation itself is managed by your mix.exs */
+@plugin "../vendor/heroicons";
+
+/* Add variants based on LiveView classes */
+@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
+@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
+@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
+
+/* Make LiveView wrapper divs transparent for layout */
+[data-phx-session], [data-phx-teleported-src] { display: contents }
+

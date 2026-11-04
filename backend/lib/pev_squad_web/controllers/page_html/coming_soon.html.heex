@@ -1,0 +1,18 @@
+<Layouts.app flash={@flash} current_scope={@current_scope} active={@active}>
+  <section class="page-header">
+    <div class="meta-row">
+      <span class="eyebrow">{@num} / Under construction</span>
+      <span class="tag-scribble">soon</span>
+    </div>
+    <h1 class="page-title" style="font-size:clamp(3.5rem, 12vw, 11rem);">{@title}</h1>
+    <p class="page-intro">
+      This section is still being moved over from the prototype. Events and RSVPs are live already.
+    </p>
+  </section>
+  <section class="band band-black">
+    <div class="hero-actions">
+      <.link navigate={~p"/events"} class="btn btn-solid">See Events</.link>
+      <.link navigate={~p"/"} class="btn btn-outline">Back Home</.link>
+    </div>
+  </section>
+</Layouts.app>

@@ -1,0 +1,4 @@
+# Member sign-up export — personal data, never commit.
+member pev squad.csv
+*.csv
+.DS_Store

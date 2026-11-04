@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title default="PEV Squad" suffix=" — PEV Squad">
+      {assigns[:page_title]}
+    </.live_title>
+    <meta
+      name="description"
+      content={assigns[:page_description] || PevSquadWeb.Layouts.default_description()}
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PEV Squad" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={PevSquadWeb.Layouts.og_title(assigns[:page_title])} />
+    <meta
+      property="og:description"
+      content={assigns[:page_description] || PevSquadWeb.Layouts.default_description()}
+    />
+    <meta property="og:image" content={url(~p"/images/logo.jpg")} />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="icon" href={~p"/images/favicon.ico"} sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href={~p"/images/favicon-32.png"} />
+    <link rel="icon" type="image/png" sizes="16x16" href={~p"/images/favicon-16.png"} />
+    <link rel="apple-touch-icon" sizes="180x180" href={~p"/images/apple-touch-icon.png"} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@400..900&family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Permanent+Marker&display=swap"
+    />
+    <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
+    </script>
+  </head>
+  <body>
+    {@inner_content}
+  </body>
+</html>

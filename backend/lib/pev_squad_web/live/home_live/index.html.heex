@@ -1,0 +1,303 @@
+<Layouts.app flash={@flash} current_scope={@current_scope} active={:home}>
+  <!-- HERO ================================================================== -->
+  <section class="hero">
+    <div class="hero-panel hero-orange">
+      <div class="meta-row">
+        <div class="meta-text">EST. 2023</div>
+        <div class="meta-text">{@date_stamp}</div>
+        <div class="meta-text meta-right">LOC: 6.2088° S<br />JAKARTA, ID</div>
+      </div>
+
+      <div class="hero-lockup">
+        <span class="tag-scribble hero-scribble">we take it</span>
+        <h1 class="display-huge lines-2">PERS<br />ONAL</h1>
+      </div>
+
+      <p class="hero-motto">
+        A COLLECTIVE OF PEV RIDERS WHO RIDE FAST, RIDE FAR, AND RIDE OFTEN — MOSTLY BECAUSE IT'S FUN.
+      </p>
+
+      <p class="hero-sub">
+        Along the way we picked up a growing list of brands, media, and personalities who ride with us. Indonesia's most active EUC community.
+      </p>
+
+      <div class="hero-actions">
+        <.link navigate={~p"/community"} class="btn btn-solid">Join the Squad</.link>
+        <a href="#collaborate" class="btn btn-outline">Collaborate With Us</a>
+      </div>
+    </div>
+
+    <div class="hero-panel hero-white">
+      <div class="meta-row">
+        <span class="eyebrow">Latest // Urban Playground</span>
+        <span class="meta-text">New drop</span>
+      </div>
+
+      <.link class="latest-feature" navigate={~p"/gallery"} style="margin-top:1.25rem;">
+        <img
+          src="/images/pev_playground_shaz_1.png"
+          alt="Urban Playground plate — Shaz riding an EUC on a parking level"
+        />
+        <div class="latest-copy">
+          <h2 class="latest-title">Shaz is Back!</h2>
+          <p class="latest-desc">
+            After maternity hiatus, our little speed demon is back. With revenge.
+          </p>
+        </div>
+      </.link>
+
+      <.link class="latest-row" navigate={~p"/gallery"}>
+        <img
+          src="/images/pev_playground_girls_1.png"
+          alt="Urban Playground plate — the PEV Girls Squad with their EUCs"
+        />
+        <div>
+          <h3 class="latest-title">PEV Girls Squad</h3>
+          <p class="latest-desc">Introducing EUC female rider squad.</p>
+        </div>
+      </.link>
+
+      <div style="margin-top:2rem;">
+        <span class="eyebrow">Next up</span>
+        <%= if @next_event do %>
+          <h2 class="card-title" style="margin-top:0.75rem; font-size:1.7rem;">
+            {@next_event.title}
+          </h2>
+          <p class="card-meta">{EventComponents.next_up_meta(@next_event)}</p>
+          <div class="hero-actions" style="margin-top:1.25rem;">
+            <.link navigate={~p"/events/#{@next_event.slug}"} class="btn btn-solid">RSVP</.link>
+            <.link navigate={~p"/events"} class="btn btn-outline">All Events</.link>
+          </div>
+        <% else %>
+          <h2 class="card-title" style="margin-top:0.75rem; font-size:1.7rem;">Next ride TBA</h2>
+          <p class="card-meta">WATCH THE WHATSAPP GROUP</p>
+          <div class="hero-actions" style="margin-top:1.25rem;">
+            <.link navigate={~p"/gallery"} class="btn btn-solid">See the Gallery</.link>
+            <.link navigate={~p"/events"} class="btn btn-outline">All Events</.link>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+  
+<!-- SQUAD PHOTO — full bleed, no overlay; the asset carries its own type. -->
+  <div class="bleed">
+    <img
+      src="/images/community.png"
+      alt="PEV Squad members and their EUCs and scooters gathered in a parking garage"
+    />
+  </div>
+  
+<!-- BY THE NUMBERS ======================================================== -->
+  <section class="band band-tight band-black">
+    <div class="section-head" style="margin-bottom:1.75rem;">
+      <div>
+        <span class="eyebrow">By the numbers</span>
+      </div>
+      <a href="#" class="btn btn-outline">Join WhatsApp Group</a>
+    </div>
+    <div class="statbar">
+      <div class="stat">
+        <div class="stat-n">184</div>
+        <div class="stat-l">Active Members</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">9</div>
+        <div class="stat-l">Cities</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">62,000+</div>
+        <div class="stat-l">KM Logged</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">37</div>
+        <div class="stat-l">Meetups Held</div>
+      </div>
+    </div>
+  </section>
+  
+<!-- MARQUEE =============================================================== -->
+  <div class="marquee">
+    <div class="marquee-inner">
+      <span class="marquee-text">RIDE FAST · RIDE FAR · RIDE OFTEN //</span>
+      <span class="marquee-text"><em>62,000 KM</em> LOGGED //</span>
+      <span class="marquee-text">RIDE FAST · RIDE FAR · RIDE OFTEN //</span>
+      <span class="marquee-text"><em>62,000 KM</em> LOGGED //</span>
+    </div>
+  </div>
+  
+<!-- THREE PILLARS ========================================================= -->
+  <section class="band band-white">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">What we're about</span>
+        <h2 class="section-title">Three Rules,<br />That's It.</h2>
+      </div>
+    </div>
+    <div class="grid grid-3 grid-rule">
+      <div class="pillar">
+        <div class="pillar-num">01 / SPEED</div>
+        <h3>Ride Fast</h3>
+        <p>
+          Performance EUCs, tuned scooters, the occasional esk8 — if it's got a motor and a top speed worth bragging about, we're riding it.
+        </p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">02 / DISTANCE</div>
+        <h3>Ride Far</h3>
+        <p>
+          Weekday commutes turn into 40km detours. Weekend rides turn into cross-city loops. Range anxiety is just a challenge.
+        </p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">03 / FREQUENCY</div>
+        <h3>Ride Often</h3>
+        <p>
+          Night rides, weekend meetups, spontaneous Tuesday sessions — if there's a reason to ride, we're already out the door.
+        </p>
+      </div>
+    </div>
+  </section>
+  
+<!-- EXPLORE INDEX ========================================================= -->
+  <section class="band band-black">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Where to go</span>
+        <h2 class="section-title">The Index</h2>
+        <p class="section-lede">Everything the squad runs, in one list.</p>
+      </div>
+    </div>
+    <div class="index-list">
+      <.link class="index-row" navigate={~p"/community"}>
+        <div class="index-num">01 / 06</div>
+        <div class="index-title">Community</div>
+        <div class="index-desc">
+          Riders from every corner of the city, one shared obsession with going fast on three wheels or less.
+        </div>
+        <div class="index-meta">184 MEMBERS · 9 CITIES</div>
+      </.link>
+      <.link class="index-row" navigate={~p"/riders"}>
+        <div class="index-num">02 / 06</div>
+        <div class="index-title">Featured Riders</div>
+        <div class="index-desc">
+          Seasoned members trusted to give star ratings on gear inside our reviews.
+        </div>
+        <div class="index-meta">6 ON THE PANEL</div>
+      </.link>
+      <.link class="index-row" navigate={~p"/gallery"}>
+        <div class="index-num">03 / 06</div>
+        <div class="index-title">Gallery</div>
+        <div class="index-desc">
+          Urban Playground — the squad's plate series of riders, machines, and car parks.
+        </div>
+        <div class="index-meta">2 NEW DROPS</div>
+      </.link>
+      <.link class="index-row" navigate={~p"/reviews"}>
+        <div class="index-num">04 / 06</div>
+        <div class="index-title">Reviews</div>
+        <div class="index-desc">
+          Unfiltered, ridden-not-sponsored breakdowns of EUCs, scooters, and boards — rated by riders who own them.
+        </div>
+        <div class="index-meta">EUC / SCOOTER / ESK8</div>
+      </.link>
+      <.link class="index-row" navigate={~p"/for-sale"}>
+        <div class="index-num">05 / 06</div>
+        <div class="index-title">For Sale</div>
+        <div class="index-desc">
+          Buy and sell gear inside the squad — new and second-hand units, straight from rider to rider.
+        </div>
+        <div class="index-meta">7 LIVE LISTINGS</div>
+      </.link>
+      <.link class="index-row" navigate={~p"/events"}>
+        <div class="index-num">06 / 06</div>
+        <div class="index-title">Events</div>
+        <div class="index-desc">
+          Group rides, meetups, and demo days — what we've done and what's coming up next.
+        </div>
+        <div class="index-meta">{@upcoming_count} UPCOMING</div>
+      </.link>
+    </div>
+  </section>
+  
+<!-- COLLABORATE =========================================================== -->
+  <section id="collaborate" class="band band-orange">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">How to collaborate</span>
+        <h2 class="section-title">If It's Fun,<br />We're In.</h2>
+        <p class="section-lede">
+          Most of us have day jobs — this is what we do for fun. So the bar for working with PEV Squad isn't a media kit, it's one question: will it be fun? Get that right and we're already halfway there.
+        </p>
+      </div>
+      <a href="#" class="btn btn-solid" style="background:var(--black); color:var(--orange);">
+        Reach Out on WhatsApp
+      </a>
+    </div>
+    <div class="grid grid-3 grid-rule">
+      <div class="pillar">
+        <div class="pillar-num">01 / SHOW UP</div>
+        <h3>Invite Us to Your Event</h3>
+        <p>
+          A pack of one-wheeled speed junkies showing up to your meetup, race, or brand activation? Consider us there.
+        </p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">02 / ON CAMERA</div>
+        <h3>Use Us for Content</h3>
+        <p>
+          Need riders, footage, or a squad on camera? We're in — no fee required, just make it fun.
+        </p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">03 / HANDS ON</div>
+        <h3>Ask Us to Help Run It</h3>
+        <p>
+          We once marshalled a running event purely because we thought it'd be a laugh. Ask and find out.
+        </p>
+      </div>
+    </div>
+  </section>
+  
+<!-- FEATURED RIDER SPOTLIGHT ============================================== -->
+  <section class="band band-black">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Verified &amp; seasoned</span>
+        <h2 class="section-title">Rider Spotlight</h2>
+        <p class="section-lede">
+          Featured Riders are seasoned members trusted to give star ratings on gear inside our reviews.
+        </p>
+      </div>
+      <.link navigate={~p"/riders"} class="btn btn-outline">All Featured Riders</.link>
+    </div>
+    <div class="poster-grid">
+      <.link class="poster" navigate={~p"/riders"}>
+        <span class="sticker sticker-pin">★ Featured</span>
+        <img src="/images/arifvirkill.png" alt="Rider profile poster — Arifvirkill" />
+        <div class="poster-cap">
+          <span class="poster-name">Arifvirkill</span>
+          <span>Tech-Wear Unit 01</span>
+        </div>
+      </.link>
+
+      <.link class="poster" navigate={~p"/riders"}>
+        <span class="sticker sticker-pin">★ Featured</span>
+        <img src="/images/rivaldo_manurung.png" alt="Rider profile poster — Rivaldo Manurung" />
+        <div class="poster-cap">
+          <span class="poster-name">Rivaldo Manurung</span>
+          <span>Moto Unit 02</span>
+        </div>
+      </.link>
+
+      <.link class="poster" navigate={~p"/riders"}>
+        <span class="sticker sticker-pin">★ Featured</span>
+        <img src="/images/didiet.png" alt="Rider profile poster — Didiet" />
+        <div class="poster-cap">
+          <span class="poster-name">Didiet</span>
+          <span>Urban Moto · Unit EUC</span>
+        </div>
+      </.link>
+    </div>
+  </section>
+</Layouts.app>

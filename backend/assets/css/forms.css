@@ -1,0 +1,245 @@
+/* ==========================================================================
+   PEV SQUAD — APP UI
+   Inputs, flashes, tables and auth panels for the parts of the app the
+   static prototype never had. Same rules as kinetic.css: hard 2px rules,
+   mono labels, orange as the only accent.
+   ========================================================================== */
+
+/* Buttons — generated Phoenix markup uses btn-primary / btn-soft / btn-ghost */
+.btn-primary {
+  background: var(--orange);
+  color: var(--black);
+  border-color: var(--black);
+}
+.btn-primary:hover { transform: translate(-3px, -3px); box-shadow: 3px 3px 0 var(--black); }
+.band-black .btn-primary { border-color: var(--orange); }
+.band-black .btn-primary:hover { box-shadow: 3px 3px 0 var(--white); }
+
+.btn-soft { background: var(--fill-soft); }
+.btn-soft:hover { background: var(--orange); color: var(--black); border-color: var(--orange); }
+
+.btn-ghost { border-color: transparent; background: transparent; }
+.btn-ghost:hover { border-color: currentColor; }
+
+.btn:disabled,
+.btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-sm { padding: 0.55rem 0.9rem; font-size: 0.68rem; }
+
+/* Fields */
+.fieldset { display: block; }
+
+.label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.input,
+.select,
+.textarea {
+  display: block;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  border: var(--bw) solid var(--rule);
+  border-radius: 0;
+  outline: none;
+}
+.textarea { min-height: 8rem; line-height: 1.5; }
+.select option { color: var(--black); }
+
+.input:focus,
+.select:focus,
+.textarea:focus { border-color: var(--orange); box-shadow: 4px 4px 0 var(--orange); }
+
+.input-error,
+.select-error,
+.textarea-error { border-color: #ff3b3b; }
+
+.text-error { color: #ff3b3b; }
+.band-white .text-error { color: #c40000; }
+
+.checkbox {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--orange);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.divider::before,
+.divider::after { content: ''; flex: 1; border-top: 1px solid var(--rule); }
+
+/* Inline links inside forms and notices */
+.link-orange { color: var(--orange); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.band-white .link-orange { color: var(--black); text-decoration-color: var(--orange); text-decoration-thickness: 2px; }
+
+/* Auth / settings panel — a narrow white card on a black band */
+.panel {
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  background: var(--white);
+  color: var(--black);
+  border: var(--bw) solid var(--black);
+  box-shadow: 8px 8px 0 var(--orange);
+  --rule: var(--black);
+  --muted: rgba(0, 0, 0, 0.62);
+  --fill-soft: rgba(0, 0, 0, 0.06);
+}
+.panel-wide { max-width: 48rem; }
+.panel .section-title { font-size: clamp(2.2rem, 5vw, 3.2rem); }
+.panel-sub { margin-top: 0.75rem; line-height: 1.5; color: var(--muted); }
+
+.notice {
+  padding: 1rem 1.1rem;
+  border: var(--bw) solid var(--rule);
+  background: var(--fill-soft);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+/* Flash toasts */
+.toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: min(26rem, calc(100vw - 2rem));
+  z-index: 200;
+}
+.alert {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1rem 1.1rem;
+  border: var(--bw) solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+  line-height: 1.4;
+  font-size: 0.95rem;
+}
+.alert-info { background: var(--white); color: var(--black); }
+.alert-error { background: var(--orange); color: var(--black); }
+
+/* Tables (admin) */
+.table { width: 100%; border-collapse: collapse; }
+.table th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.75rem 0.75rem;
+  border-bottom: var(--bw) solid var(--rule);
+}
+.table td { padding: 0.9rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.table-zebra tbody tr:nth-child(even) { background: var(--fill-soft); }
+
+.list { list-style: none; }
+.list-row { display: flex; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--rule); }
+.list-col-grow { flex: 1; }
+
+/* Masthead account link — last item in .mainnav, pushed to the far right */
+.mainnav .nav-account {
+  margin-left: auto;
+  border-left: var(--bw) solid var(--white);
+  font-weight: 700;
+}
+@media (max-width: 900px) {
+  .mainnav .nav-account { margin-left: 0; border-left: 0; }
+}
+
+/* RSVP block on event detail */
+.rsvp-box {
+  border: var(--bw) solid var(--rule);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.seat-meter {
+  height: 10px;
+  border: var(--bw) solid var(--rule);
+  background: var(--fill-soft);
+}
+.seat-meter > span { display: block; height: 100%; background: var(--orange); }
+
+.attendee-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.attendee-list li {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Event detail */
+.event-detail-title {
+  font-family: var(--font-stencil);
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.86;
+  margin-top: 1rem;
+}
+.event-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: start;
+}
+.event-facts { list-style: none; border-top: var(--bw) solid var(--rule); }
+.event-facts li {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+  line-height: 1.4;
+}
+.event-facts .k {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+.prose-body p { line-height: 1.6; font-size: 1.05rem; max-width: 68ch; }
+.prose-body p + p { margin-top: 1rem; }
+.rsvp-status {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+@media (max-width: 900px) {
+  .event-detail-grid { grid-template-columns: 1fr; }
+  .event-facts li { grid-template-columns: 7rem 1fr; }
+}
+
+/* Dev-only "local mail adapter" notice sits inside the auth panel */
+.panel .alert { box-shadow: none; margin-bottom: 1.5rem; }
