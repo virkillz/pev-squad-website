@@ -1,5 +1,6 @@
 defmodule PevSquadWeb.UserAuth do
   use PevSquadWeb, :verified_routes
+  use Gettext, backend: PevSquadWeb.Gettext
 
   import Plug.Conn
   import Phoenix.Controller
@@ -143,10 +144,13 @@ defmodule PevSquadWeb.UserAuth do
   #
   defp renew_session(conn, _user) do
     delete_csrf_token()
+    # The rider's language choice survives logging in and out.
+    locale = get_session(conn, "locale")
 
     conn
     |> configure_session(renew: true)
     |> clear_session()
+    |> then(&if(locale, do: put_session(&1, "locale", locale), else: &1))
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}, _),
@@ -224,7 +228,7 @@ defmodule PevSquadWeb.UserAuth do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
+        |> Phoenix.LiveView.put_flash(:error, gettext("You must log in to access this page."))
         |> Phoenix.LiveView.redirect(to: ~p"/users/log-in")
 
       {:halt, socket}
@@ -239,7 +243,10 @@ defmodule PevSquadWeb.UserAuth do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "Only moderators and admins can open that page.")
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          gettext("Only moderators and admins can open that page.")
+        )
         |> Phoenix.LiveView.redirect(to: ~p"/")
 
       {:halt, socket}
@@ -254,7 +261,10 @@ defmodule PevSquadWeb.UserAuth do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "You must re-authenticate to access this page.")
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          gettext("You must re-authenticate to access this page.")
+        )
         |> Phoenix.LiveView.redirect(to: ~p"/users/log-in")
 
       {:halt, socket}
@@ -288,7 +298,7 @@ defmodule PevSquadWeb.UserAuth do
       conn
     else
       conn
-      |> put_flash(:error, "You must log in to access this page.")
+      |> put_flash(:error, gettext("You must log in to access this page."))
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log-in")
       |> halt()

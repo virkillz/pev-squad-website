@@ -8,37 +8,35 @@ defmodule PevSquadWeb.EventComponents do
   alias PevSquad.Events
   alias PevSquad.Events.Event
 
-  @months ~w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
+  alias PevSquadWeb.Locale
 
-  @kind_labels %{
-    ride: "Group Ride",
-    night_ride: "Night Ride",
-    trail_ride: "Trail Ride",
-    tour: "Tour",
-    getaway: "Weekend Getaway",
-    expedition: "Expedition",
-    race: "Race",
-    meetup: "Meetup",
-    clinic: "Clinic",
-    collab: "Community Collab",
-    collab_ride: "Collab Ride",
-    brand_invite: "Brand Invite",
-    brand_activation: "Brand Activation",
-    media: "Media",
-    exhibition: "Exhibition",
-    marshal: "Marshal Duty"
-  }
-
-  def kind_label(kind), do: Map.fetch!(@kind_labels, kind)
+  # Clauses rather than a map so each label is a literal gettext call
+  # (extractable) translated in the current locale.
+  def kind_label(:ride), do: gettext("Group Ride")
+  def kind_label(:night_ride), do: gettext("Night Ride")
+  def kind_label(:trail_ride), do: gettext("Trail Ride")
+  def kind_label(:tour), do: gettext("Tour")
+  def kind_label(:getaway), do: gettext("Weekend Getaway")
+  def kind_label(:expedition), do: gettext("Expedition")
+  def kind_label(:race), do: gettext("Race")
+  def kind_label(:meetup), do: gettext("Meetup")
+  def kind_label(:clinic), do: gettext("Clinic")
+  def kind_label(:collab), do: gettext("Community Collab")
+  def kind_label(:collab_ride), do: gettext("Collab Ride")
+  def kind_label(:brand_invite), do: gettext("Brand Invite")
+  def kind_label(:brand_activation), do: gettext("Brand Activation")
+  def kind_label(:media), do: gettext("Media")
+  def kind_label(:exhibition), do: gettext("Exhibition")
+  def kind_label(:marshal), do: gettext("Marshal Duty")
 
   def kind_options, do: Enum.map(Event.kinds(), &{kind_label(&1), &1})
   def group_ride_kind_options, do: Enum.map(Event.group_ride_kinds(), &{kind_label(&1), &1})
 
   @doc "\"Group ride · hosted by @alias\", or nil for official events."
-  def hosted_by(%Event{category: :group_ride, host_alias: nil}), do: "Group ride"
+  def hosted_by(%Event{category: :group_ride, host_alias: nil}), do: gettext("Group ride")
 
   def hosted_by(%Event{category: :group_ride, host_alias: host}),
-    do: "Group ride · hosted by #{host}"
+    do: gettext("Group ride · hosted by %{host}", host: host)
 
   def hosted_by(%Event{}), do: nil
 
@@ -123,7 +121,7 @@ defmodule PevSquadWeb.EventComponents do
   @doc "\"Sat 02 Aug 2026 · 20:00 WIB\""
   def when_label(%Event{starts_at: starts_at, timezone: tz}) do
     s = local(starts_at, tz)
-    "#{Calendar.strftime(s, "%a %d %b %Y · %H:%M")} #{s.zone_abbr}"
+    "#{Locale.strftime(s, "%a %d %b %Y · %H:%M")} #{s.zone_abbr}"
   end
 
   @doc "\"02 AUG 2026 · GROUP RIDE · BUNDARAN HI, 20:00\" — the home page Next Up line."
@@ -131,7 +129,7 @@ defmodule PevSquadWeb.EventComponents do
     s = local(event.starts_at, event.timezone)
 
     [
-      Calendar.strftime(s, "%d %b %Y"),
+      Locale.strftime(s, "%d %b %Y"),
       kind_label(event.kind),
       Enum.join(
         Enum.reject(
@@ -146,14 +144,18 @@ defmodule PevSquadWeb.EventComponents do
   end
 
   @doc "\"12 / 20 going · 3 waitlist\", \"8 going\" for unlimited events."
-  def seats_label(%Event{capacity: nil, going_count: going}), do: "#{going} going"
+  def seats_label(%Event{capacity: nil, going_count: going}),
+    do: gettext("%{going} going", going: going)
 
   def seats_label(%Event{capacity: cap, going_count: going, waitlist_count: wait}) do
-    base = "#{going} / #{cap} going"
-    if wait > 0, do: "#{base} · #{wait} waitlist", else: base
+    base = gettext("%{going} / %{cap} going", going: going, cap: cap)
+
+    if wait > 0,
+      do: base <> " · " <> gettext("%{count} waitlist", count: wait),
+      else: base
   end
 
-  defp month(%DateTime{month: m}), do: Enum.at(@months, m - 1)
+  defp month(%DateTime{} = dt), do: Locale.strftime(dt, "%b")
   defp pad(n), do: n |> Integer.to_string() |> String.pad_leading(2, "0")
 
   @doc "One event row, as on the prototype's events page."
@@ -189,7 +191,7 @@ defmodule PevSquadWeb.EventComponents do
           {hosted_by(@event)}
         </span>
         <span :if={@event.status == :cancelled} class="badge" style="margin-left:0.35rem;">
-          Cancelled
+          {gettext("Cancelled")}
         </span>
         <h3 class="event-title">{@event.title}</h3>
         <p :if={@event.description} class="event-desc">{excerpt(@event.description)}</p>
@@ -199,7 +201,7 @@ defmodule PevSquadWeb.EventComponents do
           style="margin-top:0.6rem; font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.08em; text-transform:uppercase;"
         >
           {Enum.join(Enum.reject([@event.location_name, seats_label(@event)], &is_nil/1), " · ")}
-          <span :if={Events.seats_left(@event) == 0}> · Full — join the waitlist</span>
+          <span :if={Events.seats_left(@event) == 0}> ·  {gettext("Full — join the waitlist")}</span>
         </p>
       </div>
     </.link>

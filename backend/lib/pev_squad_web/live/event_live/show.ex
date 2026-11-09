@@ -13,7 +13,9 @@ defmodule PevSquadWeb.EventLive.Show do
       <section class="page-header">
         <div class="meta-row">
           <span class="eyebrow">
-            <.link navigate={~p"/events"} style="text-decoration:none;">06 / Events</.link>
+            <.link navigate={~p"/events"} style="text-decoration:none;">
+              06 / {gettext("Events")}
+            </.link>
           </span>
           <span class="badge" style="background:var(--black); color:var(--orange);">
             {kind_label(@event.kind)}
@@ -33,16 +35,20 @@ defmodule PevSquadWeb.EventLive.Show do
         <div class="event-detail-grid">
           <div class="space-y-8">
             <div :if={@event.status == :cancelled} class="notice">
-              This event has been cancelled.
+              {gettext("This event has been cancelled.")}
             </div>
             <div :if={@event.status == :draft} class="notice">
-              Draft — only staff can see this page until it's published.
+              {gettext("Draft — only staff can see this page until it's published.")}
             </div>
             <div :if={@event.status == :hidden} class="notice">
-              Hidden after reports from members — only you and the moderators can see it until they've looked.
+              {gettext(
+                "Hidden after reports from members — only you and the moderators can see it until they've looked."
+              )}
             </div>
             <p :if={@group?} class="host-note" id="group-ride-note">
-              A group ride hosted by a member, not organized by PEV Squad. Ride within your limits and wear your gear.
+              {gettext(
+                "A group ride hosted by a member, not organized by PEV Squad. Ride within your limits and wear your gear."
+              )}
             </p>
 
             <div :if={@event.description} class="prose-body">
@@ -50,18 +56,18 @@ defmodule PevSquadWeb.EventLive.Show do
             </div>
 
             <ul class="event-facts">
-              <li><span class="k">When</span><span>{when_label(@event)}</span></li>
+              <li><span class="k">{gettext("When")}</span><span>{when_label(@event)}</span></li>
               <li :if={@event.ends_at}>
-                <span class="k">Until</span><span>{when_label(%{@event | starts_at: @event.ends_at})}</span>
+                <span class="k">{gettext("Until")}</span><span>{when_label(%{@event | starts_at: @event.ends_at})}</span>
               </li>
               <li :if={@event.location_name}>
-                <span class="k">Where</span><span>{@event.location_name}</span>
+                <span class="k">{gettext("Where")}</span><span>{@event.location_name}</span>
               </li>
               <li :if={@event.meeting_point}>
-                <span class="k">Meet at</span><span>{@event.meeting_point}</span>
+                <span class="k">{gettext("Meet at")}</span><span>{@event.meeting_point}</span>
               </li>
               <li :if={@group?}>
-                <span class="k">Hosted by</span>
+                <span class="k">{gettext("Hosted by")}</span>
                 <span>
                   <.link
                     :if={@event.host_slug}
@@ -70,17 +76,19 @@ defmodule PevSquadWeb.EventLive.Show do
                   >
                     {@event.host_alias}
                   </.link>
-                  <span :if={is_nil(@event.host_slug)}>A PEV Squad member</span>
+                  <span :if={is_nil(@event.host_slug)}>{gettext("A PEV Squad member")}</span>
                 </span>
               </li>
               <li :if={!@group?}>
-                <span class="k">Run by</span>
+                <span class="k">{gettext("Run by")}</span>
                 <span>
-                  {if @event.role == :organizer, do: "PEV Squad", else: "PEV Squad as collaborator"}
+                  {if @event.role == :organizer,
+                    do: "PEV Squad",
+                    else: gettext("PEV Squad as collaborator")}
                 </span>
               </li>
               <li :if={@linked_partners != [] or @event.partners}>
-                <span class="k">With</span>
+                <span class="k">{gettext("With")}</span>
                 <span class="partner-chips" id="event-partners">
                   <.link
                     :for={p <- @linked_partners}
@@ -95,18 +103,18 @@ defmodule PevSquadWeb.EventLive.Show do
                 </span>
               </li>
               <li :if={@event.rsvp_deadline}>
-                <span class="k">RSVP by</span><span>{when_label(%{@event | starts_at: @event.rsvp_deadline})}</span>
+                <span class="k">{gettext("RSVP by")}</span><span>{when_label(%{@event | starts_at: @event.rsvp_deadline})}</span>
               </li>
             </ul>
           </div>
 
           <aside class="rsvp-box" id="rsvp">
-            <span class="eyebrow">Seats</span>
+            <span class="eyebrow">{gettext("Seats")}</span>
             <div class="stat-n" style="font-size:3rem;" id="seat-count">
               {@event.going_count}<span :if={@event.capacity} style="opacity:0.5;">/{@event.capacity}</span>
             </div>
             <span class="rsvp-status" style="font-weight:500; opacity:0.75;">
-              going<span :if={@event.waitlist_count > 0}> · {@event.waitlist_count} on the waitlist</span>
+              {gettext("going")}<span :if={@event.waitlist_count > 0}> · {gettext("%{count} on the waitlist", count: @event.waitlist_count)}</span>
             </span>
             <div :if={@event.capacity} class="seat-meter" aria-hidden="true">
               <span style={"width: #{min(@event.going_count * 100 / @event.capacity, 100)}%"}></span>
@@ -115,49 +123,55 @@ defmodule PevSquadWeb.EventLive.Show do
             <%= cond do %>
               <% @rsvp && @rsvp.status == :going -> %>
                 <p class="rsvp-status" style="color:var(--orange);" id="rsvp-status">
-                  ✓ You're going
+                  ✓ {gettext("You're going")}
                 </p>
                 <.button
                   :if={@open?}
                   phx-click="cancel"
-                  data-confirm="Give up your seat? If the ride is full, the next rider on the waitlist takes it."
+                  data-confirm={
+                    gettext(
+                      "Give up your seat? If the ride is full, the next rider on the waitlist takes it."
+                    )
+                  }
                   class="btn btn-outline w-full"
                 >
-                  Cancel my RSVP
+                  {gettext("Cancel my RSVP")}
                 </.button>
               <% @rsvp && @rsvp.status == :waitlist -> %>
                 <p class="rsvp-status" id="rsvp-status">
-                  You're #{@waitlist_position} on the waitlist
+                  {gettext("You're #%{position} on the waitlist", position: @waitlist_position)}
                 </p>
                 <p class="event-desc">
-                  If a seat opens up you'll be moved in automatically and we'll email you.
+                  {gettext("If a seat opens up you'll be moved in automatically and we'll email you.")}
                 </p>
                 <.button :if={@open?} phx-click="cancel" class="btn btn-outline w-full">
-                  Leave the waitlist
+                  {gettext("Leave the waitlist")}
                 </.button>
               <% not @open? -> %>
-                <p class="rsvp-status" id="rsvp-status">RSVPs closed</p>
+                <p class="rsvp-status" id="rsvp-status">{gettext("RSVPs closed")}</p>
               <% is_nil(@current_scope) -> %>
                 <.link navigate={~p"/users/log-in"} class="btn btn-solid w-full text-center">
-                  Log in to RSVP
+                  {gettext("Log in to RSVP")}
                 </.link>
                 <p class="event-desc">
-                  New here?
-                  <.link navigate={~p"/users/register"} class="link-orange">Create an account</.link>
+                  {gettext("New here?")}
+                  <.link navigate={~p"/users/register"} class="link-orange">
+                    {gettext("Create an account")}
+                  </.link>
                 </p>
               <% Events.seats_left(@event) == 0 -> %>
                 <.button phx-click="rsvp" variant="primary" class="btn btn-primary w-full">
-                  Full — join the waitlist
+                  {gettext("Full — join the waitlist")}
                 </.button>
                 <p class="event-desc">
-                  First come, first served. You'll get a seat if someone cancels.
+                  {gettext("First come, first served. You'll get a seat if someone cancels.")}
                 </p>
               <% true -> %>
                 <.button phx-click="rsvp" variant="primary" class="btn btn-primary w-full">
-                  RSVP — I'm going
+                  {gettext("RSVP — I'm going")}
                 </.button>
                 <p :if={@event.capacity} class="event-desc">
-                  {seats_left_label(@event)} First come, first served.
+                  {seats_left_label(@event)} {gettext("First come, first served.")}
                 </p>
             <% end %>
 
@@ -166,14 +180,14 @@ defmodule PevSquadWeb.EventLive.Show do
               navigate={~p"/group-rides/#{@event.id}/edit"}
               class="btn btn-ghost w-full text-center"
             >
-              Edit ride · see riders
+              {gettext("Edit ride · see riders")}
             </.link>
             <.link
               :if={@can_manage? and !@group?}
               navigate={~p"/admin/events/#{@event.id}/edit"}
               class="btn btn-ghost w-full text-center"
             >
-              Edit event · see riders
+              {gettext("Edit event · see riders")}
             </.link>
             <.link
               :if={((@group? and @current_scope) && !@host?) and @event.status == :published}
@@ -181,7 +195,7 @@ defmodule PevSquadWeb.EventLive.Show do
               class="lb-report"
               style="color:inherit; opacity:0.6;"
             >
-              Report this ride
+              {gettext("Report this ride")}
             </.link>
           </aside>
         </div>
@@ -217,17 +231,18 @@ defmodule PevSquadWeb.EventLive.Show do
       scope ->
         case Events.rsvp(scope, socket.assigns.event) do
           {:ok, %{status: :going}} ->
-            {:noreply, socket |> put_flash(:info, "You're in. See you there.") |> refresh()}
+            {:noreply,
+             socket |> put_flash(:info, gettext("You're in. See you there.")) |> refresh()}
 
           {:ok, %{status: :waitlist}} ->
             {:noreply,
              socket
-             |> put_flash(:info, "Ride's full — you're on the waitlist.")
+             |> put_flash(:info, gettext("Ride's full — you're on the waitlist."))
              |> refresh()}
 
           {:error, :closed} ->
             {:noreply,
-             socket |> put_flash(:error, "RSVPs for this event are closed.") |> refresh()}
+             socket |> put_flash(:error, gettext("RSVPs for this event are closed.")) |> refresh()}
         end
     end
   end
@@ -236,7 +251,7 @@ defmodule PevSquadWeb.EventLive.Show do
     {:ok, _promoted} =
       Events.cancel_rsvp(socket.assigns.current_scope, socket.assigns.event, &event_url/1)
 
-    {:noreply, socket |> put_flash(:info, "RSVP cancelled.") |> refresh()}
+    {:noreply, socket |> put_flash(:info, gettext("RSVP cancelled.")) |> refresh()}
   end
 
   @impl true
@@ -255,10 +270,8 @@ defmodule PevSquadWeb.EventLive.Show do
   end
 
   defp seats_left_label(event) do
-    case Events.seats_left(event) do
-      1 -> "1 seat left."
-      n -> "#{n} seats left."
-    end
+    n = Events.seats_left(event)
+    ngettext("1 seat left.", "%{count} seats left.", n)
   end
 
   defp event_url(event), do: url(~p"/events/#{event.slug}")

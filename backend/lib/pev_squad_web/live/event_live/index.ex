@@ -5,7 +5,12 @@ defmodule PevSquadWeb.EventLive.Index do
 
   import PevSquadWeb.EventComponents
 
-  @filters [{"All", "all"}, {"Official", "official"}, {"Group rides", "group"}]
+  defp filters,
+    do: [
+      {gettext("All"), "all"},
+      {gettext("Official"), "official"},
+      {gettext("Group rides"), "group"}
+    ]
 
   @impl true
   def render(assigns) do
@@ -13,26 +18,30 @@ defmodule PevSquadWeb.EventLive.Index do
     <Layouts.app flash={@flash} current_scope={@current_scope} active={:events}>
       <section class="page-header">
         <div class="meta-row">
-          <span class="eyebrow">06 / Group rides &amp; meetups</span>
-          <span class="tag-scribble">roll out</span>
+          <span class="eyebrow">06 / {gettext("Group rides & meetups")}</span>
+          <span class="tag-scribble">{gettext("roll out")}</span>
         </div>
-        <h1 class="page-title">Events</h1>
+        <h1 class="page-title">{gettext("Events")}</h1>
         <p class="page-intro">
-          Where the squad shows up in person — trail expeditions, overnight getaways, brand collabs and community meetups. Some we organize, some we're invited to, and group rides are hosted by members. RSVP to grab a seat: limited rides are first come, first served.
+          {gettext(
+            "Where the squad shows up in person — trail expeditions, overnight getaways, brand collabs and community meetups. Some we organize, some we're invited to, and group rides are hosted by members. RSVP to grab a seat: limited rides are first come, first served."
+          )}
         </p>
       </section>
 
       <section class="band band-black">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Mark your calendar</span>
-            <h2 class="section-title">Upcoming</h2>
+            <span class="eyebrow">{gettext("Mark your calendar")}</span>
+            <h2 class="section-title">{gettext("Upcoming")}</h2>
           </div>
           <div class="flex flex-wrap gap-3">
             <.link :if={@staff?} navigate={~p"/admin/events/new"} class="btn btn-outline">
-              New Event
+              {gettext("New Event")}
             </.link>
-            <.link navigate={~p"/group-rides/new"} class="btn btn-solid">Host a Group Ride</.link>
+            <.link navigate={~p"/group-rides/new"} class="btn btn-solid">
+              {gettext("Host a Group Ride")}
+            </.link>
           </div>
         </div>
         <div class="filters">
@@ -55,8 +64,8 @@ defmodule PevSquadWeb.EventLive.Index do
       <section :if={@past != []} class="band band-white">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Recap</span>
-            <h2 class="section-title">Past Events</h2>
+            <span class="eyebrow">{gettext("Recap")}</span>
+            <h2 class="section-title">{gettext("Past Events")}</h2>
           </div>
         </div>
         <div class="index-list">
@@ -71,12 +80,12 @@ defmodule PevSquadWeb.EventLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:page_title, "Events")
+     |> assign(:page_title, gettext("Events"))
      |> assign(
        :page_description,
-       "Group rides, meet-ups and trips from PEV Squad — see what's coming up and RSVP."
+       gettext("Group rides, meet-ups and trips from PEV Squad — see what's coming up and RSVP.")
      )
-     |> assign(:filters, @filters)
+     |> assign(:filters, filters())
      |> assign(:staff?, PevSquad.Accounts.Scope.staff?(socket.assigns.current_scope))
      |> assign(:hidden, PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope))}
   end
@@ -98,6 +107,6 @@ defmodule PevSquadWeb.EventLive.Index do
      )}
   end
 
-  defp empty_message("group"), do: "No group rides planned yet — host one."
-  defp empty_message(_), do: "Nothing on the calendar yet — watch the WhatsApp group."
+  defp empty_message("group"), do: gettext("No group rides planned yet — host one.")
+  defp empty_message(_), do: gettext("Nothing on the calendar yet — watch the WhatsApp group.")
 end

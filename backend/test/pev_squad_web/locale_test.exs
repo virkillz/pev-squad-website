@@ -2,6 +2,10 @@ defmodule PevSquadWeb.LocaleTest do
   use PevSquadWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import PevSquad.AccountsFixtures
+  import PevSquad.EventsFixtures
+
+  defp in_indonesian(conn), do: init_test_session(conn, %{"locale" => "id"})
 
   describe "picking the locale" do
     test "falls back to the configured default", %{conn: conn} do
@@ -94,6 +98,68 @@ defmodule PevSquadWeb.LocaleTest do
 
       html = lv |> form("#registration_form", user: %{email: ""}) |> render_change()
       assert html =~ "tidak boleh kosong"
+    end
+  end
+
+  describe "events in Indonesian" do
+    test "the list shows translated labels and dates", %{conn: conn} do
+      event_fixture(
+        title: "Night Loop SCBD",
+        kind: :night_ride,
+        capacity: 10,
+        starts_at: ~U[2099-08-15 13:00:00Z]
+      )
+
+      {:ok, _lv, html} = conn |> in_indonesian() |> live(~p"/events")
+
+      assert html =~ "Catat di kalender"
+      assert html =~ "Adakan Group Ride"
+      assert html =~ "0 / 10 ikut"
+      assert html =~ "Agu"
+      assert html =~ "Night Loop SCBD"
+    end
+
+    test "the detail page shows the RSVP box and translated flashes", %{conn: conn} do
+      event = event_fixture(capacity: 3, starts_at: ~U[2099-08-17 01:00:00Z])
+
+      {:ok, _lv, html} = conn |> in_indonesian() |> live(~p"/events/#{event.slug}")
+      assert html =~ "Masuk untuk RSVP"
+      assert html =~ "Sen 17 Agu 2099"
+
+      user = user_fixture()
+      conn = conn |> in_indonesian() |> log_in_user(user)
+      {:ok, lv, html} = live(conn, ~p"/events/#{event.slug}")
+      assert html =~ "Sisa 3 kursi."
+      assert lv |> element("button", "RSVP — Saya ikut") |> render_click() =~ "Kamu ikut"
+    end
+  end
+
+  describe "auth in Indonesian" do
+    test "login and registration pages", %{conn: conn} do
+      {:ok, _lv, html} = conn |> in_indonesian() |> live(~p"/users/log-in")
+      assert html =~ "Masuk dengan email"
+      assert html =~ "Belum punya akun?"
+
+      {:ok, _lv, html} = conn |> in_indonesian() |> live(~p"/users/register")
+      assert html =~ "Daftar akun"
+    end
+
+    test "the language choice survives logging in and out", %{conn: conn} do
+      user = user_fixture() |> set_password()
+
+      conn =
+        conn
+        |> in_indonesian()
+        |> post(~p"/users/log-in", %{
+          "user" => %{"email" => user.email, "password" => valid_user_password()}
+        })
+
+      assert get_session(conn, "locale") == "id"
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) == "Selamat datang kembali!"
+
+      conn = conn |> recycle() |> delete(~p"/users/log-out")
+      assert get_session(conn, "locale") == "id"
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) == "Berhasil keluar."
     end
   end
 
