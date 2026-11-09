@@ -457,6 +457,84 @@ defmodule PevSquad.Accounts do
     :ok
   end
 
+  ## Personal API tokens
+
+  # last_used_at is written at most this often, so a burst of CLI calls
+  # doesn't turn every request into a write.
+  @api_token_touch_after_seconds 300
+
+  @doc """
+  Creates a personal API token for the scope's own user. Staff only.
+
+  Returns `{:ok, plaintext, token}`. The plaintext is never stored and can't
+  be shown again.
+  """
+  def create_api_token(%Scope{user: user} = scope, attrs) do
+    if Scope.staff?(scope) do
+      {plaintext, token} = UserToken.build_api_token(user, nil)
+
+      changeset =
+        token
+        |> Ecto.Changeset.cast(attrs, [:name])
+        |> Ecto.Changeset.update_change(:name, &String.trim/1)
+        |> Ecto.Changeset.validate_required([:name])
+        |> Ecto.Changeset.validate_length(:name, max: 60)
+
+      with {:ok, token} <- Repo.insert(changeset), do: {:ok, plaintext, token}
+    else
+      {:error, :forbidden}
+    end
+  end
+
+  @doc "A blank changeset for the token form."
+  def change_api_token(attrs \\ %{}) do
+    Ecto.Changeset.cast(%UserToken{context: "api"}, attrs, [:name])
+  end
+
+  @doc "The scope's own unexpired API tokens, newest first."
+  def list_api_tokens(%Scope{user: user}) do
+    Repo.all(
+      from t in UserToken,
+        where: t.user_id == ^user.id and t.context == "api",
+        where: t.expires_at > ^DateTime.utc_now(:second),
+        order_by: [desc: t.inserted_at, desc: t.id]
+    )
+  end
+
+  @doc "Revokes one of the scope's own API tokens."
+  def delete_api_token(%Scope{user: user}, id) do
+    case Repo.get_by(UserToken, id: id, user_id: user.id, context: "api") do
+      nil -> {:error, :not_found}
+      token -> Repo.delete(token)
+    end
+  end
+
+  @doc """
+  Gets the user behind a personal API token, or nil.
+
+  Only staff tokens resolve: a member who was demoted keeps their token rows
+  but they stop working until they're staff again.
+  """
+  def get_user_by_api_token(plaintext) when is_binary(plaintext) do
+    with {:ok, query} <- UserToken.verify_api_token_query(plaintext),
+         {%User{role: role} = user, token} when role in [:moderator, :admin] <- Repo.one(query) do
+      touch_api_token(token)
+      user
+    else
+      _ -> nil
+    end
+  end
+
+  defp touch_api_token(%UserToken{last_used_at: last} = token) do
+    now = DateTime.utc_now(:second)
+
+    if is_nil(last) or DateTime.diff(now, last) >= @api_token_touch_after_seconds do
+      Repo.update_all(from(t in UserToken, where: t.id == ^token.id), set: [last_used_at: now])
+    end
+
+    :ok
+  end
+
   ## Token helper
 
   defp update_user_and_delete_all_tokens(changeset) do

@@ -1,0 +1,398 @@
+#!/usr/bin/env python3
+"""pev: draft PEV Squad events, news and articles from the command line.
+
+Talks to the admin API (/api/v1/admin, DESIGN.md section 7). Everything it
+creates or edits is a DRAFT; publish it by hand in /admin. Output is JSON on
+stdout, and errors are JSON on stderr with exit code 1.
+
+Setup:
+  export PEV_API_TOKEN=pevsq_...          # from /admin/api-tokens
+  export PEV_API_URL=http://localhost:4000 # optional; default https://pev-squad.org
+  export PEV_LOCALE=en                     # optional; language of error messages (id | en)
+
+Commands:
+  pev whoami
+  pev partners
+  pev upload IMAGE                         upload an image for a post body
+  pev spec                                 print the OpenAPI document
+
+  pev posts list [--kind news|article] [--status draft|published]
+  pev posts get ID_OR_SLUG
+  pev posts pull ID_OR_SLUG [-o FILE]      save as an editable .md file
+  pev posts create FILE                    FILE is .md (format below) or .json
+  pev posts update ID_OR_SLUG FILE         only what's in FILE changes
+  pev posts cover ID_OR_SLUG IMAGE
+
+  pev events list [--status S] [--category official|group_ride] [--upcoming]
+  pev events get ID_OR_SLUG
+  pev events create FILE                   .md (front matter + description) or .json
+  pev events update ID_OR_SLUG FILE
+
+Post .md format:
+
+  ---
+  kind: article            # news | article
+  topic: safety            # optional
+  event_id: 12             # optional, makes it a recap
+  source_name: Kompas      # optional, outside news
+  source_url: https://...
+  cover: ./cover.jpg       # optional, uploaded after saving
+  ---
+  === id ===
+  title: Cara Aman Night Ride
+  excerpt: Optional one-liner for cards.
+  machine_translated: false
+
+  Body in **Markdown**. Local images like ![](./photo.jpg) are uploaded
+  and the link is rewritten.
+  === en ===
+  title: Riding Safely at Night
+
+  English body. machine_translated defaults to true.
+
+Event .md format: front matter with the event fields (title, kind,
+starts_at, timezone, location_name, meeting_point, capacity, partner_ids:
+[1, 2], ...), and the text after it is the description. Times without an
+offset are local to `timezone` (default Asia/Jakarta): starts_at: 2026-12-05T20:00
+"""
+
+import json
+import mimetypes
+import os
+import re
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+import uuid
+
+LOCALES = ("id", "en")
+DEFAULT_URL = "https://pev-squad.org"
+
+
+# ---------------------------------------------------------------- HTTP
+
+
+def base_url():
+    return os.environ.get("PEV_API_URL", DEFAULT_URL).rstrip("/")
+
+
+def request(method, path, body=None, files=None, query=None):
+    token = os.environ.get("PEV_API_TOKEN")
+    if not token:
+        fail({"error": {"code": "no_token", "message": "Set PEV_API_TOKEN (create one at /admin/api-tokens)."}})
+
+    url = base_url() + "/api/v1" + path
+    if query:
+        query = {k: v for k, v in query.items() if v is not None}
+        if query:
+            url += "?" + urllib.parse.urlencode(query)
+
+    headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
+    if os.environ.get("PEV_LOCALE"):
+        headers["Accept-Language"] = os.environ["PEV_LOCALE"]
+    data = None
+    if files is not None:
+        boundary = uuid.uuid4().hex
+        data = multipart(files, boundary)
+        headers["Content-Type"] = "multipart/form-data; boundary=" + boundary
+    elif body is not None:
+        data = json.dumps(body).encode()
+        headers["Content-Type"] = "application/json"
+
+    req = urllib.request.Request(url, data=data, method=method, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return json.loads(resp.read() or b"null")
+    except urllib.error.HTTPError as e:
+        raw = e.read()
+        try:
+            fail(json.loads(raw))
+        except json.JSONDecodeError:
+            fail({"error": {"code": "http_%d" % e.code, "message": raw.decode(errors="replace")[:500]}})
+    except urllib.error.URLError as e:
+        fail({"error": {"code": "unreachable", "message": "%s: %s" % (base_url(), e.reason)}})
+
+
+def multipart(files, boundary):
+    out = []
+    for field, path in files.items():
+        name = os.path.basename(path)
+        ctype = mimetypes.guess_type(name)[0] or "application/octet-stream"
+        with open(path, "rb") as f:
+            content = f.read()
+        out.append(
+            (
+                "--%s\r\nContent-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\n"
+                "Content-Type: %s\r\n\r\n" % (boundary, field, name, ctype)
+            ).encode()
+            + content
+            + b"\r\n"
+        )
+    out.append(("--%s--\r\n" % boundary).encode())
+    return b"".join(out)
+
+
+def fail(payload):
+    print(json.dumps(payload, indent=2, ensure_ascii=False), file=sys.stderr)
+    sys.exit(1)
+
+
+def show(payload):
+    print(json.dumps(payload, indent=2, ensure_ascii=False))
+
+
+def quote(segment):
+    return urllib.parse.quote(str(segment), safe="")
+
+
+# ---------------------------------------------------------------- files
+
+
+def scalar(value):
+    """Front-matter values: numbers, true/false/null, [1, 2] lists, else strings."""
+    v = value.strip()
+    if v == "":
+        return None
+    if len(v) >= 2 and v[0] == v[-1] == '"':
+        try:
+            return json.loads(v)
+        except json.JSONDecodeError:
+            return v[1:-1]
+    if len(v) >= 2 and v[0] == v[-1] == "'":
+        return v[1:-1]
+    if v.startswith("[") and v.endswith("]"):
+        return [scalar(x) for x in v[1:-1].split(",") if x.strip()]
+    low = v.lower()
+    if low in ("true", "false"):
+        return low == "true"
+    if low in ("null", "~"):
+        return None
+    if re.fullmatch(r"-?\d+", v):
+        return int(v)
+    return v
+
+
+def parse_header_lines(lines):
+    out = {}
+    for line in lines:
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        key, sep, value = line.partition(":")
+        if not sep:
+            fail({"error": {"code": "bad_file", "message": "Expected 'key: value', got: %r" % line}})
+        # Allow trailing comments after a space.
+        value = re.sub(r"\s+#.*$", "", value) if not value.strip().startswith(("'", '"')) else value
+        out[key.strip()] = scalar(value)
+    return out
+
+
+def split_front_matter(text):
+    if not text.startswith("---"):
+        return {}, text
+    lines = text.split("\n")
+    try:
+        end = lines.index("---", 1)
+    except ValueError:
+        fail({"error": {"code": "bad_file", "message": "Front matter starts with --- but never ends."}})
+    return parse_header_lines(lines[1:end]), "\n".join(lines[end + 1 :])
+
+
+def parse_post_md(text):
+    meta, rest = split_front_matter(text)
+    translations = {}
+    parts = re.split(r"^===\s*(\w+)\s*===\s*$", rest, flags=re.M)
+    # parts: [before, locale, section, locale, section, ...]
+    if parts[0].strip():
+        fail({"error": {"code": "bad_file", "message": "Text before the first '=== id ===' / '=== en ===' line."}})
+    for locale, section in zip(parts[1::2], parts[2::2]):
+        if locale not in LOCALES:
+            fail({"error": {"code": "bad_file", "message": "Unknown language section: %s" % locale}})
+        section = section.strip("\n")
+        head, _, body = section.partition("\n\n")
+        fields = parse_header_lines(head.split("\n"))
+        if body.strip():
+            fields["body"] = body.strip() + "\n"
+        translations[locale] = fields if fields or body.strip() else None
+    if translations:
+        meta["translations"] = translations
+    return meta
+
+
+def parse_event_md(text):
+    meta, rest = split_front_matter(text)
+    if rest.strip():
+        meta["description"] = rest.strip() + "\n"
+    return meta
+
+
+def load(path, kind):
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    if path.endswith(".json"):
+        return json.loads(text)
+    return parse_post_md(text) if kind == "post" else parse_event_md(text)
+
+
+def upload_local_images(payload, base_dir):
+    """Uploads ![](local/file.jpg) images in post bodies and rewrites the links."""
+    done = {}
+
+    def replace(match):
+        alt, target = match.group(1), match.group(2)
+        if re.match(r"^(https?:)?//", target) or target.startswith("/uploads/"):
+            return match.group(0)
+        path = target if os.path.isabs(target) else os.path.join(base_dir, target)
+        if not os.path.isfile(path):
+            fail({"error": {"code": "bad_file", "message": "Image not found: %s" % target}})
+        if path not in done:
+            done[path] = request("POST", "/admin/uploads", files={"file": path})["data"]["path"]
+            print("uploaded %s -> %s" % (target, done[path]), file=sys.stderr)
+        return "![%s](%s)" % (alt, done[path])
+
+    for t in (payload.get("translations") or {}).values():
+        if isinstance(t, dict) and isinstance(t.get("body"), str):
+            t["body"] = re.sub(r"!\[([^\]]*)\]\(([^)\s]+)\)", replace, t["body"])
+
+
+def resolve(base_dir, path):
+    return path if os.path.isabs(path) else os.path.join(base_dir, path)
+
+
+# ---------------------------------------------------------------- commands
+
+
+def post_to_md(post):
+    meta = ["---", "id: %s" % post["id"], "kind: %s" % post["kind"], "slug: %s" % post["slug"]]
+    for key in ("topic", "event_id", "source_name", "source_url"):
+        if post.get(key) is not None:
+            meta.append("%s: %s" % (key, post[key]))
+    meta.append("# status: %s (publish in %s)" % (post["status"], post["admin_url"]))
+    meta.append("---")
+    sections = []
+    for locale in LOCALES:
+        t = post["translations"].get(locale)
+        if not t:
+            continue
+        head = ["=== %s ===" % locale, "title: %s" % json.dumps(t["title"], ensure_ascii=False)]
+        if t.get("excerpt"):
+            head.append("excerpt: %s" % json.dumps(t["excerpt"], ensure_ascii=False))
+        head.append("machine_translated: %s" % str(t["machine_translated"]).lower())
+        sections.append("\n".join(head) + "\n\n" + (t.get("body") or "").rstrip() + "\n")
+    return "\n".join(meta) + "\n" + "".join(sections)
+
+
+def save_post(method, path, file):
+    payload = load(file, "post")
+    base_dir = os.path.dirname(os.path.abspath(file))
+    cover = payload.pop("cover", None)
+    payload.pop("id", None)
+    upload_local_images(payload, base_dir)
+    result = request(method, path, body=payload)
+    if cover:
+        result = request(
+            "POST", "/admin/posts/%s/cover" % result["data"]["id"], files={"file": resolve(base_dir, cover)}
+        )
+    return result
+
+
+def flag(args, name, takes_value=True):
+    if name not in args:
+        return None
+    i = args.index(name)
+    if not takes_value:
+        args.pop(i)
+        return True
+    if i + 1 >= len(args):
+        fail({"error": {"code": "usage", "message": "%s needs a value" % name}})
+    value = args[i + 1]
+    del args[i : i + 2]
+    return value
+
+
+def need(args, n, usage):
+    if len(args) != n:
+        fail({"error": {"code": "usage", "message": "usage: pev " + usage}})
+
+
+def posts(args):
+    cmd = args.pop(0) if args else "list"
+    if cmd == "list":
+        kind, status = flag(args, "--kind"), flag(args, "--status")
+        show(request("GET", "/admin/posts", query={"kind": kind, "status": status}))
+    elif cmd == "get":
+        need(args, 1, "posts get ID_OR_SLUG")
+        show(request("GET", "/admin/posts/" + quote(args[0])))
+    elif cmd == "pull":
+        out = flag(args, "-o")
+        need(args, 1, "posts pull ID_OR_SLUG [-o FILE]")
+        md = post_to_md(request("GET", "/admin/posts/" + quote(args[0]))["data"])
+        if out:
+            with open(out, "w", encoding="utf-8") as f:
+                f.write(md)
+            print("wrote " + out, file=sys.stderr)
+        else:
+            sys.stdout.write(md)
+    elif cmd == "create":
+        need(args, 1, "posts create FILE")
+        show(save_post("POST", "/admin/posts", args[0]))
+    elif cmd == "update":
+        need(args, 2, "posts update ID_OR_SLUG FILE")
+        show(save_post("PATCH", "/admin/posts/" + quote(args[0]), args[1]))
+    elif cmd == "cover":
+        need(args, 2, "posts cover ID_OR_SLUG IMAGE")
+        show(request("POST", "/admin/posts/%s/cover" % quote(args[0]), files={"file": args[1]}))
+    else:
+        fail({"error": {"code": "usage", "message": "unknown command: posts " + cmd}})
+
+
+def events(args):
+    cmd = args.pop(0) if args else "list"
+    if cmd == "list":
+        query = {
+            "status": flag(args, "--status"),
+            "category": flag(args, "--category"),
+            "upcoming": "true" if flag(args, "--upcoming", takes_value=False) else None,
+        }
+        show(request("GET", "/admin/events", query=query))
+    elif cmd == "get":
+        need(args, 1, "events get ID_OR_SLUG")
+        show(request("GET", "/admin/events/" + quote(args[0])))
+    elif cmd == "create":
+        need(args, 1, "events create FILE")
+        payload = load(args[0], "event")
+        payload.pop("id", None)
+        show(request("POST", "/admin/events", body=payload))
+    elif cmd == "update":
+        need(args, 2, "events update ID_OR_SLUG FILE")
+        payload = load(args[1], "event")
+        payload.pop("id", None)
+        show(request("PATCH", "/admin/events/" + quote(args[0]), body=payload))
+    else:
+        fail({"error": {"code": "usage", "message": "unknown command: events " + cmd}})
+
+
+def main(argv):
+    if not argv or argv[0] in ("-h", "--help", "help"):
+        print(__doc__)
+        return
+    cmd, args = argv[0], argv[1:]
+    if cmd == "whoami":
+        show(request("GET", "/me"))
+    elif cmd == "partners":
+        show(request("GET", "/admin/partners"))
+    elif cmd == "upload":
+        need(args, 1, "upload IMAGE")
+        show(request("POST", "/admin/uploads", files={"file": args[0]}))
+    elif cmd == "spec":
+        show(request("GET", "/openapi"))
+    elif cmd == "posts":
+        posts(args)
+    elif cmd == "events":
+        events(args)
+    else:
+        fail({"error": {"code": "usage", "message": "unknown command: %s (try pev --help)" % cmd}})
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

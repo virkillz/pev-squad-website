@@ -161,13 +161,42 @@ defmodule PevSquad.Posts do
 
   ## Staff
 
-  def list_posts_for_staff(%Scope{} = scope) do
+  @doc "Every post for staff, drafts first. Options: `:kind`, `:status`."
+  def list_posts_for_staff(%Scope{} = scope, opts \\ []) do
     ensure_staff!(scope)
 
     Post
+    |> filter(:kind, opts[:kind])
+    |> filter(:status, opts[:status])
     |> order_by([p], desc_nulls_first: p.published_at, desc: p.inserted_at)
     |> preload(:translations)
     |> Repo.all()
+  end
+
+  @doc """
+  A post by id (an integer or digit string) or slug, for staff.
+  Returns `{:ok, post}` or `{:error, :not_found}`.
+  """
+  def fetch_post(%Scope{} = scope, id_or_slug) do
+    ensure_staff!(scope)
+
+    query =
+      case id_or_slug do
+        id when is_integer(id) -> where(Post, id: ^id)
+        key -> by_id_or_slug(key)
+      end
+
+    case query |> preload(:translations) |> Repo.one() do
+      nil -> {:error, :not_found}
+      post -> {:ok, post}
+    end
+  end
+
+  defp by_id_or_slug(key) do
+    case Integer.parse(key) do
+      {id, ""} -> where(Post, id: ^id)
+      _ -> where(Post, slug: ^key)
+    end
   end
 
   def get_post!(%Scope{} = scope, id) do

@@ -39,6 +39,29 @@ The public site and member pages are translated with Gettext; the admin area is 
 - After changing text: `mix gettext.extract --merge`, then fill the empty `msgstr ""` entries in `priv/gettext/id/LC_MESSAGES/*.po`. Clear any `#, fuzzy` guesses gettext adds; they're usually wrong.
 - Tests run with English as the default (`config/test.exs`); Indonesian is covered in `test/pev_squad_web/locale_test.exs`.
 
+## JSON API
+
+`/api/v1` serves the planned mobile app and staff tools (design: `docs/DESIGN.md` §7, roadmap §14).
+
+- Pipeline `:api` in the router: session-less locale (`PevSquadWeb.Locale, session: false`), then `fetch_api_scope` (`PevSquadWeb.API.Auth`) reads the bearer token. Protected routes add `require_api_user` or `require_api_staff`.
+- Controllers: `use PevSquadWeb, :api_controller`, in `lib/pev_squad_web/controllers/api/`. Return `{:error, changeset | :not_found | :forbidden}` and the fallback controller renders the shared error shape (`PevSquadWeb.API.Errors`). Declare an `operation` for each action; schemas are in `lib/pev_squad_web/api/schemas/`.
+- The spec is served at `/api/v1/openapi`, with Swagger UI at `/dev/swaggerui` in development.
+- Tokens: personal API tokens (`pevsq_…`) for staff only, created at `/admin/api-tokens`, stored hashed in `users_tokens` (context `api`).
+- Admin endpoints (`/api/v1/admin/…`, `require_api_staff`) only create and edit **drafts**. They refuse `status` / `published_at` with a 422, and editing published items or group rides returns a 409. Body parsing is in `PevSquadWeb.API.AdminParams`.
+
+## Drafting events, news and articles (`scripts/pev`)
+
+When the user asks you to write or edit an event, a news item or an article on the site, use the `pev` CLI. Don't use the admin UI, `bin/pev_squad rpc`, or the database.
+
+- It needs `PEV_API_TOKEN` (the user creates it at `/admin/api-tokens`; never print it or write it to a file in the repo). `PEV_API_URL` defaults to production; use `http://localhost:4000` to try things locally. `PEV_LOCALE=en` gives English error messages.
+- Run `scripts/pev --help` for the commands and the `.md` file format. Typical loop:
+  1. Write a draft `.md` in the scratchpad: front matter, then `=== id ===` and `=== en ===` sections.
+  2. `pev posts create FILE`. Local `![](./img.jpg)` images and `cover:` are uploaded for you.
+  3. To edit: `pev posts pull SLUG -o FILE`, change the file, then `pev posts update SLUG FILE`.
+- Events: `pev events create FILE`, with times local to `timezone` (e.g. `starts_at: 2026-12-05T20:00`). Run `pev partners` to find `partner_ids`, and `pev events list` to find an `event_id` for a recap post.
+- Write Indonesian first, since it's the default language. Set `machine_translated: false` on text the user wrote or checked. Anything you translated keeps the default `true`.
+- Everything lands as a draft. Give the user the `admin_url` from the response so they can review and publish it. You can't publish.
+
 ## Production server
 
 Full runbook: `docs/DEPLOYMENT.md`. Key facts for connecting and operating:

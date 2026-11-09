@@ -178,11 +178,19 @@ defmodule PevSquad.Events do
 
   ## Staff management
 
-  @doc "All events for the admin list, newest first."
-  def list_events_for_staff(%Scope{} = scope) do
+  @doc """
+  All events for the admin list, newest first.
+  Options: `:status`, `:category`, `:upcoming` (true = not started yet).
+  """
+  def list_events_for_staff(%Scope{} = scope, opts \\ []) do
     ensure_staff!(scope)
 
     Event
+    |> then(fn q -> if s = opts[:status], do: where(q, [e], e.status == ^s), else: q end)
+    |> then(fn q -> if c = opts[:category], do: where(q, [e], e.category == ^c), else: q end)
+    |> then(fn q ->
+      if opts[:upcoming], do: where(q, [e], e.starts_at >= ^DateTime.utc_now()), else: q
+    end)
     |> order_by([e], desc: e.starts_at)
     |> with_counts()
     |> with_host()
@@ -192,6 +200,31 @@ defmodule PevSquad.Events do
   def get_event!(%Scope{} = scope, id) do
     ensure_staff!(scope)
     Event |> where(id: ^id) |> with_counts() |> with_host() |> Repo.one!()
+  end
+
+  @doc """
+  An event by id (integer or digit string) or slug, for staff, with RSVP
+  counts. Returns `{:ok, event}` or `{:error, :not_found}`.
+  """
+  def fetch_event(%Scope{} = scope, id_or_slug) do
+    ensure_staff!(scope)
+
+    query =
+      case id_or_slug do
+        id when is_integer(id) ->
+          where(Event, id: ^id)
+
+        key ->
+          case Integer.parse(key) do
+            {id, ""} -> where(Event, id: ^id)
+            _ -> where(Event, slug: ^key)
+          end
+      end
+
+    case query |> with_counts() |> with_host() |> Repo.one() do
+      nil -> {:error, :not_found}
+      event -> {:ok, event}
+    end
   end
 
   @doc "An event the scope may edit: any for staff, their own group rides for hosts."

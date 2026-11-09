@@ -70,7 +70,8 @@ defmodule PevSquad.MixProject do
       {:tzdata, "~> 1.1"},
       {:image, "~> 0.62"},
       {:nimble_csv, "~> 1.2"},
-      {:mdex, "~> 0.14.6"}
+      {:mdex, "~> 0.14.6"},
+      {:open_api_spex, "~> 3.22"}
     ]
   end
 

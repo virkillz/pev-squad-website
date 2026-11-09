@@ -88,6 +88,14 @@ defmodule PevSquadWeb.Admin.Dashboard do
             <div class="index-desc">Write news, recaps and guides in Indonesian and English.</div>
             <div class="index-meta">CONTENT</div>
           </.link>
+          <.link class="index-row" navigate={~p"/admin/api-tokens"}>
+            <div class="index-num">11</div>
+            <div class="index-title">API Tokens</div>
+            <div class="index-desc">
+              Personal tokens for the command-line tool and AI assistants.
+            </div>
+            <div class="index-meta">TOOLS</div>
+          </.link>
         </div>
       </section>
     </Layouts.app>

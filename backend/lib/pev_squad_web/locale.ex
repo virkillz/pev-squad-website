@@ -12,6 +12,10 @@ defmodule PevSquadWeb.Locale do
 
   Used as a plug in the `:browser` pipeline and as an `on_mount` hook for
   LiveViews, which run in their own process and must set the locale again.
+
+  In the `:api` pipeline it runs as `plug PevSquadWeb.Locale, session: false`:
+  there is no session, so only `?locale=`, `Accept-Language` and the default
+  count, and the response gets a `Content-Language` header.
   """
   import Plug.Conn
 
@@ -27,9 +31,26 @@ defmodule PevSquadWeb.Locale do
 
   ## Plug
 
-  def init(opts), do: opts
+  def init(opts), do: Keyword.get(opts, :session, true)
 
-  def call(conn, _opts) do
+  def call(conn, false = _session?) do
+    param = conn.params["locale"]
+
+    locale =
+      cond do
+        supported?(param) -> param
+        locale = from_accept_language(conn) -> locale
+        true -> default()
+      end
+
+    Gettext.put_locale(PevSquadWeb.Gettext, locale)
+
+    conn
+    |> assign(:locale, locale)
+    |> put_resp_header("content-language", locale)
+  end
+
+  def call(conn, true = _session?) do
     param = conn.params["locale"]
 
     locale =

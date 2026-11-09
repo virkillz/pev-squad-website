@@ -11,12 +11,18 @@ defmodule PevSquad.Accounts.UserToken do
   @magic_link_validity_in_minutes 15
   @change_email_validity_in_days 7
   @session_validity_in_days 14
+  @api_validity_in_days 365
+  @api_token_prefix "pevsq_"
 
   schema "users_tokens" do
     field :token, :binary
     field :context, :string
     field :sent_to, :string
     field :authenticated_at, :utc_datetime
+    # Personal API tokens only (context "api").
+    field :name, :string
+    field :last_used_at, :utc_datetime
+    field :expires_at, :utc_datetime
     belongs_to :user, PevSquad.Accounts.User
 
     timestamps(type: :utc_datetime, updated_at: false)
@@ -149,6 +155,50 @@ defmodule PevSquad.Accounts.UserToken do
         :error
     end
   end
+
+  @doc """
+  Builds a personal API token for staff tools (the `pev` CLI).
+
+  Returns `{plaintext, %UserToken{}}`. The plaintext (`pevsq_…`) is shown to
+  the user once; only its SHA-256 hash is stored, so a database leak doesn't
+  leak usable tokens.
+  """
+  def build_api_token(user, name) do
+    token = :crypto.strong_rand_bytes(@rand_size)
+    expires_at = DateTime.utc_now(:second) |> DateTime.add(@api_validity_in_days, :day)
+
+    {@api_token_prefix <> Base.url_encode64(token, padding: false),
+     %UserToken{
+       token: :crypto.hash(@hash_algorithm, token),
+       context: "api",
+       name: name,
+       expires_at: expires_at,
+       user_id: user.id
+     }}
+  end
+
+  @doc """
+  Returns a query for the `{user, token}` behind a personal API token, or
+  `:error` when the string isn't shaped like one. Expired tokens don't match.
+  """
+  def verify_api_token_query(@api_token_prefix <> encoded) do
+    with {:ok, decoded} when byte_size(decoded) == @rand_size <-
+           Base.url_decode64(encoded, padding: false) do
+      hashed = :crypto.hash(@hash_algorithm, decoded)
+
+      query =
+        from token in by_token_and_context_query(hashed, "api"),
+          join: user in assoc(token, :user),
+          where: token.expires_at > ^DateTime.utc_now(:second),
+          select: {user, token}
+
+      {:ok, query}
+    else
+      _ -> :error
+    end
+  end
+
+  def verify_api_token_query(_token), do: :error
 
   defp by_token_and_context_query(token, context) do
     from UserToken, where: [token: ^token, context: ^context]

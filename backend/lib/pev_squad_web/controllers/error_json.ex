@@ -1,21 +1,19 @@
 defmodule PevSquadWeb.ErrorJSON do
   @moduledoc """
-  This module is invoked by your endpoint in case of errors on JSON requests.
+  This module is invoked by your endpoint in case of errors on JSON requests
+  (unknown /api routes, crashes). It uses the API's error shape, see
+  `PevSquadWeb.API.Errors`.
 
   See config/config.exs.
   """
+  alias PevSquadWeb.API.Errors
 
-  # If you want to customize a particular status code,
-  # you may add your own clauses, such as:
-  #
-  # def render("500.json", _assigns) do
-  #   %{errors: %{detail: "Internal Server Error"}}
-  # end
+  def render("401.json", _assigns), do: Errors.body(:unauthorized)
+  def render("403.json", _assigns), do: Errors.body(:forbidden)
+  def render("404.json", _assigns), do: Errors.body(:not_found)
 
-  # By default, Phoenix returns the status message from
-  # the template name. For example, "404.json" becomes
-  # "Not Found".
   def render(template, _assigns) do
-    %{errors: %{detail: Phoenix.Controller.status_message_from_template(template)}}
+    code = if String.starts_with?(template, "5"), do: "server_error", else: "bad_request"
+    %{error: %{code: code, message: Phoenix.Controller.status_message_from_template(template)}}
   end
 end

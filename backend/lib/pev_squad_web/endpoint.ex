@@ -50,7 +50,8 @@ defmodule PevSquadWeb.Endpoint do
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
   plug Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json],
+    # Multipart allows phone photos up to the 15 MB image limit (API uploads).
+    parsers: [:urlencoded, {:multipart, length: 16_000_000}, :json],
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
 

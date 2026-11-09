@@ -2,6 +2,7 @@ defmodule PevSquadWeb.Router do
   use PevSquadWeb, :router
 
   import PevSquadWeb.UserAuth
+  import PevSquadWeb.API.Auth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -20,8 +21,13 @@ defmodule PevSquadWeb.Router do
     plug PevSquadWeb.Locale
   end
 
+  # /api/v1: the mobile app and staff tools (DESIGN.md §7). No session or
+  # cookies; the caller comes from the bearer token.
   pipeline :api do
     plug :accepts, ["json"]
+    plug PevSquadWeb.Locale, session: false
+    plug :fetch_api_scope
+    plug OpenApiSpex.Plug.PutApiSpec, module: PevSquadWeb.API.Spec
   end
 
   scope "/", PevSquadWeb do
@@ -85,13 +91,32 @@ defmodule PevSquadWeb.Router do
       live "/posts/new", PostLive.Form, :new
       live "/posts/:id/edit", PostLive.Form, :edit
       live "/listings", ListingLive.Queue, :index
+      live "/api-tokens", ApiTokenLive.Index, :index
     end
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", PevSquadWeb do
-  #   pipe_through :api
-  # end
+  scope "/api/v1" do
+    pipe_through :api
+
+    get "/openapi", OpenApiSpex.Plug.RenderSpec, []
+  end
+
+  scope "/api/v1", PevSquadWeb.API, as: :api do
+    pipe_through [:api, :require_api_user]
+
+    get "/me", MeController, :show
+  end
+
+  # Staff tools (the `pev` CLI). Drafts only; publishing stays in /admin.
+  scope "/api/v1/admin", PevSquadWeb.API.Admin, as: :api_admin do
+    pipe_through [:api, :require_api_staff]
+
+    resources "/posts", PostController, only: [:index, :show, :create, :update]
+    post "/posts/:id/cover", PostController, :cover
+    resources "/events", EventController, only: [:index, :show, :create, :update]
+    get "/partners", PartnerController, :index
+    post "/uploads", UploadController, :create
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:pev_squad, :dev_routes) do
@@ -107,6 +132,7 @@ defmodule PevSquadWeb.Router do
 
       live_dashboard "/dashboard", metrics: PevSquadWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+      get "/swaggerui", OpenApiSpex.Plug.SwaggerUI, path: "/api/v1/openapi"
     end
   end
 

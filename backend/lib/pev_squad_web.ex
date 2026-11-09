@@ -48,6 +48,22 @@ defmodule PevSquadWeb do
     end
   end
 
+  # JSON controllers under /api/v1. Errors returned from actions go through
+  # the fallback controller, so every endpoint answers in the same shape.
+  def api_controller do
+    quote do
+      use Phoenix.Controller, formats: [:json]
+      use OpenApiSpex.ControllerSpecs
+      use Gettext, backend: PevSquadWeb.Gettext
+
+      import Plug.Conn
+
+      action_fallback PevSquadWeb.API.FallbackController
+
+      unquote(verified_routes())
+    end
+  end
+
   def live_view do
     quote do
       use Phoenix.LiveView

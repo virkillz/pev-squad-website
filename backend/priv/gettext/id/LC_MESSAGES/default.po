@@ -186,10 +186,10 @@ msgstr "Ikuti"
 #: lib/pev_squad_web/components/layouts.ex:146
 #: lib/pev_squad_web/live/home_live/index.html.heex:259
 #: lib/pev_squad_web/live/listing_live/index.ex:19
-#: lib/pev_squad_web/live/listing_live/index.ex:88
+#: lib/pev_squad_web/live/listing_live/index.ex:90
 #: lib/pev_squad_web/live/listing_live/mine.ex:21
 #: lib/pev_squad_web/live/listing_live/show.ex:20
-#: lib/pev_squad_web/live/listing_live/show.ex:168
+#: lib/pev_squad_web/live/listing_live/show.ex:169
 #, elixir-autogen, elixir-format
 msgid "For Sale"
 msgstr "Dijual"
@@ -291,7 +291,7 @@ msgstr "Terbaru // Urban Playground"
 
 #: lib/pev_squad_web/components/layouts.ex:99
 #: lib/pev_squad_web/live/auth_titles.ex:13
-#: lib/pev_squad_web/live/listing_live/show.ex:161
+#: lib/pev_squad_web/live/listing_live/show.ex:162
 #: lib/pev_squad_web/live/user_live/confirmation.ex:55
 #: lib/pev_squad_web/live/user_live/login.ex:15
 #, elixir-autogen, elixir-format
@@ -670,7 +670,7 @@ msgstr "Siapa cepat dia dapat."
 msgid "First come, first served. You'll get a seat if someone cancels."
 msgstr "Siapa cepat dia dapat. Kamu akan dapat kursi kalau ada yang batal."
 
-#: lib/pev_squad_web/components/event_components.ex:204
+#: lib/pev_squad_web/components/event_components.ex:205
 #: lib/pev_squad_web/live/event_live/show.ex:176
 #, elixir-autogen, elixir-format
 msgid "Full — join the waitlist"
@@ -3086,7 +3086,7 @@ msgstr[1] "%{count} iklan"
 msgid "A member listing is waiting in the For Sale queue:\n\n  %{title}\n\n%{url}"
 msgstr "Ada iklan anggota yang menunggu di antrean Dijual:\n\n  %{title}\n\n%{url}"
 
-#: lib/pev_squad_web/live/listing_live/show.ex:226
+#: lib/pev_squad_web/live/listing_live/show.ex:230
 #, elixir-autogen, elixir-format
 msgid "A moderator checks every listing before it goes on the board."
 msgstr "Moderator memeriksa setiap iklan sebelum tayang."
@@ -3111,7 +3111,7 @@ msgstr "Moderator akan segera memeriksanya."
 msgid "A photo couldn't be read. Try JPG or PNG."
 msgstr "Ada foto yang tidak bisa dibaca. Coba JPG atau PNG."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:91
+#: lib/pev_squad_web/live/listing_live/show.ex:92
 #, elixir-autogen, elixir-format
 msgid "About it"
 msgstr "Tentang barangnya"
@@ -3141,7 +3141,7 @@ msgstr "Kategori"
 msgid "Changing the price, quantity, location or contact keeps it live. Changing the title, category, condition, description or photos sends it back for review."
 msgstr "Mengubah harga, jumlah, lokasi, atau kontak tidak menurunkan iklan. Mengubah judul, kategori, kondisi, deskripsi, atau foto akan mengirimnya kembali untuk diperiksa."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:140
+#: lib/pev_squad_web/live/listing_live/show.ex:141
 #, elixir-autogen, elixir-format
 msgid "Chat on WhatsApp"
 msgstr "Chat lewat WhatsApp"
@@ -3158,7 +3158,7 @@ msgid "Choose one"
 msgstr "Pilih salah satu"
 
 #: lib/pev_squad_web/live/listing_live/form.ex:60
-#: lib/pev_squad_web/live/listing_live/show.ex:101
+#: lib/pev_squad_web/live/listing_live/show.ex:102
 #, elixir-autogen, elixir-format
 msgid "Condition"
 msgstr "Kondisi"
@@ -3168,7 +3168,7 @@ msgstr "Kondisi"
 msgid "Condition, battery health, what's included, any repairs, why you're selling, COD or shipping."
 msgstr "Kondisi, kesehatan baterai, kelengkapan, riwayat perbaikan, alasan dijual, COD atau kirim."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:149
+#: lib/pev_squad_web/live/listing_live/show.ex:150
 #, elixir-autogen, elixir-format
 msgid "DM @%{handle} on Instagram"
 msgstr "DM @%{handle} di Instagram"
@@ -3223,7 +3223,7 @@ msgstr "Edit untuk mengirimnya kembali ke moderator."
 msgid "Edit listing"
 msgstr "Edit iklan"
 
-#: lib/pev_squad_web/live/listing_live/show.ex:229
+#: lib/pev_squad_web/live/listing_live/show.ex:233
 #, elixir-autogen, elixir-format
 msgid "Edit the listing and save it to send it back for review."
 msgstr "Edit iklan lalu simpan untuk mengirimnya kembali ke moderator."
@@ -3243,7 +3243,7 @@ msgstr "Untuk part"
 msgid "Free"
 msgstr "Gratis"
 
-#: lib/pev_squad_web/live/listing_live/show.ex:217
+#: lib/pev_squad_web/live/listing_live/show.ex:221
 #, elixir-autogen, elixir-format
 msgid "Hi, is your %{title} on PEV Squad still available? %{url}"
 msgstr "Halo, %{title} yang di PEV Squad masih ada? %{url}"
@@ -3278,7 +3278,7 @@ msgstr "Akun Instagram"
 msgid "Is your %{title} still available?"
 msgstr "%{title} kamu masih tersedia?"
 
-#: lib/pev_squad_web/live/listing_live/show.ex:233
+#: lib/pev_squad_web/live/listing_live/show.ex:237
 #, elixir-autogen, elixir-format
 msgid "It drops off the board %{when} unless you tap \"Still available\"."
 msgstr "Iklan turun %{when} kecuali kamu tekan \"Masih tersedia\"."
@@ -3288,7 +3288,7 @@ msgstr "Iklan turun %{when} kecuali kamu tekan \"Masih tersedia\"."
 msgid "It had been off the board for a while, so a moderator will check it again before it goes back up."
 msgstr "Iklan ini sudah lama turun, jadi moderator akan memeriksanya lagi sebelum tayang kembali."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:242
+#: lib/pev_squad_web/live/listing_live/show.ex:246
 #, elixir-autogen, elixir-format
 msgid "It stays on the board, marked sold, until %{when}."
 msgstr "Iklan tetap tampil dengan tanda terjual sampai %{when}."
@@ -3298,7 +3298,7 @@ msgstr "Iklan tetap tampil dengan tanda terjual sampai %{when}."
 msgid "It's back on the board."
 msgstr "Iklan tayang lagi."
 
-#: lib/pev_squad_web/live/listing_live/index.ex:72
+#: lib/pev_squad_web/live/listing_live/index.ex:73
 #, elixir-autogen, elixir-format
 msgid "Last %{count} days"
 msgstr "%{count} hari terakhir"
@@ -3328,12 +3328,12 @@ msgstr "Iklan menunggu persetujuan: %{title}"
 msgid "Listings stay on the board for %{days} days after you last confirmed them. Tap \"Still available\" at least once a week; we'll email you a reminder before one drops off."
 msgstr "Iklan tayang selama %{days} hari sejak terakhir kamu konfirmasi. Tekan \"Masih tersedia\" minimal seminggu sekali; kami kirim email pengingat sebelum iklan turun."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:107
+#: lib/pev_squad_web/live/listing_live/show.ex:108
 #, elixir-autogen, elixir-format
 msgid "Location"
 msgstr "Lokasi"
 
-#: lib/pev_squad_web/live/listing_live/show.ex:159
+#: lib/pev_squad_web/live/listing_live/show.ex:160
 #, elixir-autogen, elixir-format
 msgid "Log in to see how to contact the seller."
 msgstr "Masuk untuk melihat kontak penjual."
@@ -3348,7 +3348,7 @@ msgstr "Tandai terjual"
 msgid "Marked sold. It stays on the board as sold for 7 days."
 msgstr "Ditandai terjual. Iklan tetap tampil sebagai terjual selama 7 hari."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:152
+#: lib/pev_squad_web/live/listing_live/show.ex:153
 #, elixir-autogen, elixir-format
 msgid "Meet in a public place, check the item before you pay, and never send a deposit to someone you haven't met."
 msgstr "Ketemuan di tempat umum, cek barang sebelum bayar, dan jangan pernah transfer DP ke orang yang belum pernah kamu temui."
@@ -3358,7 +3358,7 @@ msgstr "Ketemuan di tempat umum, cek barang sebelum bayar, dan jangan pernah tra
 msgid "Member marketplace"
 msgstr "Lapak anggota"
 
-#: lib/pev_squad_web/live/listing_live/show.ex:103
+#: lib/pev_squad_web/live/listing_live/show.ex:104
 #, elixir-autogen, elixir-format
 msgid "Mileage"
 msgstr "Jarak tempuh"
@@ -3421,17 +3421,17 @@ msgstr "Sedang tayang. Turun %{when}."
 msgid "Only active members can sell. Ask a moderator if you think this is a mistake."
 msgstr "Hanya anggota aktif yang bisa berjualan. Hubungi moderator kalau menurutmu ini keliru."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:247
+#: lib/pev_squad_web/live/listing_live/show.ex:251
 #, elixir-autogen, elixir-format
 msgid "Only you can see it until you unhide it."
 msgstr "Hanya kamu yang bisa melihatnya sampai kamu tampilkan lagi."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:246
+#: lib/pev_squad_web/live/listing_live/show.ex:250
 #, elixir-autogen, elixir-format
 msgid "Only you can see it."
 msgstr "Hanya kamu yang bisa melihatnya."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:238
+#: lib/pev_squad_web/live/listing_live/show.ex:242
 #, elixir-autogen, elixir-format
 msgid "Only you can see it. Tap \"Still available\" on My listings to put it back."
 msgstr "Hanya kamu yang bisa melihatnya. Tekan \"Masih tersedia\" di Iklan saya untuk menayangkannya lagi."
@@ -3446,7 +3446,7 @@ msgstr "Part"
 msgid "Photos (%{count} of %{max})"
 msgstr "Foto (%{count} dari %{max})"
 
-#: lib/pev_squad_web/live/listing_live/show.ex:97
+#: lib/pev_squad_web/live/listing_live/show.ex:98
 #, elixir-autogen, elixir-format
 msgid "Price"
 msgstr "Harga"
@@ -3467,12 +3467,12 @@ msgid "Put it back on the board as available?"
 msgstr "Tayangkan lagi sebagai masih tersedia?"
 
 #: lib/pev_squad_web/live/listing_live/form.ex:75
-#: lib/pev_squad_web/live/listing_live/show.ex:105
+#: lib/pev_squad_web/live/listing_live/show.ex:106
 #, elixir-autogen, elixir-format
 msgid "Quantity"
 msgstr "Jumlah"
 
-#: lib/pev_squad_web/live/listing_live/index.ex:73
+#: lib/pev_squad_web/live/listing_live/index.ex:75
 #, elixir-autogen, elixir-format
 msgid "Recently sold"
 msgstr "Baru terjual"
@@ -3503,7 +3503,7 @@ msgstr "Disimpan. Perubahanmu diperiksa moderator dulu sebelum tayang."
 msgid "Sell something"
 msgstr "Jual barang"
 
-#: lib/pev_squad_web/live/listing_live/show.ex:109
+#: lib/pev_squad_web/live/listing_live/show.ex:110
 #, elixir-autogen, elixir-format
 msgid "Seller"
 msgstr "Penjual"
@@ -3530,7 +3530,7 @@ msgstr "Terjual %{when}"
 msgid "Sold %{when}."
 msgstr "Terjual %{when}."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:127
+#: lib/pev_squad_web/live/listing_live/show.ex:128
 #, elixir-autogen, elixir-format
 msgid "Sold %{when}. Congrats to the new owner."
 msgstr "Terjual %{when}. Selamat untuk pemilik barunya."
@@ -3541,7 +3541,7 @@ msgid "Sold %{when}. Shown as sold for a week."
 msgstr "Terjual %{when}. Tampil sebagai terjual selama seminggu."
 
 #: lib/pev_squad_web/live/listing_live/mine.ex:74
-#: lib/pev_squad_web/live/listing_live/show.ex:120
+#: lib/pev_squad_web/live/listing_live/show.ex:121
 #, elixir-autogen, elixir-format
 msgid "Still available"
 msgstr "Masih tersedia"
@@ -3582,7 +3582,7 @@ msgstr "Maksimal %{count} foto."
 msgid "Used"
 msgstr "Bekas"
 
-#: lib/pev_squad_web/live/listing_live/index.ex:91
+#: lib/pev_squad_web/live/listing_live/index.ex:93
 #, elixir-autogen, elixir-format
 msgid "Used and new EUCs, scooters, boards and gear from PEV Squad riders."
 msgstr "EUC, skuter, board, dan perlengkapan baru maupun bekas dari rider PEV Squad."
@@ -3642,7 +3642,7 @@ msgstr "Iklan kamu perlu diperbaiki: %{title}"
 msgid "Your rider profile is waiting for a moderator to approve it. You can sell once it's approved."
 msgstr "Profil rider kamu sedang menunggu persetujuan moderator. Kamu bisa berjualan setelah disetujui."
 
-#: lib/pev_squad_web/live/listing_live/show.ex:122
+#: lib/pev_squad_web/live/listing_live/show.ex:123
 #, elixir-autogen, elixir-format
 msgid "confirmed %{when}"
 msgstr "dikonfirmasi %{when}"
@@ -3660,7 +3660,7 @@ msgstr[1] "dalam %{count} hari"
 msgid "nego"
 msgstr "nego"
 
-#: lib/pev_squad_web/live/listing_live/show.ex:99
+#: lib/pev_squad_web/live/listing_live/show.ex:100
 #, elixir-autogen, elixir-format
 msgid "negotiable"
 msgstr "bisa nego"
@@ -3685,3 +3685,53 @@ msgstr "besok"
 #, elixir-autogen, elixir-format
 msgid "yesterday"
 msgstr "kemarin"
+
+#: lib/pev_squad_web/api/errors.ex:43
+#, elixir-autogen, elixir-format
+msgid "A valid API token is required."
+msgstr "Token API yang valid diperlukan."
+
+#: lib/pev_squad_web/api/errors.ex:45
+#, elixir-autogen, elixir-format
+msgid "Not found."
+msgstr "Tidak ditemukan."
+
+#: lib/pev_squad_web/api/errors.ex:50
+#, elixir-autogen, elixir-format
+msgid "Some fields need fixing."
+msgstr "Beberapa isian perlu diperbaiki."
+
+#: lib/pev_squad_web/api/errors.ex:51
+#, elixir-autogen, elixir-format
+msgid "Too many requests. Try again in a moment."
+msgstr "Terlalu banyak permintaan. Coba lagi sebentar lagi."
+
+#: lib/pev_squad_web/api/errors.ex:44
+#, elixir-autogen, elixir-format
+msgid "You don't have permission to do that."
+msgstr "Kamu tidak punya izin untuk melakukan itu."
+
+#: lib/pev_squad_web/api/errors.ex:48
+#, elixir-autogen, elixir-format
+msgid "Only drafts can be changed through the API. Edit published items in /admin."
+msgstr "Lewat API hanya draf yang bisa diubah. Ubah yang sudah terbit di /admin."
+
+#: lib/pev_squad_web/api/admin_params.ex:153
+#, elixir-autogen, elixir-format
+msgid "must be a list of partner ids"
+msgstr "harus berupa daftar id partner"
+
+#: lib/pev_squad_web/api/admin_params.ex:31
+#, elixir-autogen, elixir-format
+msgid "publish in /admin; the API only writes drafts"
+msgstr "terbitkan di /admin; API hanya menulis draf"
+
+#: lib/pev_squad_web/controllers/api/admin/upload_controller.ex:46
+#, elixir-autogen, elixir-format
+msgid "send a JPEG, PNG or WebP image as `file`"
+msgstr "kirim gambar JPEG, PNG, atau WebP sebagai `file`"
+
+#: lib/pev_squad_web/api/admin_params.ex:62
+#, elixir-autogen, elixir-format
+msgid "use an object keyed by language, e.g. {\"id\": {...}, \"en\": {...}}"
+msgstr "gunakan objek per bahasa, misalnya {\"id\": {...}, \"en\": {...}}"
