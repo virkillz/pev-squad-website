@@ -5,6 +5,7 @@ defmodule PevSquadWeb.CommunityLiveTest do
   import PevSquad.AccountsFixtures
   import PevSquad.EventsFixtures
   import PevSquad.RidersFixtures
+  import PevSquad.PartnersFixtures
 
   test "roster shows public riders and filters by type", %{conn: conn} do
     rider_fixture(alias: "Wynn", main_ride: "Sherman OG")
@@ -113,6 +114,45 @@ defmodule PevSquadWeb.CommunityLiveTest do
 
       html = lv |> form("#link-form", email: member.email) |> render_submit()
       assert html =~ "Linked to #{member.email}"
+    end
+
+    test "staff set a rider's partner communities; they show on the roster, rider and partner pages",
+         %{conn: conn} do
+      staff = staff_scope_fixture()
+      rider = rider_fixture(alias: "Awang")
+      rejs = partner_fixture(name: "REJS")
+      partner_fixture(kind: :brand, name: "Hyundai")
+
+      {:ok, lv, html} = live(log_in_user(conn, staff.user), ~p"/admin/riders/#{rider}/edit")
+      assert html =~ "REJS"
+      refute html =~ "Hyundai"
+
+      lv
+      |> form("#rider-form")
+      |> render_submit(%{"community_ids" => ["", "#{rejs.id}"]})
+
+      assert render(lv) =~ "Saved."
+
+      {:ok, _lv, html} = live(conn, ~p"/community")
+      assert html =~ ~s(title="REJS")
+
+      {:ok, lv, _html} = live(conn, ~p"/community/#{rider.slug}")
+      assert lv |> element("#rider-communities a", "REJS") |> has_element?()
+
+      {:ok, lv, _html} = live(conn, ~p"/partners/#{rejs.slug}")
+      assert lv |> element("#partner-riders", "Awang") |> has_element?()
+    end
+
+    test "staff can't pick more than three communities", %{conn: conn} do
+      staff = staff_scope_fixture()
+      rider = rider_fixture()
+      ids = for _ <- 1..4, do: "#{partner_fixture().id}"
+
+      {:ok, lv, _html} = live(log_in_user(conn, staff.user), ~p"/admin/riders/#{rider}/edit")
+      html = lv |> form("#rider-form") |> render_submit(%{"community_ids" => ids})
+
+      assert html =~ "Pick at most 3"
+      assert PevSquad.Riders.community_ids(staff, rider) == []
     end
 
     test "members can't open it", %{conn: conn} do

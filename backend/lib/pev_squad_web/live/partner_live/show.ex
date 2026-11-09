@@ -6,6 +6,7 @@ defmodule PevSquadWeb.PartnerLive.Show do
 
   import PevSquadWeb.PartnerComponents
   import PevSquadWeb.EventComponents, only: [event_row: 1]
+  import PevSquadWeb.RiderComponents, only: [rider_card: 1]
 
   @impl true
   def render(assigns) do
@@ -88,7 +89,22 @@ defmodule PevSquadWeb.PartnerLive.Show do
         </div>
       </section>
 
-      <section :if={@events != []} class="band band-white">
+      <section :if={@riders != []} class="band band-white">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Also in The Squad</span>
+            <h2 class="section-title">Our Riders</h2>
+          </div>
+        </div>
+        <div class="grid grid-3" id="partner-riders">
+          <.rider_card :for={rider <- @riders} rider={rider} />
+        </div>
+      </section>
+
+      <section
+        :if={@events != []}
+        class={["band", if(@riders == [], do: "band-white", else: "band-black")]}
+      >
         <div class="section-head">
           <div>
             <span class="eyebrow">Track record</span>
@@ -114,9 +130,18 @@ defmodule PevSquadWeb.PartnerLive.Show do
      |> assign(:partner, partner)
      |> assign(:links, social_links(partner))
      |> assign(:events, Partners.list_partner_events(partner))
+     |> assign(:riders, community_riders(partner, socket.assigns.current_scope))
      |> assign(:now, DateTime.utc_now())
      |> assign(:staff?, PevSquad.Accounts.Scope.staff?(socket.assigns.current_scope))}
   end
+
+  defp community_riders(%Partner{kind: :community} = partner, scope) do
+    PevSquad.Riders.list_community_riders(partner,
+      exclude_users: PevSquad.Safety.hidden_user_ids(scope)
+    )
+  end
+
+  defp community_riders(_brand, _scope), do: []
 
   defp past?(event, now), do: DateTime.compare(event.ends_at || event.starts_at, now) == :lt
 

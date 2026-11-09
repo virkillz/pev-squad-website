@@ -45,6 +45,22 @@ defmodule PevSquadWeb.CommunityLive.Show do
               <li :if={@rider.main_ride}>
                 <span class="k">Rides</span><span>{@rider.main_ride}</span>
               </li>
+              <li :if={@rider.communities != []}>
+                <span class="k">Also rides with</span>
+                <span class="partner-chips" id="rider-communities">
+                  <.link
+                    :for={p <- @rider.communities}
+                    navigate={~p"/partners/#{p.slug}"}
+                    class="partner-chip"
+                  >
+                    <img :if={p.logo_path} src={p.logo_path} alt="" />
+                    <span :if={!p.logo_path} class="chip-initials">
+                      {PevSquadWeb.PartnerComponents.initials(p.name)}
+                    </span>
+                    {p.name}
+                  </.link>
+                </span>
+              </li>
               <li><span class="k">Type</span><span>{type_label(@rider.primary_pev_type)}</span></li>
               <li :if={@rider.instagram}>
                 <span class="k">Instagram</span>

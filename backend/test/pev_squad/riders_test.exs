@@ -4,6 +4,7 @@ defmodule PevSquad.RidersTest do
   import PevSquad.AccountsFixtures
   import PevSquad.EventsFixtures
   import PevSquad.RidersFixtures
+  import PevSquad.PartnersFixtures
 
   alias PevSquad.Riders
   alias PevSquad.Riders.{MemberImport, RiderProfile}
@@ -162,6 +163,55 @@ defmodule PevSquad.RidersTest do
       refute ben.is_public
       assert ben.primary_pev_type == :esk8
       assert ben.bio == "Shred"
+    end
+  end
+
+  describe "partner communities" do
+    test "staff set them; public pages show published communities in order" do
+      staff = staff_scope_fixture()
+      rider = rider_fixture(alias: "Wynn")
+      rejs = partner_fixture(name: "REJS")
+      snoi = partner_fixture(name: "SNOI")
+      hidden = partner_fixture(name: "Hidden Crew", published: false)
+      brand = partner_fixture(kind: :brand, name: "Hyundai")
+
+      assert {:ok, 3} = Riders.set_communities(staff, rider, [snoi.id, "#{rejs.id}", hidden.id])
+      assert Riders.community_ids(staff, rider) == [snoi.id, rejs.id, hidden.id]
+
+      assert ["SNOI", "REJS"] =
+               Enum.map(Riders.get_public_rider!(rider.slug).communities, & &1.name)
+
+      assert [%{communities: [_, _]}] = Riders.list_public_riders()
+      assert [%{alias: "Wynn"}] = Riders.list_community_riders(rejs)
+      assert [] = Riders.list_community_riders(partner_fixture())
+
+      # Brands are ignored; replacing clears the old ones.
+      assert {:ok, 1} = Riders.set_communities(staff, rider, [brand.id, rejs.id])
+      assert Riders.community_ids(staff, rider) == [rejs.id]
+    end
+
+    test "at most three" do
+      staff = staff_scope_fixture()
+      rider = rider_fixture()
+      ids = for _ <- 1..4, do: partner_fixture().id
+
+      assert {:error, :too_many} = Riders.set_communities(staff, rider, ids)
+      assert Riders.community_ids(staff, rider) == []
+    end
+
+    test "members can't set them, not even on their own profile" do
+      member = user_scope_fixture()
+
+      {:ok, own} =
+        Riders.save_my_profile(member, %{alias: "Selfie", is_public: true, communities: [1]})
+
+      partner = partner_fixture()
+
+      assert_raise PevSquad.Riders.NotAuthorizedError, fn ->
+        Riders.set_communities(member, own, [partner.id])
+      end
+
+      assert Riders.get_public_rider!(own.slug).communities == []
     end
   end
 end

@@ -14,13 +14,16 @@ defmodule PevSquad.Riders do
   alias PevSquad.Accounts
   alias PevSquad.Accounts.Scope
   alias PevSquad.Repo
+  alias PevSquad.Partners.Partner
   alias PevSquad.Riders.{Avatar, RiderProfile}
+
+  @max_communities 3
 
   ## Public
 
   @doc "Public profiles, optionally filtered by `:type`, minus `:exclude_users` (blocked members). Photos first, then by alias."
   def list_public_riders(opts \\ []) do
-    opts |> public_riders_query() |> Repo.all()
+    opts |> public_riders_query() |> Repo.all() |> put_communities()
   end
 
   @doc """
@@ -40,6 +43,7 @@ defmodule PevSquad.Riders do
       |> limit(^per_page)
       |> offset(^((page - 1) * per_page))
       |> Repo.all()
+      |> put_communities()
 
     %{entries: entries, page: page, per_page: per_page, total: total, total_pages: total_pages}
   end
@@ -61,7 +65,45 @@ defmodule PevSquad.Riders do
   defp filter_type(query, nil), do: query
   defp filter_type(query, type), do: where(query, primary_pev_type: ^type)
 
-  def get_public_rider!(slug), do: Repo.get_by!(RiderProfile, slug: slug, is_public: true)
+  def get_public_rider!(slug) do
+    RiderProfile
+    |> Repo.get_by!(slug: slug, is_public: true)
+    |> List.wrap()
+    |> put_communities()
+    |> hd()
+  end
+
+  @doc "Public riders affiliated with a partner community (same order and `:exclude_users` as the roster)."
+  def list_community_riders(%Partner{id: partner_id}, opts \\ []) do
+    opts
+    |> public_riders_query()
+    |> join(:inner, [r], ra in "rider_affiliations",
+      on: ra.rider_profile_id == r.id and ra.partner_id == ^partner_id
+    )
+    |> Repo.all()
+    |> put_communities()
+  end
+
+  # Fills each rider's `communities` with their published partner
+  # communities, in the order staff set.
+  defp put_communities([]), do: []
+
+  defp put_communities(riders) do
+    ids = Enum.map(riders, & &1.id)
+
+    by_rider =
+      from(p in Partner,
+        join: ra in "rider_affiliations",
+        on: ra.partner_id == p.id,
+        where: ra.rider_profile_id in ^ids and p.published and p.kind == :community,
+        order_by: [asc: ra.position, asc: fragment("lower(?)", p.name)],
+        select: {ra.rider_profile_id, p}
+      )
+      |> Repo.all()
+      |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
+
+    Enum.map(riders, &%{&1 | communities: Map.get(by_rider, &1.id, [])})
+  end
 
   @doc "Counts for the community stat bar."
   def stats do
@@ -121,6 +163,57 @@ defmodule PevSquad.Riders do
     |> Repo.update()
     |> attach_avatar(avatar_source)
   end
+
+  def max_communities, do: @max_communities
+
+  @doc "Ids of the partner communities a rider is affiliated with, in display order (unpublished ones too)."
+  def community_ids(%Scope{} = scope, %RiderProfile{id: rider_id}) do
+    ensure_staff!(scope)
+
+    from(ra in "rider_affiliations",
+      where: ra.rider_profile_id == ^rider_id,
+      order_by: ra.position,
+      select: ra.partner_id
+    )
+    |> Repo.all()
+  end
+
+  @doc """
+  Replaces a rider's partner communities with `partner_ids`, in that order.
+  Staff only; members can't set their own. Ids that aren't communities are
+  ignored. Returns `{:error, :too_many}` past `max_communities/0`.
+  """
+  def set_communities(%Scope{} = scope, %RiderProfile{id: rider_id}, partner_ids) do
+    ensure_staff!(scope)
+    ids = partner_ids |> Enum.map(&to_integer/1) |> Enum.uniq()
+
+    if length(ids) > @max_communities do
+      {:error, :too_many}
+    else
+      Repo.transact(fn ->
+        from(ra in "rider_affiliations", where: ra.rider_profile_id == ^rider_id)
+        |> Repo.delete_all()
+
+        communities =
+          from(p in Partner, where: p.id in ^ids and p.kind == :community, select: p.id)
+          |> Repo.all()
+          |> MapSet.new()
+
+        rows =
+          ids
+          |> Enum.filter(&MapSet.member?(communities, &1))
+          |> Enum.with_index(fn id, i ->
+            %{rider_profile_id: rider_id, partner_id: id, position: i}
+          end)
+
+        {count, _} = Repo.insert_all("rider_affiliations", rows)
+        {:ok, count}
+      end)
+    end
+  end
+
+  defp to_integer(id) when is_integer(id), do: id
+  defp to_integer(id) when is_binary(id), do: String.to_integer(id)
 
   @doc """
   Links an unclaimed (imported) profile to the member with `email`.

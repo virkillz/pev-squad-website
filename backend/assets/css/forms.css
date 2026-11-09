@@ -339,6 +339,24 @@
   font-weight: 700;
 }
 
+/* Partner community logos on a rider card */
+.rider-communities { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+.rider-community {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.15rem;
+  background: #fff;
+  border: 1px solid var(--black);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+.rider-community img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
 /* About page: the three pillars carry a short list of real events */
 .about-pillar { display: flex; flex-direction: column; gap: 1rem; }
 .about-pillar h3 { font-size: clamp(2rem, 3.5vw, 3rem); }

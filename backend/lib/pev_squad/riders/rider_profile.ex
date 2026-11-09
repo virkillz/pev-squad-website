@@ -19,6 +19,9 @@ defmodule PevSquad.Riders.RiderProfile do
     field :is_public, :boolean, default: false
     field :featured_since, :utc_datetime
     field :source, Ecto.Enum, values: [:member, :import], default: :member
+    # Published partner communities the rider belongs to, in display order.
+    # Filled by the Riders context; set by staff via Riders.set_communities/3.
+    field :communities, {:array, :any}, virtual: true, default: []
 
     belongs_to :user, User
 

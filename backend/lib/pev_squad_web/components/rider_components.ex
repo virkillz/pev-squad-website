@@ -46,6 +46,16 @@ defmodule PevSquadWeb.RiderComponents do
           {@rider.alias}
         </h3>
         <p class="card-meta">{card_meta(@rider)}</p>
+        <div :if={@rider.communities != []} class="rider-communities">
+          <span
+            :for={p <- @rider.communities}
+            class="rider-community"
+            title={p.name}
+          >
+            <img :if={p.logo_path} src={p.logo_path} alt={"#{p.name} logo"} loading="lazy" />
+            <span :if={!p.logo_path}>{PevSquadWeb.PartnerComponents.initials(p.name)}</span>
+          </span>
+        </div>
         <p :if={@rider.bio} class="card-desc">{@rider.bio}</p>
       </div>
     </.link>

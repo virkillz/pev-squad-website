@@ -1,7 +1,7 @@
 defmodule PevSquadWeb.Admin.RiderLive.Edit do
   use PevSquadWeb, :live_view
 
-  alias PevSquad.Riders
+  alias PevSquad.{Partners, Riders}
 
   import PevSquadWeb.RiderComponents, only: [type_options: 0]
 
@@ -72,6 +72,36 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
               <.input field={@form[:instagram]} type="text" label="Instagram" />
             </div>
             <.input field={@form[:bio]} type="textarea" label="Bio" />
+            <fieldset class="fieldset space-y-2" id="rider-communities">
+              <span class="label">
+                Partner communities, up to {Riders.max_communities()} (<.link
+                  navigate={~p"/admin/partners"}
+                  class="link-orange"
+                >manage</.link>)
+              </span>
+              <input type="hidden" name="community_ids[]" value="" />
+              <p :if={@all_communities == []} class="text-sm">
+                No partner communities yet.
+              </p>
+              <div class="flex flex-wrap gap-x-6 gap-y-2">
+                <label
+                  :for={p <- @all_communities}
+                  class="flex gap-2 items-center cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    name="community_ids[]"
+                    value={p.id}
+                    checked={p.id in @community_ids}
+                    class="checkbox"
+                  />
+                  <span>{p.name}{if !p.published, do: " (unpublished)"}</span>
+                </label>
+              </div>
+              <p :if={length(@community_ids) > Riders.max_communities()} class="text-sm link-orange">
+                Pick at most {Riders.max_communities()}.
+              </p>
+            </fieldset>
             <.input
               field={@form[:is_public]}
               type="checkbox"
@@ -90,7 +120,15 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
-    {:ok, assign_rider(socket, Riders.get_rider!(socket.assigns.current_scope, id))}
+    scope = socket.assigns.current_scope
+
+    all_communities =
+      scope |> Partners.list_all_partners() |> Enum.filter(&(&1.kind == :community))
+
+    {:ok,
+     socket
+     |> assign(:all_communities, all_communities)
+     |> assign_rider(Riders.get_rider!(scope, id))}
   end
 
   defp assign_rider(socket, rider) do
@@ -98,6 +136,7 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
     |> assign(:page_title, "Admin · #{rider.alias}")
     |> assign(:rider, rider)
     |> assign(:form, to_form(Riders.change_profile(rider)))
+    |> assign(:community_ids, Riders.community_ids(socket.assigns.current_scope, rider))
   end
 
   defp reload(socket) do
@@ -105,15 +144,32 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
   end
 
   @impl true
-  def handle_event("validate", %{"rider_profile" => params}, socket) do
+  def handle_event("validate", %{"rider_profile" => params} = all_params, socket) do
     changeset = Riders.change_profile(socket.assigns.rider, params)
-    {:noreply, assign(socket, :form, to_form(changeset, action: :validate))}
+
+    {:noreply,
+     socket
+     |> assign(:community_ids, community_ids(all_params))
+     |> assign(:form, to_form(changeset, action: :validate))}
   end
 
-  def handle_event("save", %{"rider_profile" => params}, socket) do
-    case Riders.update_rider(socket.assigns.current_scope, socket.assigns.rider, params) do
-      {:ok, _rider} -> {:noreply, socket |> put_flash(:info, "Saved.") |> reload()}
-      {:error, changeset} -> {:noreply, assign(socket, :form, to_form(changeset))}
+  def handle_event("save", %{"rider_profile" => params} = all_params, socket) do
+    scope = socket.assigns.current_scope
+    ids = community_ids(all_params)
+    socket = assign(socket, :community_ids, ids)
+
+    if length(ids) > Riders.max_communities() do
+      {:noreply,
+       put_flash(socket, :error, "Pick at most #{Riders.max_communities()} communities.")}
+    else
+      case Riders.update_rider(scope, socket.assigns.rider, params) do
+        {:ok, rider} ->
+          {:ok, _} = Riders.set_communities(scope, rider, ids)
+          {:noreply, socket |> put_flash(:info, "Saved.") |> reload()}
+
+        {:error, changeset} ->
+          {:noreply, assign(socket, :form, to_form(changeset))}
+      end
     end
   end
 
@@ -130,6 +186,13 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
   def handle_event("unlink", _params, socket) do
     {:ok, _} = Riders.unlink_member(socket.assigns.current_scope, socket.assigns.rider)
     {:noreply, socket |> put_flash(:info, "Unlinked.") |> reload()}
+  end
+
+  defp community_ids(params) do
+    params
+    |> Map.get("community_ids", [])
+    |> Enum.reject(&(&1 == ""))
+    |> Enum.map(&String.to_integer/1)
   end
 
   defp link_error(:no_such_user), do: "No member has registered with that email yet."
