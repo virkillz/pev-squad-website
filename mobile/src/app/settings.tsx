@@ -12,8 +12,8 @@ import { bw, colors, space } from '@/theme';
 
 /**
  * Pengaturan. Language (saved to the account when signed in, so emails
- * follow it) and the account section. Notifications, blocked members and
- * account deletion come next (DESIGN.md §10).
+ * follow it) and the account section, with account deletion.
+ * Notifications and blocked members come next (DESIGN.md §10).
  */
 export default function SettingsScreen() {
   const router = useRouter();
@@ -54,7 +54,11 @@ export default function SettingsScreen() {
               <Body weight="bold" color={colors.white}>{me.data?.email ?? '…'}</Body>
             </View>
             <BigButton tone="white" label={t('menu.profile')} onPress={() => router.push('/profile')} />
+            <BigButton tone="white" label={t('settings.blocked')} onPress={() => router.push('/blocked')} />
             <BigButton tone="black" label={t('profile.logout')} onPress={() => confirmLogout(t)} />
+            <Pressable accessibilityRole="link" onPress={() => router.push('/account/delete')} style={{ paddingVertical: space.m }}>
+              <Mono bold size={12} color={colors.orange} style={{ textDecorationLine: 'underline' }}>{t('delete.open')}</Mono>
+            </Pressable>
           </View>
         ) : null}
       </ScrollView>

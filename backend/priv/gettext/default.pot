@@ -3693,32 +3693,32 @@ msgstr ""
 msgid "yesterday"
 msgstr ""
 
-#: lib/pev_squad_web/api/errors.ex:43
+#: lib/pev_squad_web/api/errors.ex:44
 #, elixir-autogen, elixir-format
 msgid "A valid API token is required."
 msgstr ""
 
-#: lib/pev_squad_web/api/errors.ex:45
+#: lib/pev_squad_web/api/errors.ex:46
 #, elixir-autogen, elixir-format
 msgid "Not found."
 msgstr ""
 
-#: lib/pev_squad_web/api/errors.ex:50
+#: lib/pev_squad_web/api/errors.ex:51
 #, elixir-autogen, elixir-format
 msgid "Some fields need fixing."
 msgstr ""
 
-#: lib/pev_squad_web/api/errors.ex:51
+#: lib/pev_squad_web/api/errors.ex:56
 #, elixir-autogen, elixir-format
 msgid "Too many requests. Try again in a moment."
 msgstr ""
 
-#: lib/pev_squad_web/api/errors.ex:44
+#: lib/pev_squad_web/api/errors.ex:45
 #, elixir-autogen, elixir-format
 msgid "You don't have permission to do that."
 msgstr ""
 
-#: lib/pev_squad_web/api/errors.ex:48
+#: lib/pev_squad_web/api/errors.ex:49
 #, elixir-autogen, elixir-format
 msgid "Only drafts can be changed through the API. Edit published items in /admin."
 msgstr ""
@@ -3741,4 +3741,34 @@ msgstr ""
 #: lib/pev_squad_web/api/admin_params.ex:62
 #, elixir-autogen, elixir-format
 msgid "use an object keyed by language, e.g. {\"id\": {...}, \"en\": {...}}"
+msgstr ""
+
+#: lib/pev_squad_web/api/errors.ex:54
+#, elixir-autogen, elixir-format
+msgid "For your security, log in again before doing this."
+msgstr ""
+
+#: lib/pev_squad_web/api/page.ex:60
+#, elixir-autogen, elixir-format
+msgid "isn't a cursor from this API"
+msgstr ""
+
+#: lib/pev_squad_web/api/page.ex:48
+#, elixir-autogen, elixir-format
+msgid "must be a number from 1 to %{max}"
+msgstr ""
+
+#: lib/pev_squad_web/controllers/api/safety_controller.ex:145
+#, elixir-autogen, elixir-format
+msgid "That's yours."
+msgstr ""
+
+#: lib/pev_squad_web/controllers/api/safety_controller.ex:94
+#, elixir-autogen, elixir-format
+msgid "This profile isn't linked to a member account, so there's nobody to block."
+msgstr ""
+
+#: lib/pev_squad_web/controllers/api/safety_controller.ex:131
+#, elixir-autogen, elixir-format
+msgid "must be profile, photo, event or review"
 msgstr ""

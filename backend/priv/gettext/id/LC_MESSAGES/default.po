@@ -3686,32 +3686,32 @@ msgstr "besok"
 msgid "yesterday"
 msgstr "kemarin"
 
-#: lib/pev_squad_web/api/errors.ex:43
+#: lib/pev_squad_web/api/errors.ex:44
 #, elixir-autogen, elixir-format
 msgid "A valid API token is required."
 msgstr "Token API yang valid diperlukan."
 
-#: lib/pev_squad_web/api/errors.ex:45
+#: lib/pev_squad_web/api/errors.ex:46
 #, elixir-autogen, elixir-format
 msgid "Not found."
 msgstr "Tidak ditemukan."
 
-#: lib/pev_squad_web/api/errors.ex:50
+#: lib/pev_squad_web/api/errors.ex:51
 #, elixir-autogen, elixir-format
 msgid "Some fields need fixing."
 msgstr "Beberapa isian perlu diperbaiki."
 
-#: lib/pev_squad_web/api/errors.ex:51
+#: lib/pev_squad_web/api/errors.ex:56
 #, elixir-autogen, elixir-format
 msgid "Too many requests. Try again in a moment."
 msgstr "Terlalu banyak permintaan. Coba lagi sebentar lagi."
 
-#: lib/pev_squad_web/api/errors.ex:44
+#: lib/pev_squad_web/api/errors.ex:45
 #, elixir-autogen, elixir-format
 msgid "You don't have permission to do that."
 msgstr "Kamu tidak punya izin untuk melakukan itu."
 
-#: lib/pev_squad_web/api/errors.ex:48
+#: lib/pev_squad_web/api/errors.ex:49
 #, elixir-autogen, elixir-format
 msgid "Only drafts can be changed through the API. Edit published items in /admin."
 msgstr "Lewat API hanya draf yang bisa diubah. Ubah yang sudah terbit di /admin."
@@ -3735,3 +3735,33 @@ msgstr "kirim gambar JPEG, PNG, atau WebP sebagai `file`"
 #, elixir-autogen, elixir-format
 msgid "use an object keyed by language, e.g. {\"id\": {...}, \"en\": {...}}"
 msgstr "gunakan objek per bahasa, misalnya {\"id\": {...}, \"en\": {...}}"
+
+#: lib/pev_squad_web/api/errors.ex:54
+#, elixir-autogen, elixir-format
+msgid "For your security, log in again before doing this."
+msgstr "Demi keamanan, masuk lagi sebelum melakukan ini."
+
+#: lib/pev_squad_web/api/page.ex:60
+#, elixir-autogen, elixir-format
+msgid "isn't a cursor from this API"
+msgstr "bukan cursor dari API ini"
+
+#: lib/pev_squad_web/api/page.ex:48
+#, elixir-autogen, elixir-format
+msgid "must be a number from 1 to %{max}"
+msgstr "harus angka dari 1 sampai %{max}"
+
+#: lib/pev_squad_web/controllers/api/safety_controller.ex:145
+#, elixir-autogen, elixir-format
+msgid "That's yours."
+msgstr "Ini milikmu sendiri."
+
+#: lib/pev_squad_web/controllers/api/safety_controller.ex:94
+#, elixir-autogen, elixir-format
+msgid "This profile isn't linked to a member account, so there's nobody to block."
+msgstr "Profil ini tidak terhubung ke akun member, jadi tidak ada yang bisa diblokir."
+
+#: lib/pev_squad_web/controllers/api/safety_controller.ex:131
+#, elixir-autogen, elixir-format
+msgid "must be profile, photo, event or review"
+msgstr "harus profile, photo, event, atau review"

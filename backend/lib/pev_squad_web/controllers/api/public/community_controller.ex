@@ -67,7 +67,10 @@ defmodule PevSquadWeb.API.CommunityController do
 
   def rider(conn, %{"slug" => slug}) do
     with {:ok, rider} <- Helpers.fetch(fn -> Riders.get_public_rider!(slug) end) do
-      json(conn, %{data: PublicJSON.rider_detail(rider)})
+      blocked? =
+        rider.user_id != nil and PevSquad.Safety.blocked?(Helpers.scope(conn), rider.user_id)
+
+      json(conn, %{data: PublicJSON.rider_detail(rider, blocked?)})
     end
   end
 

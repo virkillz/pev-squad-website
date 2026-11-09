@@ -153,14 +153,48 @@ defmodule PevSquad.Accounts do
     end
   end
 
+  ## Deleting your own account
+
+  @doc """
+  The member deletes their own account (app store requirement). Needs a
+  recent login (sudo mode), so a stolen long-lived session can't do it.
+
+  Same steps as `delete_member/4`, except that every rider profile they
+  hold goes too, including an imported one they claimed: they asked for
+  their data to be removed.
+
+  Returns `{:ok, user}`, `{:error, :reauth_required}` or `{:error, :admin}`
+  (an admin hands the role to someone else first).
+  """
+  def delete_own_account(%Scope{user: %User{} = user} = scope, event_url_fun, events_url) do
+    cond do
+      user.role == :admin -> {:error, :admin}
+      not sudo_mode?(user) -> {:error, :reauth_required}
+      true -> do_delete_member(scope, user, event_url_fun, events_url, :all_profiles)
+    end
+  end
+
+  @doc "What deleting your own account removes, for the confirmation screen."
+  def own_footprint(%Scope{user: %User{} = user}) do
+    footprint(user)
+    |> Map.merge(%{
+      keeps_profile?: false,
+      listings: count(PevSquad.Listings.Listing, seller_id: user.id)
+    })
+  end
+
   ## Admin: deleting a member
 
   @doc """
   What deleting `user` would remove, for the confirmation screen:
   `%{profile, keeps_profile?, reviews, photos, hosted_rides, upcoming_rsvps}`.
   """
-  def member_footprint(%Scope{} = scope, %User{id: user_id} = user) do
+  def member_footprint(%Scope{} = scope, %User{} = user) do
     ensure_staff!(scope)
+    footprint(user)
+  end
+
+  defp footprint(%User{id: user_id} = user) do
     profile = Repo.get_by(RiderProfile, user_id: user_id)
     now = DateTime.utc_now()
 
@@ -202,11 +236,11 @@ defmodule PevSquad.Accounts do
       not Scope.admin?(scope) -> raise PevSquad.Accounts.NotAuthorizedError
       user.id == me.id -> {:error, :self}
       user.role == :admin -> {:error, :admin}
-      true -> do_delete_member(scope, user, event_url_fun, events_url)
+      true -> do_delete_member(scope, user, event_url_fun, events_url, :own_profile)
     end
   end
 
-  defp do_delete_member(scope, user, event_url_fun, events_url) do
+  defp do_delete_member(scope, user, event_url_fun, events_url, profiles) do
     alias PevSquad.Events.{Event, Rsvp}
     alias PevSquad.Events.Notifier, as: EventNotifier
 
@@ -241,15 +275,34 @@ defmodule PevSquad.Accounts do
       {:ok, _} = PevSquad.Gallery.delete_photo(scope, photo)
     end
 
-    # 4. Their own profile goes; imported or staff-added ones become unclaimed
-    #    when the account is deleted (rider_profiles.user_id is nilified).
-    case Repo.get_by(RiderProfile, user_id: user.id, source: :member) do
-      nil -> :ok
-      profile -> {:ok, _} = PevSquad.Riders.delete_rider(scope, profile)
+    # 4. Their own profile goes. When staff delete someone, imported or
+    #    staff-added profiles become unclaimed instead (user_id is nilified).
+    profile_query =
+      case profiles do
+        :own_profile ->
+          from p in RiderProfile, where: p.user_id == ^user.id and p.source == :member
+
+        :all_profiles ->
+          from p in RiderProfile, where: p.user_id == ^user.id
+      end
+
+    for profile <- Repo.all(profile_query) do
+      {:ok, deleted} = Repo.delete(profile)
+      if deleted.avatar_path, do: PevSquad.Riders.Avatar.delete(deleted.avatar_path)
     end
 
-    # 5. The account; reviews, RSVPs, tokens and blocks cascade.
-    Repo.delete(user)
+    # 5. The account; reviews, RSVPs, tokens, blocks and listings cascade.
+    #    Listing photo files aren't rows, so remove them once the rows are gone.
+    listing_photos =
+      Repo.all(
+        from l in PevSquad.Listings.Listing, where: l.seller_id == ^user.id, select: l.photos
+      )
+      |> List.flatten()
+
+    with {:ok, deleted} <- Repo.delete(user) do
+      Enum.each(listing_photos, &PevSquad.Listings.Processing.delete/1)
+      {:ok, deleted}
+    end
   end
 
   defp ensure_staff!(scope) do

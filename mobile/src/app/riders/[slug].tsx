@@ -4,7 +4,9 @@ import { Linking, Pressable, ScrollView, View } from 'react-native';
 
 import { BackBar, QueryState } from '@/components/chrome';
 import { Icon } from '@/components/icon';
+import { SafetyActions } from '@/components/safety';
 import { Body, Mono, Stencil } from '@/components/text';
+import { useAuth } from '@/lib/auth';
 import { useLocale } from '@/lib/i18n';
 import { useRider } from '@/lib/queries';
 import { bw, colors, space } from '@/theme';
@@ -14,6 +16,7 @@ export default function RiderScreen() {
   const router = useRouter();
   const { t, label } = useLocale();
   const rider = useRider(slug);
+  const { me } = useAuth();
   const r = rider.data;
 
   return (
@@ -65,6 +68,21 @@ export default function RiderScreen() {
               <Icon name="instagram" size={18} />
               <Mono bold size={12}>@{r.instagram.replace(/^@/, '')}</Mono>
             </Pressable>
+          ) : null}
+
+          {r.blocked ? (
+            <View style={{ margin: space.l, marginBottom: 0, padding: space.m, borderWidth: bw, backgroundColor: colors.black, gap: space.s }}>
+              <Body color={colors.white}>{t('safety.youBlocked')}</Body>
+              <Pressable accessibilityRole="link" onPress={() => router.push('/blocked')}>
+                <Mono bold size={11} color={colors.orange}>{t('safety.manage')}</Mono>
+              </Pressable>
+            </View>
+          ) : null}
+
+          {me.data?.rider_profile?.slug !== r.slug ? (
+            <View style={{ padding: space.l }}>
+              <SafetyActions target={{ type: 'profile', id: r.id, name: r.alias, canBlock: r.has_account }} hideBlock={r.blocked} />
+            </View>
           ) : null}
         </ScrollView>
       ) : null}

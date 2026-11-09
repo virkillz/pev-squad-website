@@ -17,7 +17,7 @@ Members can log in with an email link or their website password. Sessions are ke
 New members set up a rider profile (alias, city, PEV, public consent), which waits for staff approval.
 The avatar menu (top right) opens the profile, settings, language, and logout.
 Signed in, the language choice is also saved to the account, so emails follow it.
-RSVP, selling, avatars, and seller contacts still require the website.
+Settings has account deletion and the blocked-members list. Rider profiles, group rides, and gallery photos have Report and Block buttons. RSVP, selling, avatars, and seller contacts still require the website.
 
 ### Testing the email link
 
@@ -118,7 +118,7 @@ From `backend/`, run `mix precommit` before completion.
 App authentication is in place. Next up are the remaining member features, as described in [the platform roadmap](../docs/DESIGN.md).
 
 1. ~~App login, refresh tokens, logout, onboarding, and profile editing.~~ Done.
-2. Avatar upload, account deletion, and blocked members in Settings (store requirements).
+2. ~~Account deletion, report and block, blocked members.~~ Done. Next: avatar upload. Reviews aren't in the app yet; add Report there when they are.
 3. Add and check deep-link handling on iOS and Android.
 4. Add RSVP and member actions, including listing and photo uploads.
 5. Add notifications and error tracking.

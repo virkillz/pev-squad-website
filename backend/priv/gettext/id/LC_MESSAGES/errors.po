@@ -161,7 +161,7 @@ msgstr "harus diawali http:// atau https://"
 msgid "paste the full channel link (https://youtube.com/@…)"
 msgstr "tempel link channel lengkap (https://youtube.com/@…)"
 
-#: lib/pev_squad/safety/report.ex:42
+#: lib/pev_squad/safety/report.ex:43
 #, elixir-autogen, elixir-format
 msgid "pick a reason"
 msgstr "pilih alasan"
@@ -184,7 +184,7 @@ msgstr "gunakan huruf kecil, angka, dan tanda hubung"
 msgid "write the public statement for the ban"
 msgstr "tulis pernyataan publik untuk pengeluaran ini"
 
-#: lib/pev_squad/safety/report.ex:47
+#: lib/pev_squad/safety/report.ex:48
 #, elixir-autogen, elixir-format
 msgid "you've already reported this — the moderators are on it"
 msgstr "kamu sudah melaporkan ini — moderator sedang menanganinya"

@@ -5,10 +5,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PostRow } from '@/components/cards';
 import { BackBar, BigButton, QueryState } from '@/components/chrome';
+import { SafetyActions } from '@/components/safety';
 import { Icon } from '@/components/icon';
 import { Body, Mono, Stencil, Tag } from '@/components/text';
 import type { EventDetail } from '@/lib/api';
 import { dayLabel, timeLabel } from '@/lib/format';
+import { useAuth } from '@/lib/auth';
 import { useLocale } from '@/lib/i18n';
 import { useEvent } from '@/lib/queries';
 import { bw, colors, space } from '@/theme';
@@ -38,6 +40,7 @@ export default function EventScreen() {
   const insets = useSafeAreaInsets();
   const { t, label, locale } = useLocale();
   const event = useEvent(slug);
+  const { me } = useAuth();
   // Read the clock once per screen, not on every render.
   const [openedAt] = useState(() => Date.now());
   const e = event.data;
@@ -132,6 +135,12 @@ export default function EventScreen() {
               <View style={{ paddingHorizontal: space.l }}>
                 <Mono bold size={11} style={{ paddingBottom: 6, borderBottomWidth: bw }}>{t('event.recaps')}</Mono>
                 {e.recaps.map((p) => <PostRow key={p.id} post={p} onDark={false} />)}
+              </View>
+            ) : null}
+
+            {e.category === 'group_ride' && e.host && e.host.slug !== me.data?.rider_profile?.slug ? (
+              <View style={{ padding: space.l }}>
+                <SafetyActions target={{ type: 'event', id: e.id, name: e.host.alias, canBlock: true }} leave={1} />
               </View>
             ) : null}
           </ScrollView>

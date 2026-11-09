@@ -218,10 +218,16 @@ defmodule PevSquadWeb.API.PublicJSON do
     }
   end
 
-  def rider_detail(r) do
+  def rider_detail(r, blocked? \\ false) do
     r
     |> rider()
-    |> Map.merge(%{bio: r.bio, instagram: r.instagram})
+    |> Map.merge(%{
+      id: r.id,
+      bio: r.bio,
+      instagram: r.instagram,
+      has_account: r.user_id != nil,
+      blocked: blocked?
+    })
   end
 
   ## Partners

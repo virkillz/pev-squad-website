@@ -5,8 +5,10 @@ import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackBar, QueryState } from '@/components/chrome';
+import { SafetyActions } from '@/components/safety';
 import { Body, Mono, Stencil } from '@/components/text';
 import type { Schemas } from '@/lib/api';
+import { useAuth } from '@/lib/auth';
 import { useLocale } from '@/lib/i18n';
 import { useAlbum } from '@/lib/queries';
 import { bw, colors, space } from '@/theme';
@@ -20,6 +22,7 @@ export default function AlbumScreen() {
   const { width } = useWindowDimensions();
   const { t } = useLocale();
   const album = useAlbum(slug);
+  const { me } = useAuth();
   const [open, setOpen] = useState<GalleryPhoto | null>(null);
   const a = album.data;
   const cell = (width - space.l * 2 - 8) / 2;
@@ -52,6 +55,15 @@ export default function AlbumScreen() {
                 <View style={{ padding: space.l, gap: 4 }}>
                   {open.caption ? <Body color={colors.white}>{open.caption}</Body> : null}
                   {open.uploader ? <Mono size={10} color={colors.mutedOnBlack}>@{open.uploader.alias}</Mono> : null}
+                </View>
+              ) : null}
+              {open.uploader && open.uploader.alias !== me.data?.rider_profile?.alias ? (
+                <View style={{ paddingHorizontal: space.l }}>
+                  <SafetyActions
+                    onDark
+                    target={{ type: 'photo', id: open.id, name: `@${open.uploader.alias}`, canBlock: true }}
+                    beforeNavigate={() => setOpen(null)}
+                  />
                 </View>
               ) : null}
             </>

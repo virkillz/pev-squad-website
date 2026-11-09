@@ -14,6 +14,7 @@ defmodule PevSquadWeb.API.Errors do
   @statuses %{
     unauthorized: 401,
     forbidden: 403,
+    reauth_required: 403,
     not_found: 404,
     conflict: 409,
     validation_failed: 422,
@@ -48,5 +49,9 @@ defmodule PevSquadWeb.API.Errors do
     do: gettext("Only drafts can be changed through the API. Edit published items in /admin.")
 
   def message(:validation_failed), do: gettext("Some fields need fixing.")
+
+  def message(:reauth_required),
+    do: gettext("For your security, log in again before doing this.")
+
   def message(:rate_limited), do: gettext("Too many requests. Try again in a moment.")
 end

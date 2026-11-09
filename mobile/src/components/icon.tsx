@@ -14,12 +14,26 @@ export type IconName =
   | 'chat'
   | 'instagram'
   | 'translate'
-  | 'search';
+  | 'search'
+  | 'flag'
+  | 'block';
 
 export function Icon({ name, size = 22, color = '#000' }: { name: IconName; size?: number; color?: string }) {
   const p = { stroke: color, strokeWidth: 2, strokeLinecap: 'square' as const, fill: 'none' };
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityElementsHidden importantForAccessibility="no">
+      {name === 'flag' && (
+        <>
+          <Path d="M5 21V4" {...p} />
+          <Path d="M5 4h12l-2 4 2 4H5" {...p} />
+        </>
+      )}
+      {name === 'block' && (
+        <>
+          <Circle cx={12} cy={12} r={8} {...p} />
+          <Path d="M6.5 17.5l11-11" {...p} />
+        </>
+      )}
       {name === 'home' && (
         <>
           <Path d="M3 11l9-7 9 7v9H3z" {...p} />

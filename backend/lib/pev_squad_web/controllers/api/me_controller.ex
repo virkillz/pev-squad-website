@@ -44,6 +44,49 @@ defmodule PevSquadWeb.API.MeController do
     end
   end
 
+  operation(:deletion,
+    summary: "What deleting your account would remove, for the confirmation screen",
+    responses: [ok: {"Footprint", "application/json", Schemas.Deletion}]
+  )
+
+  def deletion(conn, _params) do
+    f = Accounts.own_footprint(conn.assigns.current_scope)
+
+    json(conn, %{
+      data: %{
+        profile_alias: f.profile && f.profile.alias,
+        reviews: f.reviews,
+        photos: f.photos,
+        listings: f.listings,
+        hosted_rides: f.hosted_rides,
+        upcoming_rsvps: f.upcoming_rsvps
+      }
+    })
+  end
+
+  operation(:delete,
+    summary:
+      "Permanently delete your account and what you posted. Needs a login in the last 20 minutes",
+    responses: [
+      no_content: "Deleted",
+      forbidden:
+        {"reauth_required: log in again first; forbidden: admins can't", "application/json",
+         Schemas.Error}
+    ]
+  )
+
+  def delete(conn, _params) do
+    case Accounts.delete_own_account(
+           conn.assigns.current_scope,
+           &url(~p"/events/#{&1.slug}"),
+           url(~p"/events")
+         ) do
+      {:ok, _user} -> send_resp(conn, :no_content, "")
+      {:error, :admin} -> {:error, :forbidden}
+      {:error, :reauth_required} -> {:error, :reauth_required}
+    end
+  end
+
   operation(:show,
     summary: "The signed-in user",
     responses: [

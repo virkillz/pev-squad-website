@@ -15,7 +15,7 @@ defmodule PevSquadWeb.API.FallbackController do
   end
 
   def call(conn, {:error, code})
-      when code in [:not_found, :forbidden, :unauthorized, :conflict] do
+      when code in [:not_found, :forbidden, :reauth_required, :unauthorized, :conflict] do
     Errors.send_error(conn, code)
   end
 

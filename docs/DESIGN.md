@@ -177,7 +177,7 @@ Built on `mix phx.gen.auth` (Phoenix 1.8 includes **magic link + optional passwo
 
 **API tokens:** see §7.2. There are personal API tokens for staff tools (built) and access + refresh tokens for the app (planned).
 
-**Account deletion:** in-app and on the web (an Apple requirement). Deleting anonymises the profile and removes photos after a 30-day grace period. Reviews stay up as "Deleted rider" unless the member asks for them to be removed too.
+**Account deletion:** in-app (an Apple requirement; `DELETE /api/v1/me`, needs a login in the last 20 minutes) and by staff in `/admin/members`. It is immediate and uses the same steps as the admin delete: upcoming RSVPs are cancelled, hosted group rides removed (riders emailed), and photos, listings, reviews, profile, tokens and blocks deleted. A member deleting themselves also removes an imported profile they claimed. Admins can't delete their own account. Not built yet: the web settings button, and the earlier idea of a 30-day grace period with reviews kept as "Deleted rider".
 
 ---
 
@@ -220,7 +220,7 @@ One JSON API serves two clients: the **mobile app**, and **staff tools** (the `p
 | Auth | `POST auth/password`, `auth/magic_link`, `auth/magic_link/exchange`, `auth/google`, `auth/apple`, `auth/refresh`, `DELETE auth/session` | Step 4 |
 | Me (more) | `PATCH me` (incl. `locale`), `GET/PATCH me/profile`, `POST me/push_devices`, `DELETE me` | Step 4 |
 | Member actions | `PUT/DELETE events/:slug/rsvp`, `GET events/:slug/attendees`, `POST/PATCH reviews`, `POST albums/:slug/photos`, `POST/PATCH listings`, `POST listings/:id/still_available`, … | Step 5 |
-| Safety | `POST reports`, `POST blocks`, `DELETE blocks/:id` | Step 5 (needed before store review) |
+| Safety | `GET reports/reasons`, `POST reports` (with optional `block`), `GET blocks`, `POST blocks`, `DELETE blocks/:user_id`. Targets are `{target_type, target_id}`; the server finds the owner | Built |
 
 **Admin content rules (step 2):** the API **creates and edits drafts only**. Publishing (and scheduling with a future `published_at`) stays a click in `/admin`, so nothing written by a script or an AI goes live without a person reading it.
 

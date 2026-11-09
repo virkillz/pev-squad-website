@@ -272,6 +272,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/blocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Members you blocked */
+        get: operations["PevSquadWeb.API.SafetyController.blocks"];
+        put?: never;
+        /** Block the owner of a profile, photo, group ride or review */
+        post: operations["PevSquadWeb.API.SafetyController.block"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/blocks/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Unblock a member (idempotent) */
+        delete: operations["PevSquadWeb.API.SafetyController.unblock"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/community": {
         parameters: {
             query?: never;
@@ -385,11 +420,29 @@ export interface paths {
         get: operations["PevSquadWeb.API.MeController.show"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** Permanently delete your account and what you posted. Needs a login in the last 20 minutes */
+        delete: operations["PevSquadWeb.API.MeController.delete"];
         options?: never;
         head?: never;
         /** Save the member's email language */
         patch: operations["PevSquadWeb.API.MeController.update"];
+        trace?: never;
+    };
+    "/api/v1/me/deletion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** What deleting your account would remove, for the confirmation screen */
+        get: operations["PevSquadWeb.API.MeController.deletion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/me/profile": {
@@ -452,6 +505,40 @@ export interface paths {
         };
         /** One post with its Markdown body */
         get: operations["PevSquadWeb.API.PostController.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Report something; optionally block its owner in the same step */
+        post: operations["PevSquadWeb.API.SafetyController.report"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/reasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Report reasons, labelled in the request language */
+        get: operations["PevSquadWeb.API.SafetyController.reasons"];
         put?: never;
         post?: never;
         delete?: never;
@@ -531,6 +618,17 @@ export interface components {
                 rides_upcoming: number;
             };
         };
+        /** Deletion */
+        Deletion: {
+            data: {
+                hosted_rides: number;
+                listings: number;
+                photos: number;
+                profile_alias: string | null;
+                reviews: number;
+                upcoming_rsvps: number;
+            };
+        };
         /**
          * Error
          * @example {
@@ -548,7 +646,7 @@ export interface components {
         Error: {
             error: {
                 /** @enum {string} */
-                code: "unauthorized" | "forbidden" | "not_found" | "conflict" | "validation_failed" | "rate_limited" | "bad_request" | "server_error";
+                code: "unauthorized" | "forbidden" | "reauth_required" | "not_found" | "conflict" | "validation_failed" | "rate_limited" | "bad_request" | "server_error";
                 /** @description Only for validation_failed: field name => list of messages */
                 fields?: {
                     [key: string]: unknown;
@@ -972,11 +1070,16 @@ export interface components {
             /** Format: uri */
             avatar_url: string | null;
             bio: string | null;
+            /** @description The signed-in member has blocked this rider; always false when logged out */
+            blocked: boolean;
             city: string | null;
             communities: {
                 name: string;
                 slug: string;
             }[];
+            /** @description False for an unclaimed (imported) profile: it can be reported but not blocked */
+            has_account: boolean;
+            id: number;
             instagram: string | null;
             main_ride: string | null;
             /** @enum {string} */
@@ -1693,6 +1796,94 @@ export interface operations {
             };
         };
     };
+    "PevSquadWeb.API.SafetyController.blocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Blocked */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            alias: string | null;
+                            user_id: number;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.SafetyController.block": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Target */
+        requestBody: {
+            content: {
+                "application/json": {
+                    target_id: number;
+                    /** @enum {string} */
+                    target_type: "profile" | "photo" | "event" | "review";
+                };
+            };
+        };
+        responses: {
+            /** @description Blocked */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            alias: string | null;
+                            user_id: number;
+                        };
+                    };
+                };
+            };
+            /** @description Your own, or nobody to block */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.SafetyController.unblock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Unblocked */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     "PevSquadWeb.API.CommunityController.show": {
         parameters: {
             query?: never;
@@ -1875,6 +2066,33 @@ export interface operations {
             };
         };
     };
+    "PevSquadWeb.API.MeController.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description reauth_required: log in again first; forbidden: admins can't */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     "PevSquadWeb.API.MeController.update": {
         parameters: {
             query?: never;
@@ -1899,6 +2117,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Me"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.MeController.deletion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Footprint */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Deletion"];
                 };
             };
         };
@@ -2010,6 +2248,88 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["PostDetail"];
+                    };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.SafetyController.report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Report */
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description Also block the owner */
+                    block?: boolean;
+                    notes?: string | null;
+                    /** @enum {string} */
+                    reason: "spam" | "offensive" | "harassment" | "dangerous" | "private_info" | "not_theirs" | "other";
+                    target_id: number;
+                    /** @enum {string} */
+                    target_type: "profile" | "photo" | "event" | "review";
+                };
+            };
+        };
+        responses: {
+            /** @description Reported */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            blocked: boolean;
+                        };
+                    };
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Invalid, already reported, or your own */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.SafetyController.reasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reasons */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            label: string;
+                            /** @enum {string} */
+                            value: "spam" | "offensive" | "harassment" | "dangerous" | "private_info" | "not_theirs" | "other";
+                        }[];
                     };
                 };
             };

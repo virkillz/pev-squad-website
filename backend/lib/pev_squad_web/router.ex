@@ -126,6 +126,14 @@ defmodule PevSquadWeb.Router do
 
     get "/me", MeController, :show
     patch "/me", MeController, :update
+    delete "/me", MeController, :delete
+    get "/me/deletion", MeController, :deletion
+
+    get "/reports/reasons", SafetyController, :reasons
+    post "/reports", SafetyController, :report
+    get "/blocks", SafetyController, :blocks
+    post "/blocks", SafetyController, :block
+    delete "/blocks/:user_id", SafetyController, :unblock
     put "/me/profile", MeController, :profile
   end
 

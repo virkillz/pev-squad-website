@@ -230,7 +230,22 @@ defmodule PevSquadWeb.API.PublicSchemas do
           events: list(ref("Event"))
         }),
       "Rider" => rider,
-      "RiderDetail" => merge(rider, %{bio: str_n(), instagram: str_n()}),
+      "RiderDetail" =>
+        merge(rider, %{
+          id: int(),
+          bio: str_n(),
+          instagram: str_n(),
+          has_account: %Schema{
+            type: :boolean,
+            description:
+              "False for an unclaimed (imported) profile: it can be reported but not blocked"
+          },
+          blocked: %Schema{
+            type: :boolean,
+            description:
+              "The signed-in member has blocked this rider; always false when logged out"
+          }
+        }),
       "Album" => album,
       "AlbumDetail" =>
         obj(%{

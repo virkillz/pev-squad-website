@@ -180,7 +180,7 @@ msgstr ""
 msgid "paste the full channel link (https://youtube.com/@…)"
 msgstr ""
 
-#: lib/pev_squad/safety/report.ex:42
+#: lib/pev_squad/safety/report.ex:43
 #, elixir-autogen, elixir-format
 msgid "pick a reason"
 msgstr ""
@@ -203,7 +203,7 @@ msgstr ""
 msgid "write the public statement for the ban"
 msgstr ""
 
-#: lib/pev_squad/safety/report.ex:47
+#: lib/pev_squad/safety/report.ex:48
 #, elixir-autogen, elixir-format
 msgid "you've already reported this — the moderators are on it"
 msgstr ""

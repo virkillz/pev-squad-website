@@ -31,6 +31,7 @@ defmodule PevSquad.Safety.Report do
     timestamps(type: :utc_datetime)
   end
 
+  def reason_values, do: Keyword.keys(@reasons)
   def reasons, do: Enum.map(@reasons, fn {k, label} -> {k, translate(label)} end)
   def reason_label(reason), do: @reasons |> Keyword.fetch!(reason) |> translate()
 

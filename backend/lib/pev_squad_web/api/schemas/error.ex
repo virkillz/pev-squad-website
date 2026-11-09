@@ -15,7 +15,7 @@ defmodule PevSquadWeb.API.Schemas.Error do
           code: %Schema{
             type: :string,
             enum:
-              ~w(unauthorized forbidden not_found conflict validation_failed rate_limited bad_request server_error)
+              ~w(unauthorized forbidden reauth_required not_found conflict validation_failed rate_limited bad_request server_error)
           },
           message: %Schema{type: :string, description: "In the request language"},
           fields: %Schema{
