@@ -45,3 +45,6 @@ config :phoenix,
 
 # Keep test uploads out of the dev uploads folder.
 config :pev_squad, :uploads_dir, Path.expand("../tmp/test_uploads", __DIR__)
+
+# Tests assert on the English source strings; Indonesian is tested explicitly.
+config :pev_squad, PevSquadWeb.Gettext, default_locale: "en"

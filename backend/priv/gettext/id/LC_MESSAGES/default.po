@@ -1,0 +1,457 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:232
+#, elixir-autogen, elixir-format
+msgid "%{count} UPCOMING"
+msgstr "%{count} MENDATANG"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:196
+#, elixir-autogen, elixir-format
+msgid "184 MEMBERS · 9 CITIES"
+msgstr "184 ANGGOTA · 9 KOTA"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:204
+#, elixir-autogen, elixir-format
+msgid "2 NEW DROPS"
+msgstr "2 RILISAN BARU"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:224
+#, elixir-autogen, elixir-format
+msgid "7 LIVE LISTINGS"
+msgstr "7 IKLAN AKTIF"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:17
+#, elixir-autogen, elixir-format
+msgid "A COLLECTIVE OF PEV RIDERS CHASING SPEED, ADVENTURE AND FREEDOM — MOSTLY BECAUSE IT'S FUN."
+msgstr "KUMPULAN RIDER PEV YANG MENGEJAR KECEPATAN, PETUALANGAN DAN KEBEBASAN — TERUTAMA KARENA SERU."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:170
+#, elixir-autogen, elixir-format
+msgid "A PEV is a real way to get to work. Ride to the station, take it on public transport, ride the last mile — no traffic jams, no parking, your own schedule."
+msgstr "PEV itu beneran bisa jadi kendaraan ke kantor. Naik ke stasiun, bawa ke transportasi umum, lanjut last mile — bebas macet, nggak perlu cari parkir, jadwal kamu sendiri."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:258
+#, elixir-autogen, elixir-format
+msgid "A pack of one-wheeled speed junkies showing up to your meetup, race, or brand activation? Consider us there."
+msgstr "Segerombolan pecandu kecepatan beroda satu datang ke meetup, balapan, atau aktivasi brand kamu? Anggap saja kami sudah di sana."
+
+#: lib/pev_squad_web/components/layouts.ex:22
+#: lib/pev_squad_web/components/layouts.ex:140
+#, elixir-autogen, elixir-format
+msgid "About"
+msgstr "Tentang"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:145
+#, elixir-autogen, elixir-format
+msgid "About Us"
+msgstr "Tentang Kami"
+
+#: lib/pev_squad_web/components/layouts.ex:93
+#, elixir-autogen, elixir-format
+msgid "Account"
+msgstr "Akun"
+
+#: lib/pev_squad_web/components/core_components.ex:368
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr "Aksi"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:111
+#, elixir-autogen, elixir-format
+msgid "Active Members"
+msgstr "Anggota Aktif"
+
+#: lib/pev_squad_web/components/layouts.ex:87
+#, elixir-autogen, elixir-format
+msgid "Admin"
+msgstr "Admin"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:159
+#, elixir-autogen, elixir-format
+msgid "Adventure"
+msgstr "Petualangan"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:48
+#, elixir-autogen, elixir-format
+msgid "After maternity hiatus, our little speed demon is back. With revenge."
+msgstr "Setelah cuti melahirkan, si speed demon kecil kami kembali. Dengan dendam."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:73
+#: lib/pev_squad_web/live/home_live/index.html.heex:80
+#, elixir-autogen, elixir-format
+msgid "All Events"
+msgstr "Semua Event"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:23
+#, elixir-autogen, elixir-format
+msgid "Along the way we picked up a growing list of brands, media, and personalities who ride with us. Indonesia's most active EUC community."
+msgstr "Seiring jalan, makin banyak brand, media, dan tokoh yang ikut riding bareng kami. Komunitas EUC paling aktif di Indonesia."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:272
+#, elixir-autogen, elixir-format
+msgid "Ask Us to Help Run It"
+msgstr "Ajak Kami Bantu Jalankan"
+
+#: lib/pev_squad_web/components/layouts.ex:207
+#: lib/pev_squad_web/components/layouts.ex:219
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr "Mencoba menyambung ulang"
+
+#: lib/pev_squad_web/components/layouts.ex:126
+#, elixir-autogen, elixir-format
+msgid "Basecamp"
+msgstr "Basecamp"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:220
+#, elixir-autogen, elixir-format
+msgid "Buy and sell gear inside the squad — new and second-hand units, straight from rider to rider."
+msgstr "Jual beli gear di dalam squad — unit baru maupun bekas, langsung dari rider ke rider."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:104
+#, elixir-autogen, elixir-format
+msgid "By the numbers"
+msgstr "Dalam angka"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:167
+#, elixir-autogen, elixir-format
+msgid "COMMUTE"
+msgstr "KOMUTER"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:115
+#, elixir-autogen, elixir-format
+msgid "Cities"
+msgstr "Kota"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:30
+#, elixir-autogen, elixir-format
+msgid "Collaborate With Us"
+msgstr "Kolaborasi Bareng Kami"
+
+#: lib/pev_squad_web/components/layouts.ex:17
+#: lib/pev_squad_web/components/layouts.ex:135
+#: lib/pev_squad_web/live/home_live/index.html.heex:190
+#, elixir-autogen, elixir-format
+msgid "Community"
+msgstr "Komunitas"
+
+#: lib/pev_squad_web/components/layouts.ex:21
+#: lib/pev_squad_web/components/layouts.ex:139
+#: lib/pev_squad_web/live/home_live/index.html.heex:228
+#, elixir-autogen, elixir-format
+msgid "Events"
+msgstr "Event"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:184
+#, elixir-autogen, elixir-format
+msgid "Everything the squad runs, in one list."
+msgstr "Semua yang dijalankan squad, dalam satu daftar."
+
+#: lib/pev_squad_web/components/layouts.ex:133
+#, elixir-autogen, elixir-format
+msgid "Explore"
+msgstr "Jelajahi"
+
+#: lib/pev_squad_web/components/layouts.ex:144
+#, elixir-autogen, elixir-format
+msgid "Follow"
+msgstr "Ikuti"
+
+#: lib/pev_squad_web/components/layouts.ex:20
+#: lib/pev_squad_web/components/layouts.ex:138
+#: lib/pev_squad_web/live/home_live/index.html.heex:218
+#, elixir-autogen, elixir-format
+msgid "For Sale"
+msgstr "Dijual"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:168
+#, elixir-autogen, elixir-format
+msgid "Freedom"
+msgstr "Kebebasan"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:143
+#, elixir-autogen, elixir-format
+msgid "Freedom."
+msgstr "Kebebasan."
+
+#: lib/pev_squad_web/components/layouts.ex:18
+#: lib/pev_squad_web/components/layouts.ex:136
+#: lib/pev_squad_web/live/home_live/index.html.heex:200
+#, elixir-autogen, elixir-format
+msgid "Gallery"
+msgstr "Galeri"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:230
+#, elixir-autogen, elixir-format
+msgid "Group rides, meetups, and demo days — what we've done and what's coming up next."
+msgstr "Group ride, meetup, dan demo day — yang sudah kami jalani dan yang akan datang."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:161
+#, elixir-autogen, elixir-format
+msgid "Group rides, weekend getaways and multi-day tours. Night loops through the city, trails in Bogor, the spine of Java. Range anxiety is just part of the route plan."
+msgstr "Group ride, getaway akhir pekan, dan touring berhari-hari. Night ride keliling kota, trail di Bogor, membelah Pulau Jawa. Range anxiety cuma bagian dari rencana rute."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:271
+#, elixir-autogen, elixir-format
+msgid "HANDS ON"
+msgstr "TURUN TANGAN"
+
+#: lib/pev_squad_web/components/layouts.ex:16
+#, elixir-autogen, elixir-format
+msgid "Home"
+msgstr "Beranda"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:241
+#, elixir-autogen, elixir-format
+msgid "How to collaborate"
+msgstr "Cara berkolaborasi"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:242
+#, elixir-autogen, elixir-format
+msgid "If It's Fun,"
+msgstr "Kalau Seru,"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:60
+#, elixir-autogen, elixir-format
+msgid "Introducing EUC female rider squad."
+msgstr "Memperkenalkan squad rider EUC perempuan."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:256
+#, elixir-autogen, elixir-format
+msgid "Invite Us to Your Event"
+msgstr "Undang Kami ke Event Kamu"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:106
+#, elixir-autogen, elixir-format
+msgid "Join WhatsApp Group"
+msgstr "Gabung Grup WhatsApp"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:29
+#, elixir-autogen, elixir-format
+msgid "Join the Squad"
+msgstr "Gabung Squad"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:119
+#, elixir-autogen, elixir-format
+msgid "KM Logged"
+msgstr "KM Tercatat"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:132
+#: lib/pev_squad_web/live/home_live/index.html.heex:134
+#, elixir-autogen, elixir-format
+msgid "LOGGED"
+msgstr "TERCATAT"
+
+#: lib/pev_squad_web/components/layouts.ex:168
+#, elixir-autogen, elixir-format
+msgid "Language"
+msgstr "Bahasa"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:36
+#, elixir-autogen, elixir-format
+msgid "Latest // Urban Playground"
+msgstr "Terbaru // Urban Playground"
+
+#: lib/pev_squad_web/components/layouts.ex:98
+#, elixir-autogen, elixir-format
+msgid "Log in"
+msgstr "Masuk"
+
+#: lib/pev_squad_web/components/layouts.ex:95
+#, elixir-autogen, elixir-format
+msgid "Log out"
+msgstr "Keluar"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:123
+#, elixir-autogen, elixir-format
+msgid "Meetups Held"
+msgstr "Meetup Digelar"
+
+#: lib/pev_squad_web/components/layouts.ex:104
+#, elixir-autogen, elixir-format
+msgid "Menu"
+msgstr "Menu"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:244
+#, elixir-autogen, elixir-format
+msgid "Most of us have day jobs — this is what we do for fun. So the bar for working with PEV Squad isn't a media kit, it's one question: will it be fun? Get that right and we're already halfway there."
+msgstr "Kebanyakan dari kami punya pekerjaan tetap — ini yang kami lakukan untuk bersenang-senang. Jadi syarat kerja sama dengan PEV Squad bukan media kit, cuma satu pertanyaan: bakal seru nggak? Kalau jawabannya iya, kita sudah setengah jalan."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:267
+#, elixir-autogen, elixir-format
+msgid "Need riders, footage, or a squad on camera? We're in — no fee required, just make it fun."
+msgstr "Butuh rider, footage, atau satu squad di depan kamera? Kami siap — tanpa bayaran, asal seru."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:37
+#, elixir-autogen, elixir-format
+msgid "New drop"
+msgstr "Rilisan baru"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:76
+#, elixir-autogen, elixir-format
+msgid "Next ride TBA"
+msgstr "Ride berikutnya menyusul"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:65
+#, elixir-autogen, elixir-format
+msgid "Next up"
+msgstr "Berikutnya"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:264
+#, elixir-autogen, elixir-format
+msgid "ON CAMERA"
+msgstr "DI DEPAN KAMERA"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:96
+#, elixir-autogen, elixir-format
+msgid "PEV Squad members and their EUCs and scooters gathered in a parking garage"
+msgstr "Anggota PEV Squad dengan EUC dan skuter mereka berkumpul di gedung parkir"
+
+#: lib/pev_squad_web/components/layouts.ex:27
+#, elixir-autogen, elixir-format
+msgid "PEV Squad — speed, adventure, freedom. Indonesia's personal electric vehicle community: racing, touring and commuting on EUCs, scooters and boards."
+msgstr "PEV Squad — kecepatan, petualangan, kebebasan. Komunitas kendaraan listrik pribadi Indonesia: balapan, touring, dan komuter dengan EUC, skuter, dan board."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:149
+#, elixir-autogen, elixir-format
+msgid "RACE"
+msgstr "BALAP"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:152
+#, elixir-autogen, elixir-format
+msgid "Races and competitions — drag runs, cannonball races, anything with a start line. Performance EUCs, tuned scooters and boards, pushed to find out what they actually do."
+msgstr "Balapan dan kompetisi — drag, cannonball race, apa pun yang ada garis startnya. EUC performa tinggi, skuter dan board yang sudah dioprek, digeber untuk tahu kemampuan aslinya."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:250
+#, elixir-autogen, elixir-format
+msgid "Reach Out on WhatsApp"
+msgstr "Hubungi Kami di WhatsApp"
+
+#: lib/pev_squad_web/components/layouts.ex:19
+#: lib/pev_squad_web/components/layouts.ex:137
+#: lib/pev_squad_web/live/home_live/index.html.heex:208
+#, elixir-autogen, elixir-format
+msgid "Reviews"
+msgstr "Review"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:192
+#, elixir-autogen, elixir-format
+msgid "Riders from every corner of the city, one shared obsession with going fast on three wheels or less."
+msgstr "Rider dari setiap sudut kota, satu obsesi yang sama: ngebut di atas tiga roda atau kurang."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:255
+#, elixir-autogen, elixir-format
+msgid "SHOW UP"
+msgstr "HADIR"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:131
+#: lib/pev_squad_web/live/home_live/index.html.heex:133
+#, elixir-autogen, elixir-format
+msgid "SPEED · ADVENTURE · FREEDOM"
+msgstr "KECEPATAN · PETUALANGAN · KEBEBASAN"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:79
+#, elixir-autogen, elixir-format
+msgid "See the Gallery"
+msgstr "Lihat Galeri"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:46
+#, elixir-autogen, elixir-format
+msgid "Shaz is Back!"
+msgstr "Shaz Kembali!"
+
+#: lib/pev_squad_web/components/layouts.ex:214
+#, elixir-autogen, elixir-format
+msgid "Something went wrong!"
+msgstr "Terjadi kesalahan!"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:150
+#, elixir-autogen, elixir-format
+msgid "Speed"
+msgstr "Kecepatan"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:143
+#, elixir-autogen, elixir-format
+msgid "Speed. Adventure."
+msgstr "Kecepatan. Petualangan."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:158
+#, elixir-autogen, elixir-format
+msgid "TOUR"
+msgstr "TOURING"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:183
+#, elixir-autogen, elixir-format
+msgid "The Index"
+msgstr "Indeks"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:210
+#, elixir-autogen, elixir-format
+msgid "Unfiltered, ridden-not-sponsored breakdowns of EUCs, scooters, and boards — rated by riders who own them."
+msgstr "Ulasan EUC, skuter, dan board tanpa filter — dikendarai, bukan disponsori — dinilai oleh rider yang memilikinya."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:43
+#, elixir-autogen, elixir-format
+msgid "Urban Playground plate — Shaz riding an EUC on a parking level"
+msgstr "Plate Urban Playground — Shaz mengendarai EUC di lantai gedung parkir"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:56
+#, elixir-autogen, elixir-format
+msgid "Urban Playground plate — the PEV Girls Squad with their EUCs"
+msgstr "Plate Urban Playground — PEV Girls Squad dengan EUC mereka"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:202
+#, elixir-autogen, elixir-format
+msgid "Urban Playground — the squad's plate series of riders, machines, and car parks."
+msgstr "Urban Playground — seri foto squad tentang rider, mesin, dan gedung parkir."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:265
+#, elixir-autogen, elixir-format
+msgid "Use Us for Content"
+msgstr "Pakai Kami untuk Konten"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:77
+#, elixir-autogen, elixir-format
+msgid "WATCH THE WHATSAPP GROUP"
+msgstr "PANTAU GRUP WHATSAPP"
+
+#: lib/pev_squad_web/components/layouts.ex:202
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr "Koneksi internet terputus"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:274
+#, elixir-autogen, elixir-format
+msgid "We once marshalled a running event purely because we thought it'd be a laugh. Ask and find out."
+msgstr "Kami pernah jadi marshal di event lari cuma karena kelihatannya seru. Tanya saja, nanti tahu sendiri."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:242
+#, elixir-autogen, elixir-format
+msgid "We're In."
+msgstr "Kami Ikut."
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:142
+#, elixir-autogen, elixir-format
+msgid "What we're about"
+msgstr "Tentang kami"
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:182
+#, elixir-autogen, elixir-format
+msgid "Where to go"
+msgstr "Mau ke mana"
+
+#: lib/pev_squad_web/components/core_components.ex:74
+#, elixir-autogen, elixir-format
+msgid "close"
+msgstr "tutup"

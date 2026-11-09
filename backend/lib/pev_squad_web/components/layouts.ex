@@ -9,19 +9,32 @@ defmodule PevSquadWeb.Layouts do
 
   embed_templates "layouts/*"
 
-  @nav [
-    {:home, "01", "Home", "/"},
-    {:community, "02", "Community", "/community"},
-    {:gallery, "03", "Gallery", "/gallery"},
-    {:reviews, "04", "Reviews", "/reviews"},
-    {:for_sale, "05", "For Sale", "/for-sale"},
-    {:events, "06", "Events", "/events"},
-    {:about, "07", "About", "/about"}
-  ]
+  # A function, not a module attribute, so the labels are translated at
+  # render time in the rider's locale.
+  defp nav do
+    [
+      {:home, "01", gettext("Home"), "/"},
+      {:community, "02", gettext("Community"), "/community"},
+      {:gallery, "03", gettext("Gallery"), "/gallery"},
+      {:reviews, "04", gettext("Reviews"), "/reviews"},
+      {:for_sale, "05", gettext("For Sale"), "/for-sale"},
+      {:events, "06", gettext("Events"), "/events"},
+      {:about, "07", gettext("About"), "/about"}
+    ]
+  end
 
-  @default_description "PEV Squad — speed, adventure, freedom. Indonesia's personal electric vehicle community: racing, touring and commuting on EUCs, scooters and boards."
+  def default_description do
+    gettext(
+      "PEV Squad — speed, adventure, freedom. Indonesia's personal electric vehicle community: racing, touring and commuting on EUCs, scooters and boards."
+    )
+  end
 
-  def default_description, do: @default_description
+  def og_locale do
+    case PevSquadWeb.Locale.current() do
+      "en" -> "en_US"
+      _ -> "id_ID"
+    end
+  end
 
   def og_title(nil), do: "PEV Squad"
   def og_title(title), do: "#{title} — PEV Squad"
@@ -46,7 +59,7 @@ defmodule PevSquadWeb.Layouts do
   slot :inner_block, required: true
 
   def app(assigns) do
-    assigns = assign(assigns, :nav, @nav)
+    assigns = assign(assigns, :nav, nav())
 
     ~H"""
     <header class="masthead">
@@ -71,23 +84,24 @@ defmodule PevSquadWeb.Layouts do
             navigate={~p"/admin"}
             class={["nav-account", @active == :admin && "active"]}
           >
-            Admin
+            {gettext("Admin")}
           </.link>
           <.link
             navigate={~p"/users/profile"}
             class={["nav-account", @active == :account && "active"]}
           >
-            Account
+            {gettext("Account")}
           </.link>
-          <.link href={~p"/users/log-out"} method="delete">Log out</.link>
+          <.link href={~p"/users/log-out"} method="delete">{gettext("Log out")}</.link>
         <% else %>
           <.link navigate={~p"/users/log-in"} class={["nav-account", @active == :account && "active"]}>
-            Log in
+            {gettext("Log in")}
           </.link>
         <% end %>
+        <.language_switch />
       </nav>
       <button class="nav-toggle" type="button" aria-controls="mainnav" aria-expanded="false">
-        Menu
+        {gettext("Menu")}
       </button>
     </header>
 
@@ -109,25 +123,25 @@ defmodule PevSquadWeb.Layouts do
         <div>
           <h2 class="footer-big">WE TAKE IT<br /><em>PERSONAL.</em></h2>
           <div style="margin-top:3rem;">
-            <span class="eyebrow">Basecamp</span>
+            <span class="eyebrow">{gettext("Basecamp")}</span>
             <p style="margin-top:0.5rem; line-height:1.5;">
               JAKARTA · BANDUNG · SURABAYA<br />SEMARANG · YOGYAKARTA · BEKASI
             </p>
           </div>
         </div>
         <div class="footer-col">
-          <h4>Explore</h4>
+          <h4>{gettext("Explore")}</h4>
           <ul>
-            <li><.link navigate={~p"/community"}>Community</.link></li>
-            <li><.link navigate={~p"/gallery"}>Gallery</.link></li>
-            <li><.link navigate={~p"/reviews"}>Reviews</.link></li>
-            <li><.link navigate={~p"/for-sale"}>For Sale</.link></li>
-            <li><.link navigate={~p"/events"}>Events</.link></li>
-            <li><.link navigate={~p"/about"}>About</.link></li>
+            <li><.link navigate={~p"/community"}>{gettext("Community")}</.link></li>
+            <li><.link navigate={~p"/gallery"}>{gettext("Gallery")}</.link></li>
+            <li><.link navigate={~p"/reviews"}>{gettext("Reviews")}</.link></li>
+            <li><.link navigate={~p"/for-sale"}>{gettext("For Sale")}</.link></li>
+            <li><.link navigate={~p"/events"}>{gettext("Events")}</.link></li>
+            <li><.link navigate={~p"/about"}>{gettext("About")}</.link></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Follow</h4>
+          <h4>{gettext("Follow")}</h4>
           <ul>
             <li><a href="#">Instagram</a></li>
             <li><a href="#">WhatsApp</a></li>
@@ -140,6 +154,29 @@ defmodule PevSquadWeb.Layouts do
         <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
       </div>
     </footer>
+    """
+  end
+
+  @doc """
+  EN / ID toggle. A plain link (full page load) so the plug stores the
+  choice in the session and every LiveView remounts in the new language.
+  """
+  def language_switch(assigns) do
+    assigns = assign(assigns, :current, PevSquadWeb.Locale.current())
+
+    ~H"""
+    <span class="lang-switch" aria-label={gettext("Language")}>
+      <a
+        :for={{code, label} <- [{"id", "ID"}, {"en", "EN"}]}
+        href={~p"/locale/#{code}"}
+        lang={code}
+        hreflang={code}
+        class={@current == code && "active"}
+        aria-current={@current == code && "true"}
+      >
+        {label}
+      </a>
+    </span>
     """
   end
 

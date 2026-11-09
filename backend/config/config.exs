@@ -25,6 +25,10 @@ config :pev_squad,
   generators: [timestamp_type: :utc_datetime]
 
 # Configure the endpoint
+# UI language. Indonesian unless the browser asks for English or the rider
+# picks it in the switcher (see PevSquadWeb.Locale).
+config :pev_squad, PevSquadWeb.Gettext, default_locale: "id", locales: ~w(id en)
+
 config :pev_squad, PevSquadWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,

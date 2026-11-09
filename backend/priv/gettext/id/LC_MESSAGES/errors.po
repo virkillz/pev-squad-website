@@ -1,0 +1,93 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "can't be blank"
+msgstr "tidak boleh kosong"
+
+msgid "has already been taken"
+msgstr "sudah dipakai"
+
+msgid "is invalid"
+msgstr "tidak valid"
+
+msgid "must be accepted"
+msgstr "harus disetujui"
+
+msgid "has invalid format"
+msgstr "formatnya tidak valid"
+
+msgid "has an invalid entry"
+msgstr "berisi entri yang tidak valid"
+
+msgid "is reserved"
+msgstr "sudah dicadangkan"
+
+msgid "does not match confirmation"
+msgstr "tidak cocok dengan konfirmasi"
+
+msgid "is still associated with this entry"
+msgstr "masih terhubung dengan entri ini"
+
+msgid "are still associated with this entry"
+msgstr "masih terhubung dengan entri ini"
+
+msgid "should have %{count} item(s)"
+msgid_plural "should have %{count} item(s)"
+msgstr[0] "harus berisi %{count} item"
+
+msgid "should be %{count} character(s)"
+msgid_plural "should be %{count} character(s)"
+msgstr[0] "harus %{count} karakter"
+
+msgid "should be %{count} byte(s)"
+msgid_plural "should be %{count} byte(s)"
+msgstr[0] "harus %{count} byte"
+
+msgid "should have at least %{count} item(s)"
+msgid_plural "should have at least %{count} item(s)"
+msgstr[0] "minimal berisi %{count} item"
+
+msgid "should be at least %{count} character(s)"
+msgid_plural "should be at least %{count} character(s)"
+msgstr[0] "minimal %{count} karakter"
+
+msgid "should be at least %{count} byte(s)"
+msgid_plural "should be at least %{count} byte(s)"
+msgstr[0] "minimal %{count} byte"
+
+msgid "should have at most %{count} item(s)"
+msgid_plural "should have at most %{count} item(s)"
+msgstr[0] "maksimal berisi %{count} item"
+
+msgid "should be at most %{count} character(s)"
+msgid_plural "should be at most %{count} character(s)"
+msgstr[0] "maksimal %{count} karakter"
+
+msgid "should be at most %{count} byte(s)"
+msgid_plural "should be at most %{count} byte(s)"
+msgstr[0] "maksimal %{count} byte"
+
+msgid "must be less than %{number}"
+msgstr "harus kurang dari %{number}"
+
+msgid "must be greater than %{number}"
+msgstr "harus lebih dari %{number}"
+
+msgid "must be less than or equal to %{number}"
+msgstr "harus kurang dari atau sama dengan %{number}"
+
+msgid "must be greater than or equal to %{number}"
+msgstr "harus lebih dari atau sama dengan %{number}"
+
+msgid "must be equal to %{number}"
+msgstr "harus sama dengan %{number}"

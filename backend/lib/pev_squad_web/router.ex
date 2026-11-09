@@ -10,6 +10,7 @@ defmodule PevSquadWeb.Router do
     plug :put_root_layout, html: {PevSquadWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug PevSquadWeb.Locale
     plug :fetch_current_scope_for_user
   end
 
@@ -21,7 +22,7 @@ defmodule PevSquadWeb.Router do
     pipe_through :browser
 
     live_session :public,
-      on_mount: [{PevSquadWeb.UserAuth, :mount_current_scope}] do
+      on_mount: [PevSquadWeb.Locale, {PevSquadWeb.UserAuth, :mount_current_scope}] do
       live "/", HomeLive.Index, :index
       live "/events", EventLive.Index, :index
       live "/events/:slug", EventLive.Show, :show
@@ -39,13 +40,15 @@ defmodule PevSquadWeb.Router do
 
     # The Featured Riders page is switched off for now (DESIGN.md decision 14).
     get "/riders", PageController, :riders
+
+    get "/locale/:locale", PageController, :locale
   end
 
   scope "/admin", PevSquadWeb.Admin, as: :admin do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :staff,
-      on_mount: [{PevSquadWeb.UserAuth, :require_staff}] do
+      on_mount: [PevSquadWeb.Locale, {PevSquadWeb.UserAuth, :require_staff}] do
       live "/", Dashboard, :index
       live "/events", EventLive.Index, :index
       live "/events/new", EventLive.Form, :new
@@ -95,7 +98,11 @@ defmodule PevSquadWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{PevSquadWeb.UserAuth, :require_authenticated}, PevSquadWeb.AuthTitles] do
+      on_mount: [
+        PevSquadWeb.Locale,
+        {PevSquadWeb.UserAuth, :require_authenticated},
+        PevSquadWeb.AuthTitles
+      ] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/profile", UserLive.Profile, :edit
       live "/reviews/new", ReviewLive.Form, :new
@@ -115,7 +122,7 @@ defmodule PevSquadWeb.Router do
     pipe_through :browser
 
     live_session :public_reviews,
-      on_mount: [{PevSquadWeb.UserAuth, :mount_current_scope}] do
+      on_mount: [PevSquadWeb.Locale, {PevSquadWeb.UserAuth, :mount_current_scope}] do
       live "/reviews/:id", ReviewLive.Show, :show
       live "/gallery/:slug", GalleryLive.Album, :show
     end
@@ -125,7 +132,11 @@ defmodule PevSquadWeb.Router do
     pipe_through [:browser]
 
     live_session :current_user,
-      on_mount: [{PevSquadWeb.UserAuth, :mount_current_scope}, PevSquadWeb.AuthTitles] do
+      on_mount: [
+        PevSquadWeb.Locale,
+        {PevSquadWeb.UserAuth, :mount_current_scope},
+        PevSquadWeb.AuthTitles
+      ] do
       live "/users/register", UserLive.Registration, :new
       live "/users/log-in", UserLive.Login, :new
       live "/users/log-in/:token", UserLive.Confirmation, :new

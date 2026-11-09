@@ -20,11 +20,11 @@ defmodule PevSquadWeb.HomeLive.Index do
      )}
   end
 
-  # "04 NOV WED" in Jakarta time — the hero meta strip.
+  # "04 NOV WED" (or "04 NOV RAB") in Jakarta time — the hero meta strip.
   defp date_stamp do
     DateTime.utc_now()
     |> DateTime.shift_zone!("Asia/Jakarta")
-    |> Calendar.strftime("%d %b %a")
+    |> PevSquadWeb.Locale.strftime("%d %b %a")
     |> String.upcase()
   end
 end

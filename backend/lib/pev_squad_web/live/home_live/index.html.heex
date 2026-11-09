@@ -14,34 +14,38 @@
       </div>
 
       <p class="hero-motto">
-        A COLLECTIVE OF PEV RIDERS CHASING SPEED, ADVENTURE AND FREEDOM — MOSTLY BECAUSE IT'S FUN.
+        {gettext(
+          "A COLLECTIVE OF PEV RIDERS CHASING SPEED, ADVENTURE AND FREEDOM — MOSTLY BECAUSE IT'S FUN."
+        )}
       </p>
 
       <p class="hero-sub">
-        Along the way we picked up a growing list of brands, media, and personalities who ride with us. Indonesia's most active EUC community.
+        {gettext(
+          "Along the way we picked up a growing list of brands, media, and personalities who ride with us. Indonesia's most active EUC community."
+        )}
       </p>
 
       <div class="hero-actions">
-        <.link navigate={~p"/community"} class="btn btn-solid">Join the Squad</.link>
-        <a href="#collaborate" class="btn btn-outline">Collaborate With Us</a>
+        <.link navigate={~p"/community"} class="btn btn-solid">{gettext("Join the Squad")}</.link>
+        <a href="#collaborate" class="btn btn-outline">{gettext("Collaborate With Us")}</a>
       </div>
     </div>
 
     <div class="hero-panel hero-white">
       <div class="meta-row">
-        <span class="eyebrow">Latest // Urban Playground</span>
-        <span class="meta-text">New drop</span>
+        <span class="eyebrow">{gettext("Latest // Urban Playground")}</span>
+        <span class="meta-text">{gettext("New drop")}</span>
       </div>
 
       <.link class="latest-feature" navigate={~p"/gallery"} style="margin-top:1.25rem;">
         <img
           src="/images/pev_playground_shaz_1.png"
-          alt="Urban Playground plate — Shaz riding an EUC on a parking level"
+          alt={gettext("Urban Playground plate — Shaz riding an EUC on a parking level")}
         />
         <div class="latest-copy">
-          <h2 class="latest-title">Shaz is Back!</h2>
+          <h2 class="latest-title">{gettext("Shaz is Back!")}</h2>
           <p class="latest-desc">
-            After maternity hiatus, our little speed demon is back. With revenge.
+            {gettext("After maternity hiatus, our little speed demon is back. With revenge.")}
           </p>
         </div>
       </.link>
@@ -49,16 +53,16 @@
       <.link class="latest-row" navigate={~p"/gallery"}>
         <img
           src="/images/pev_playground_girls_1.png"
-          alt="Urban Playground plate — the PEV Girls Squad with their EUCs"
+          alt={gettext("Urban Playground plate — the PEV Girls Squad with their EUCs")}
         />
         <div>
           <h3 class="latest-title">PEV Girls Squad</h3>
-          <p class="latest-desc">Introducing EUC female rider squad.</p>
+          <p class="latest-desc">{gettext("Introducing EUC female rider squad.")}</p>
         </div>
       </.link>
 
       <div style="margin-top:2rem;">
-        <span class="eyebrow">Next up</span>
+        <span class="eyebrow">{gettext("Next up")}</span>
         <%= if @next_event do %>
           <h2 class="card-title" style="margin-top:0.75rem; font-size:1.7rem;">
             {@next_event.title}
@@ -66,14 +70,18 @@
           <p class="card-meta">{EventComponents.next_up_meta(@next_event)}</p>
           <div class="hero-actions" style="margin-top:1.25rem;">
             <.link navigate={~p"/events/#{@next_event.slug}"} class="btn btn-solid">RSVP</.link>
-            <.link navigate={~p"/events"} class="btn btn-outline">All Events</.link>
+            <.link navigate={~p"/events"} class="btn btn-outline">{gettext("All Events")}</.link>
           </div>
         <% else %>
-          <h2 class="card-title" style="margin-top:0.75rem; font-size:1.7rem;">Next ride TBA</h2>
-          <p class="card-meta">WATCH THE WHATSAPP GROUP</p>
+          <h2 class="card-title" style="margin-top:0.75rem; font-size:1.7rem;">
+            {gettext("Next ride TBA")}
+          </h2>
+          <p class="card-meta">{gettext("WATCH THE WHATSAPP GROUP")}</p>
           <div class="hero-actions" style="margin-top:1.25rem;">
-            <.link navigate={~p"/gallery"} class="btn btn-solid">See the Gallery</.link>
-            <.link navigate={~p"/events"} class="btn btn-outline">All Events</.link>
+            <.link navigate={~p"/gallery"} class="btn btn-solid">
+              {gettext("See the Gallery")}
+            </.link>
+            <.link navigate={~p"/events"} class="btn btn-outline">{gettext("All Events")}</.link>
           </div>
         <% end %>
       </div>
@@ -89,7 +97,7 @@
   <div :if={@featured_photos == []} class="bleed">
     <img
       src="/images/community.png"
-      alt="PEV Squad members and their EUCs and scooters gathered in a parking garage"
+      alt={gettext("PEV Squad members and their EUCs and scooters gathered in a parking garage")}
     />
   </div>
   
@@ -97,26 +105,26 @@
   <section class="band band-tight band-black">
     <div class="section-head" style="margin-bottom:1.75rem;">
       <div>
-        <span class="eyebrow">By the numbers</span>
+        <span class="eyebrow">{gettext("By the numbers")}</span>
       </div>
-      <a href="#" class="btn btn-outline">Join WhatsApp Group</a>
+      <a href="#" class="btn btn-outline">{gettext("Join WhatsApp Group")}</a>
     </div>
     <div class="statbar">
       <div class="stat">
         <div class="stat-n">184</div>
-        <div class="stat-l">Active Members</div>
+        <div class="stat-l">{gettext("Active Members")}</div>
       </div>
       <div class="stat">
         <div class="stat-n">9</div>
-        <div class="stat-l">Cities</div>
+        <div class="stat-l">{gettext("Cities")}</div>
       </div>
       <div class="stat">
         <div class="stat-n">62,000+</div>
-        <div class="stat-l">KM Logged</div>
+        <div class="stat-l">{gettext("KM Logged")}</div>
       </div>
       <div class="stat">
         <div class="stat-n">37</div>
-        <div class="stat-l">Meetups Held</div>
+        <div class="stat-l">{gettext("Meetups Held")}</div>
       </div>
     </div>
   </section>
@@ -124,10 +132,10 @@
 <!-- MARQUEE =============================================================== -->
   <div class="marquee">
     <div class="marquee-inner">
-      <span class="marquee-text">SPEED · ADVENTURE · FREEDOM //</span>
-      <span class="marquee-text"><em>62,000 KM</em> LOGGED //</span>
-      <span class="marquee-text">SPEED · ADVENTURE · FREEDOM //</span>
-      <span class="marquee-text"><em>62,000 KM</em> LOGGED //</span>
+      <span class="marquee-text">{gettext("SPEED · ADVENTURE · FREEDOM")} //</span>
+      <span class="marquee-text"><em>62,000 KM</em> {gettext("LOGGED")} //</span>
+      <span class="marquee-text">{gettext("SPEED · ADVENTURE · FREEDOM")} //</span>
+      <span class="marquee-text"><em>62,000 KM</em> {gettext("LOGGED")} //</span>
     </div>
   </div>
   
@@ -135,31 +143,37 @@
   <section class="band band-white">
     <div class="section-head">
       <div>
-        <span class="eyebrow">What we're about</span>
-        <h2 class="section-title">Speed. Adventure.<br />Freedom.</h2>
+        <span class="eyebrow">{gettext("What we're about")}</span>
+        <h2 class="section-title">{gettext("Speed. Adventure.")}<br />{gettext("Freedom.")}</h2>
       </div>
-      <.link navigate={~p"/about"} class="btn btn-outline">About Us</.link>
+      <.link navigate={~p"/about"} class="btn btn-outline">{gettext("About Us")}</.link>
     </div>
     <div class="grid grid-3 grid-rule">
       <div class="pillar">
-        <div class="pillar-num">01 / RACE</div>
-        <h3>Speed</h3>
+        <div class="pillar-num">01 / {gettext("RACE")}</div>
+        <h3>{gettext("Speed")}</h3>
         <p>
-          Races and competitions — drag runs, cannonball races, anything with a start line. Performance EUCs, tuned scooters and boards, pushed to find out what they actually do.
+          {gettext(
+            "Races and competitions — drag runs, cannonball races, anything with a start line. Performance EUCs, tuned scooters and boards, pushed to find out what they actually do."
+          )}
         </p>
       </div>
       <div class="pillar">
-        <div class="pillar-num">02 / TOUR</div>
-        <h3>Adventure</h3>
+        <div class="pillar-num">02 / {gettext("TOUR")}</div>
+        <h3>{gettext("Adventure")}</h3>
         <p>
-          Group rides, weekend getaways and multi-day tours. Night loops through the city, trails in Bogor, the spine of Java. Range anxiety is just part of the route plan.
+          {gettext(
+            "Group rides, weekend getaways and multi-day tours. Night loops through the city, trails in Bogor, the spine of Java. Range anxiety is just part of the route plan."
+          )}
         </p>
       </div>
       <div class="pillar">
-        <div class="pillar-num">03 / COMMUTE</div>
-        <h3>Freedom</h3>
+        <div class="pillar-num">03 / {gettext("COMMUTE")}</div>
+        <h3>{gettext("Freedom")}</h3>
         <p>
-          A PEV is a real way to get to work. Ride to the station, take it on public transport, ride the last mile — no traffic jams, no parking, your own schedule.
+          {gettext(
+            "A PEV is a real way to get to work. Ride to the station, take it on public transport, ride the last mile — no traffic jams, no parking, your own schedule."
+          )}
         </p>
       </div>
     </div>
@@ -169,51 +183,61 @@
   <section class="band band-black">
     <div class="section-head">
       <div>
-        <span class="eyebrow">Where to go</span>
-        <h2 class="section-title">The Index</h2>
-        <p class="section-lede">Everything the squad runs, in one list.</p>
+        <span class="eyebrow">{gettext("Where to go")}</span>
+        <h2 class="section-title">{gettext("The Index")}</h2>
+        <p class="section-lede">{gettext("Everything the squad runs, in one list.")}</p>
       </div>
     </div>
     <div class="index-list">
       <.link class="index-row" navigate={~p"/community"}>
         <div class="index-num">01 / 05</div>
-        <div class="index-title">Community</div>
+        <div class="index-title">{gettext("Community")}</div>
         <div class="index-desc">
-          Riders from every corner of the city, one shared obsession with going fast on three wheels or less.
+          {gettext(
+            "Riders from every corner of the city, one shared obsession with going fast on three wheels or less."
+          )}
         </div>
-        <div class="index-meta">184 MEMBERS · 9 CITIES</div>
+        <div class="index-meta">{gettext("184 MEMBERS · 9 CITIES")}</div>
       </.link>
       <.link class="index-row" navigate={~p"/gallery"}>
         <div class="index-num">02 / 05</div>
-        <div class="index-title">Gallery</div>
+        <div class="index-title">{gettext("Gallery")}</div>
         <div class="index-desc">
-          Urban Playground — the squad's plate series of riders, machines, and car parks.
+          {gettext(
+            "Urban Playground — the squad's plate series of riders, machines, and car parks."
+          )}
         </div>
-        <div class="index-meta">2 NEW DROPS</div>
+        <div class="index-meta">{gettext("2 NEW DROPS")}</div>
       </.link>
       <.link class="index-row" navigate={~p"/reviews"}>
         <div class="index-num">03 / 05</div>
-        <div class="index-title">Reviews</div>
+        <div class="index-title">{gettext("Reviews")}</div>
         <div class="index-desc">
-          Unfiltered, ridden-not-sponsored breakdowns of EUCs, scooters, and boards — rated by riders who own them.
+          {gettext(
+            "Unfiltered, ridden-not-sponsored breakdowns of EUCs, scooters, and boards — rated by riders who own them."
+          )}
         </div>
         <div class="index-meta">EUC / SCOOTER / ESK8</div>
       </.link>
       <.link class="index-row" navigate={~p"/for-sale"}>
         <div class="index-num">04 / 05</div>
-        <div class="index-title">For Sale</div>
+        <div class="index-title">{gettext("For Sale")}</div>
         <div class="index-desc">
-          Buy and sell gear inside the squad — new and second-hand units, straight from rider to rider.
+          {gettext(
+            "Buy and sell gear inside the squad — new and second-hand units, straight from rider to rider."
+          )}
         </div>
-        <div class="index-meta">7 LIVE LISTINGS</div>
+        <div class="index-meta">{gettext("7 LIVE LISTINGS")}</div>
       </.link>
       <.link class="index-row" navigate={~p"/events"}>
         <div class="index-num">05 / 05</div>
-        <div class="index-title">Events</div>
+        <div class="index-title">{gettext("Events")}</div>
         <div class="index-desc">
-          Group rides, meetups, and demo days — what we've done and what's coming up next.
+          {gettext(
+            "Group rides, meetups, and demo days — what we've done and what's coming up next."
+          )}
         </div>
-        <div class="index-meta">{@upcoming_count} UPCOMING</div>
+        <div class="index-meta">{gettext("%{count} UPCOMING", count: @upcoming_count)}</div>
       </.link>
     </div>
   </section>
@@ -222,36 +246,44 @@
   <section id="collaborate" class="band band-orange">
     <div class="section-head">
       <div>
-        <span class="eyebrow">How to collaborate</span>
-        <h2 class="section-title">If It's Fun,<br />We're In.</h2>
+        <span class="eyebrow">{gettext("How to collaborate")}</span>
+        <h2 class="section-title">{gettext("If It's Fun,")}<br />{gettext("We're In.")}</h2>
         <p class="section-lede">
-          Most of us have day jobs — this is what we do for fun. So the bar for working with PEV Squad isn't a media kit, it's one question: will it be fun? Get that right and we're already halfway there.
+          {gettext(
+            "Most of us have day jobs — this is what we do for fun. So the bar for working with PEV Squad isn't a media kit, it's one question: will it be fun? Get that right and we're already halfway there."
+          )}
         </p>
       </div>
       <a href="#" class="btn btn-solid" style="background:var(--black); color:var(--orange);">
-        Reach Out on WhatsApp
+        {gettext("Reach Out on WhatsApp")}
       </a>
     </div>
     <div class="grid grid-3 grid-rule">
       <div class="pillar">
-        <div class="pillar-num">01 / SHOW UP</div>
-        <h3>Invite Us to Your Event</h3>
+        <div class="pillar-num">01 / {gettext("SHOW UP")}</div>
+        <h3>{gettext("Invite Us to Your Event")}</h3>
         <p>
-          A pack of one-wheeled speed junkies showing up to your meetup, race, or brand activation? Consider us there.
+          {gettext(
+            "A pack of one-wheeled speed junkies showing up to your meetup, race, or brand activation? Consider us there."
+          )}
         </p>
       </div>
       <div class="pillar">
-        <div class="pillar-num">02 / ON CAMERA</div>
-        <h3>Use Us for Content</h3>
+        <div class="pillar-num">02 / {gettext("ON CAMERA")}</div>
+        <h3>{gettext("Use Us for Content")}</h3>
         <p>
-          Need riders, footage, or a squad on camera? We're in — no fee required, just make it fun.
+          {gettext(
+            "Need riders, footage, or a squad on camera? We're in — no fee required, just make it fun."
+          )}
         </p>
       </div>
       <div class="pillar">
-        <div class="pillar-num">03 / HANDS ON</div>
-        <h3>Ask Us to Help Run It</h3>
+        <div class="pillar-num">03 / {gettext("HANDS ON")}</div>
+        <h3>{gettext("Ask Us to Help Run It")}</h3>
         <p>
-          We once marshalled a running event purely because we thought it'd be a laugh. Ask and find out.
+          {gettext(
+            "We once marshalled a running event purely because we thought it'd be a laugh. Ask and find out."
+          )}
         </p>
       </div>
     </div>

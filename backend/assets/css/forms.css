@@ -171,6 +171,16 @@
   .mainnav .nav-account { margin-left: 0; border-left: 0; }
 }
 
+/* EN / ID language switch — after the account links in .mainnav */
+.lang-switch { display: flex; }
+.mainnav .lang-switch a { padding: 0 0.6rem; opacity: 0.6; }
+.mainnav .lang-switch a:last-child { border-right: 0; }
+.mainnav .lang-switch a.active { opacity: 1; }
+@media (max-width: 900px) {
+  .mainnav .lang-switch a { flex: 1; justify-content: center; padding: 0.9rem 1rem; }
+  .mainnav .lang-switch a:first-child { border-right: var(--bw) solid rgba(255, 255, 255, 0.3); }
+}
+
 /* RSVP block on event detail */
 .rsvp-box {
   border: var(--bw) solid var(--rule);
