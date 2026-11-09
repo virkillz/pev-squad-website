@@ -15,7 +15,7 @@ defmodule PevSquadWeb.AboutLive.Index do
     <Layouts.app flash={@flash} current_scope={@current_scope} active={:about}>
       <section class="page-header">
         <div class="meta-row">
-          <span class="eyebrow">07 / {gettext("Who we are")}</span>
+          <span class="eyebrow">08 / {gettext("Who we are")}</span>
           <span class="tag-scribble">{gettext("since 2023")}</span>
         </div>
         <h1 class="page-title">{gettext("About")}</h1>

@@ -69,7 +69,8 @@ defmodule PevSquad.MixProject do
       {:bandit, "~> 1.5"},
       {:tzdata, "~> 1.1"},
       {:image, "~> 0.62"},
-      {:nimble_csv, "~> 1.2"}
+      {:nimble_csv, "~> 1.2"},
+      {:mdex, "~> 0.14.6"}
     ]
   end
 

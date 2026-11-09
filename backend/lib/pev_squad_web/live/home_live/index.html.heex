@@ -32,34 +32,69 @@
     </div>
 
     <div class="hero-panel hero-white">
-      <div class="meta-row">
-        <span class="eyebrow">{gettext("Latest // Urban Playground")}</span>
-        <span class="meta-text">{gettext("New drop")}</span>
-      </div>
+      <%= case @latest_posts do %>
+        <% [feature | rest] -> %>
+          <div class="meta-row">
+            <span class="eyebrow">{gettext("Latest // News & Articles")}</span>
+            <.link navigate={~p"/news"} class="meta-text">{gettext("All news")} →</.link>
+          </div>
 
-      <.link class="latest-feature" navigate={~p"/gallery"} style="margin-top:1.25rem;">
-        <img
-          src="/images/pev_playground_shaz_1.png"
-          alt={gettext("Urban Playground plate — Shaz riding an EUC on a parking level")}
-        />
-        <div class="latest-copy">
-          <h2 class="latest-title">{gettext("Shaz is Back!")}</h2>
-          <p class="latest-desc">
-            {gettext("After maternity hiatus, our little speed demon is back. With revenge.")}
-          </p>
-        </div>
-      </.link>
+          <.link
+            class="latest-feature"
+            navigate={PostComponents.post_path(feature.post)}
+            style="margin-top:1.25rem;"
+            id="latest-post"
+            lang={feature.t.locale}
+          >
+            <img :if={feature.post.cover_path} src={feature.post.cover_path} alt="" />
+            <div class="latest-copy">
+              <h2 class="latest-title">{feature.t.title}</h2>
+              <p class="latest-desc">{PevSquad.Posts.excerpt(feature.t)}</p>
+            </div>
+          </.link>
 
-      <.link class="latest-row" navigate={~p"/gallery"}>
-        <img
-          src="/images/pev_playground_girls_1.png"
-          alt={gettext("Urban Playground plate — the PEV Girls Squad with their EUCs")}
-        />
-        <div>
-          <h3 class="latest-title">PEV Girls Squad</h3>
-          <p class="latest-desc">{gettext("Introducing EUC female rider squad.")}</p>
-        </div>
-      </.link>
+          <.link
+            :for={item <- rest}
+            class={["latest-row", !item.post.cover_path && "no-image"]}
+            navigate={PostComponents.post_path(item.post)}
+            lang={item.t.locale}
+          >
+            <img :if={item.post.cover_path} src={item.post.cover_path} alt="" />
+            <div>
+              <h3 class="latest-title">{item.t.title}</h3>
+              <p class="latest-desc">{PostComponents.post_meta(item.post, item.t)}</p>
+            </div>
+          </.link>
+        <% [] -> %>
+          <div class="meta-row">
+            <span class="eyebrow">{gettext("Latest // Urban Playground")}</span>
+            <span class="meta-text">{gettext("New drop")}</span>
+          </div>
+
+          <.link class="latest-feature" navigate={~p"/gallery"} style="margin-top:1.25rem;">
+            <img
+              src="/images/pev_playground_shaz_1.png"
+              alt={gettext("Urban Playground plate — Shaz riding an EUC on a parking level")}
+            />
+            <div class="latest-copy">
+              <h2 class="latest-title">{gettext("Shaz is Back!")}</h2>
+              <p class="latest-desc">
+                {gettext("After maternity hiatus, our little speed demon is back. With revenge.")}
+              </p>
+            </div>
+          </.link>
+
+          <.link class="latest-row" navigate={~p"/gallery"}>
+            <img
+              src="/images/pev_playground_girls_1.png"
+              alt={gettext("Urban Playground plate — the PEV Girls Squad with their EUCs")}
+            />
+            <div>
+              <h3 class="latest-title">PEV Girls Squad</h3>
+              <p class="latest-desc">{gettext("Introducing EUC female rider squad.")}</p>
+            </div>
+          </.link>
+      <% end %>
 
       <div style="margin-top:2rem;">
         <span class="eyebrow">{gettext("Next up")}</span>
@@ -190,7 +225,7 @@
     </div>
     <div class="index-list">
       <.link class="index-row" navigate={~p"/community"}>
-        <div class="index-num">01 / 05</div>
+        <div class="index-num">01 / 06</div>
         <div class="index-title">{gettext("Community")}</div>
         <div class="index-desc">
           {gettext(
@@ -200,7 +235,7 @@
         <div class="index-meta">{gettext("184 MEMBERS · 9 CITIES")}</div>
       </.link>
       <.link class="index-row" navigate={~p"/gallery"}>
-        <div class="index-num">02 / 05</div>
+        <div class="index-num">02 / 06</div>
         <div class="index-title">{gettext("Gallery")}</div>
         <div class="index-desc">
           {gettext(
@@ -210,7 +245,7 @@
         <div class="index-meta">{gettext("2 NEW DROPS")}</div>
       </.link>
       <.link class="index-row" navigate={~p"/reviews"}>
-        <div class="index-num">03 / 05</div>
+        <div class="index-num">03 / 06</div>
         <div class="index-title">{gettext("Reviews")}</div>
         <div class="index-desc">
           {gettext(
@@ -220,7 +255,7 @@
         <div class="index-meta">EUC / SCOOTER / ESK8</div>
       </.link>
       <.link class="index-row" navigate={~p"/for-sale"}>
-        <div class="index-num">04 / 05</div>
+        <div class="index-num">04 / 06</div>
         <div class="index-title">{gettext("For Sale")}</div>
         <div class="index-desc">
           {gettext(
@@ -230,7 +265,7 @@
         <div class="index-meta">{gettext("7 LIVE LISTINGS")}</div>
       </.link>
       <.link class="index-row" navigate={~p"/events"}>
-        <div class="index-num">05 / 05</div>
+        <div class="index-num">05 / 06</div>
         <div class="index-title">{gettext("Events")}</div>
         <div class="index-desc">
           {gettext(
@@ -238,6 +273,16 @@
           )}
         </div>
         <div class="index-meta">{gettext("%{count} UPCOMING", count: @upcoming_count)}</div>
+      </.link>
+      <.link class="index-row" navigate={~p"/news"}>
+        <div class="index-num">06 / 06</div>
+        <div class="index-title">{gettext("News")}</div>
+        <div class="index-desc">
+          {gettext(
+            "Ride recaps, announcements and PEV news, plus guides on safety, maintenance and gear."
+          )}
+        </div>
+        <div class="index-meta">{gettext("NEWS · ARTICLES")}</div>
       </.link>
     </div>
   </section>

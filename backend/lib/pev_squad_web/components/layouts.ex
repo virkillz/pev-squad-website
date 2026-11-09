@@ -19,7 +19,8 @@ defmodule PevSquadWeb.Layouts do
       {:reviews, "04", gettext("Reviews"), "/reviews"},
       {:for_sale, "05", gettext("For Sale"), "/for-sale"},
       {:events, "06", gettext("Events"), "/events"},
-      {:about, "07", gettext("About"), "/about"}
+      {:news, "07", gettext("News"), "/news"},
+      {:about, "08", gettext("About"), "/about"}
     ]
   end
 
@@ -144,6 +145,8 @@ defmodule PevSquadWeb.Layouts do
             <li><.link navigate={~p"/reviews"}>{gettext("Reviews")}</.link></li>
             <li><.link navigate={~p"/for-sale"}>{gettext("For Sale")}</.link></li>
             <li><.link navigate={~p"/events"}>{gettext("Events")}</.link></li>
+            <li><.link navigate={~p"/news"}>{gettext("News")}</.link></li>
+            <li><.link navigate={~p"/articles"}>{gettext("Articles")}</.link></li>
             <li><.link navigate={~p"/about"}>{gettext("About")}</.link></li>
           </ul>
         </div>

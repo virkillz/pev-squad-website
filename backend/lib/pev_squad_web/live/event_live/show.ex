@@ -55,6 +55,18 @@ defmodule PevSquadWeb.EventLive.Show do
               <p :for={para <- paragraphs(@event.description)}>{para}</p>
             </div>
 
+            <div :if={@recaps != []} class="event-recaps" id="event-recaps">
+              <span class="eyebrow">{gettext("Recap")}</span>
+              <.link
+                :for={post <- @recaps}
+                navigate={PevSquadWeb.PostComponents.post_path(post)}
+                class="event-recap"
+                lang={recap_title(post).locale}
+              >
+                {recap_title(post).title} →
+              </.link>
+            </div>
+
             <ul class="event-facts">
               <li><span class="k">{gettext("When")}</span><span>{when_label(@event)}</span></li>
               <li :if={@event.ends_at}>
@@ -216,6 +228,7 @@ defmodule PevSquadWeb.EventLive.Show do
      |> assign(:page_title, event.title)
      |> assign(:page_description, description(event))
      |> assign(:linked_partners, PevSquad.Partners.list_event_partners(event))
+     |> assign(:recaps, PevSquad.Posts.list_event_posts(event))
      |> assign(:group?, event.category == :group_ride)
      |> assign(:host?, Events.host?(scope, event))
      |> assign(:can_manage?, Events.can_manage?(scope, event))
@@ -275,6 +288,9 @@ defmodule PevSquadWeb.EventLive.Show do
   end
 
   defp event_url(event), do: url(~p"/events/#{event.slug}")
+
+  defp recap_title(post),
+    do: PevSquad.Posts.translation_for(post, PevSquadWeb.Locale.current())
 
   defp paragraphs(text), do: String.split(text, ~r/\n\s*\n/, trim: true)
 

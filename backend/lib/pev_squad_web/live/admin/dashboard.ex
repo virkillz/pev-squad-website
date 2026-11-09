@@ -76,6 +76,12 @@ defmodule PevSquadWeb.Admin.Dashboard do
             <div class="index-desc">Partner communities and brand partners, with logos.</div>
             <div class="index-meta">NETWORK</div>
           </.link>
+          <.link class="index-row" navigate={~p"/admin/posts"}>
+            <div class="index-num">09</div>
+            <div class="index-title">News &amp; Articles</div>
+            <div class="index-desc">Write news, recaps and guides in Indonesian and English.</div>
+            <div class="index-meta">CONTENT</div>
+          </.link>
         </div>
       </section>
     </Layouts.app>

@@ -12,7 +12,7 @@
       content={assigns[:page_description] || PevSquadWeb.Layouts.default_description()}
     />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={assigns[:og_type] || "website"} />
     <meta property="og:site_name" content="PEV Squad" />
     <meta property="og:locale" content={PevSquadWeb.Layouts.og_locale()} />
     <meta property="og:title" content={PevSquadWeb.Layouts.og_title(assigns[:page_title])} />
@@ -20,9 +20,19 @@
       property="og:description"
       content={assigns[:page_description] || PevSquadWeb.Layouts.default_description()}
     />
-    <meta property="og:image" content={url(~p"/images/logo.jpg")} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={assigns[:og_image] || url(~p"/images/logo.jpg")} />
+    <meta
+      name="twitter:card"
+      content={if assigns[:og_image], do: "summary_large_image", else: "summary"}
+    />
+    <link
+      :for={{lang, href} <- assigns[:alternate_locales] || []}
+      rel="alternate"
+      hreflang={lang}
+      href={href}
+    />
 
+    <link rel="alternate" type="application/rss+xml" title="PEV Squad" href={~p"/feed.xml"} />
     <link rel="icon" href={~p"/images/favicon.ico"} sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href={~p"/images/favicon-32.png"} />
     <link rel="icon" type="image/png" sizes="16x16" href={~p"/images/favicon-16.png"} />

@@ -14,6 +14,12 @@ defmodule PevSquadWeb.Router do
     plug :fetch_current_scope_for_user
   end
 
+  # RSS readers send all sorts of Accept headers, so no content negotiation.
+  pipeline :feed do
+    plug :fetch_session
+    plug PevSquadWeb.Locale
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -33,6 +39,10 @@ defmodule PevSquadWeb.Router do
       live "/reviews", ReviewLive.Index, :index
       live "/gallery", GalleryLive.Index, :index
       live "/models/:slug", ModelLive.Show, :show
+      live "/news", PostLive.Index, :news
+      live "/news/:slug", PostLive.Show, :news
+      live "/articles", PostLive.Index, :articles
+      live "/articles/:slug", PostLive.Show, :article
     end
 
     # Sections still living in the static prototype.
@@ -42,6 +52,12 @@ defmodule PevSquadWeb.Router do
     get "/riders", PageController, :riders
 
     get "/locale/:locale", PageController, :locale
+  end
+
+  scope "/", PevSquadWeb do
+    pipe_through :feed
+
+    get "/feed.xml", FeedController, :index
   end
 
   scope "/admin", PevSquadWeb.Admin, as: :admin do
@@ -67,6 +83,9 @@ defmodule PevSquadWeb.Router do
       live "/partners", PartnerLive.Index, :index
       live "/partners/new", PartnerLive.Form, :new
       live "/partners/:id/edit", PartnerLive.Form, :edit
+      live "/posts", PostLive.Index, :index
+      live "/posts/new", PostLive.Form, :new
+      live "/posts/:id/edit", PostLive.Form, :edit
     end
   end
 

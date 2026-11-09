@@ -11,22 +11,22 @@
 msgid ""
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:240
+#: lib/pev_squad_web/live/home_live/index.html.heex:275
 #, elixir-autogen, elixir-format
 msgid "%{count} UPCOMING"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:200
+#: lib/pev_squad_web/live/home_live/index.html.heex:235
 #, elixir-autogen, elixir-format
 msgid "184 MEMBERS · 9 CITIES"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:210
+#: lib/pev_squad_web/live/home_live/index.html.heex:245
 #, elixir-autogen, elixir-format
 msgid "2 NEW DROPS"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:230
+#: lib/pev_squad_web/live/home_live/index.html.heex:265
 #, elixir-autogen, elixir-format
 msgid "7 LIVE LISTINGS"
 msgstr ""
@@ -36,30 +36,30 @@ msgstr ""
 msgid "A COLLECTIVE OF PEV RIDERS CHASING SPEED, ADVENTURE AND FREEDOM — MOSTLY BECAUSE IT'S FUN."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:174
+#: lib/pev_squad_web/live/home_live/index.html.heex:209
 #, elixir-autogen, elixir-format
 msgid "A PEV is a real way to get to work. Ride to the station, take it on public transport, ride the last mile — no traffic jams, no parking, your own schedule."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:266
+#: lib/pev_squad_web/live/home_live/index.html.heex:311
 #, elixir-autogen, elixir-format
 msgid "A pack of one-wheeled speed junkies showing up to your meetup, race, or brand activation? Consider us there."
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:22
-#: lib/pev_squad_web/components/layouts.ex:147
+#: lib/pev_squad_web/components/layouts.ex:23
+#: lib/pev_squad_web/components/layouts.ex:150
 #: lib/pev_squad_web/live/about_live/index.ex:21
 #: lib/pev_squad_web/live/about_live/index.ex:183
 #, elixir-autogen, elixir-format
 msgid "About"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:149
+#: lib/pev_squad_web/live/home_live/index.html.heex:184
 #, elixir-autogen, elixir-format
 msgid "About Us"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:93
+#: lib/pev_squad_web/components/layouts.ex:94
 #: lib/pev_squad_web/live/auth_titles.ex:16
 #, elixir-autogen, elixir-format
 msgid "Account"
@@ -70,29 +70,29 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:115
+#: lib/pev_squad_web/live/home_live/index.html.heex:150
 #, elixir-autogen, elixir-format
 msgid "Active Members"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:87
+#: lib/pev_squad_web/components/layouts.ex:88
 #, elixir-autogen, elixir-format
 msgid "Admin"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:55
-#: lib/pev_squad_web/live/home_live/index.html.heex:163
+#: lib/pev_squad_web/live/home_live/index.html.heex:198
 #, elixir-autogen, elixir-format
 msgid "Adventure"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:48
+#: lib/pev_squad_web/live/home_live/index.html.heex:82
 #, elixir-autogen, elixir-format
 msgid "After maternity hiatus, our little speed demon is back. With revenge."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:73
-#: lib/pev_squad_web/live/home_live/index.html.heex:84
+#: lib/pev_squad_web/live/home_live/index.html.heex:108
+#: lib/pev_squad_web/live/home_live/index.html.heex:119
 #, elixir-autogen, elixir-format
 msgid "All Events"
 msgstr ""
@@ -102,41 +102,41 @@ msgstr ""
 msgid "Along the way we picked up a growing list of brands, media, and personalities who ride with us. Indonesia's most active EUC community."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:282
+#: lib/pev_squad_web/live/home_live/index.html.heex:327
 #, elixir-autogen, elixir-format
 msgid "Ask Us to Help Run It"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:214
-#: lib/pev_squad_web/components/layouts.ex:226
+#: lib/pev_squad_web/components/layouts.ex:217
+#: lib/pev_squad_web/components/layouts.ex:229
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:133
+#: lib/pev_squad_web/components/layouts.ex:134
 #, elixir-autogen, elixir-format
 msgid "Basecamp"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:226
+#: lib/pev_squad_web/live/home_live/index.html.heex:261
 #, elixir-autogen, elixir-format
 msgid "Buy and sell gear inside the squad — new and second-hand units, straight from rider to rider."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:108
+#: lib/pev_squad_web/live/home_live/index.html.heex:143
 #, elixir-autogen, elixir-format
 msgid "By the numbers"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:67
-#: lib/pev_squad_web/live/home_live/index.html.heex:171
+#: lib/pev_squad_web/live/home_live/index.html.heex:206
 #, elixir-autogen, elixir-format
 msgid "COMMUTE"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:89
 #: lib/pev_squad_web/live/community_live/index.ex:62
-#: lib/pev_squad_web/live/home_live/index.html.heex:119
+#: lib/pev_squad_web/live/home_live/index.html.heex:154
 #, elixir-autogen, elixir-format
 msgid "Cities"
 msgstr ""
@@ -147,80 +147,81 @@ msgid "Collaborate With Us"
 msgstr ""
 
 #: lib/pev_squad_web/components/layouts.ex:17
-#: lib/pev_squad_web/components/layouts.ex:142
+#: lib/pev_squad_web/components/layouts.ex:143
+#: lib/pev_squad_web/components/post_components.ex:12
 #: lib/pev_squad_web/live/community_live/index.ex:39
 #: lib/pev_squad_web/live/community_live/index.ex:226
 #: lib/pev_squad_web/live/community_live/show.ex:16
-#: lib/pev_squad_web/live/home_live/index.html.heex:194
+#: lib/pev_squad_web/live/home_live/index.html.heex:229
 #, elixir-autogen, elixir-format
 msgid "Community"
 msgstr ""
 
 #: lib/pev_squad_web/components/layouts.ex:21
-#: lib/pev_squad_web/components/layouts.ex:146
+#: lib/pev_squad_web/components/layouts.ex:147
 #: lib/pev_squad_web/live/event_live/index.ex:24
 #: lib/pev_squad_web/live/event_live/index.ex:83
 #: lib/pev_squad_web/live/event_live/show.ex:17
-#: lib/pev_squad_web/live/home_live/index.html.heex:234
+#: lib/pev_squad_web/live/home_live/index.html.heex:269
 #, elixir-autogen, elixir-format
 msgid "Events"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:188
+#: lib/pev_squad_web/live/home_live/index.html.heex:223
 #, elixir-autogen, elixir-format
 msgid "Everything the squad runs, in one list."
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:140
+#: lib/pev_squad_web/components/layouts.ex:141
 #, elixir-autogen, elixir-format
 msgid "Explore"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:151
+#: lib/pev_squad_web/components/layouts.ex:154
 #, elixir-autogen, elixir-format
 msgid "Follow"
 msgstr ""
 
 #: lib/pev_squad_web/components/layouts.ex:20
-#: lib/pev_squad_web/components/layouts.ex:145
+#: lib/pev_squad_web/components/layouts.ex:146
 #: lib/pev_squad_web/controllers/page_controller.ex:4
-#: lib/pev_squad_web/live/home_live/index.html.heex:224
+#: lib/pev_squad_web/live/home_live/index.html.heex:259
 #, elixir-autogen, elixir-format
 msgid "For Sale"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:68
-#: lib/pev_squad_web/live/home_live/index.html.heex:172
+#: lib/pev_squad_web/live/home_live/index.html.heex:207
 #, elixir-autogen, elixir-format
 msgid "Freedom"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:33
-#: lib/pev_squad_web/live/home_live/index.html.heex:147
+#: lib/pev_squad_web/live/home_live/index.html.heex:182
 #, elixir-autogen, elixir-format
 msgid "Freedom."
 msgstr ""
 
 #: lib/pev_squad_web/components/layouts.ex:18
-#: lib/pev_squad_web/components/layouts.ex:143
+#: lib/pev_squad_web/components/layouts.ex:144
 #: lib/pev_squad_web/live/gallery_live/index.ex:19
 #: lib/pev_squad_web/live/gallery_live/index.ex:83
-#: lib/pev_squad_web/live/home_live/index.html.heex:204
+#: lib/pev_squad_web/live/home_live/index.html.heex:239
 #, elixir-autogen, elixir-format
 msgid "Gallery"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:236
+#: lib/pev_squad_web/live/home_live/index.html.heex:271
 #, elixir-autogen, elixir-format
 msgid "Group rides, meetups, and demo days — what we've done and what's coming up next."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:165
+#: lib/pev_squad_web/live/home_live/index.html.heex:200
 #, elixir-autogen, elixir-format
 msgid "Group rides, weekend getaways and multi-day tours. Night loops through the city, trails in Bogor, the spine of Java. Range anxiety is just part of the route plan."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:281
+#: lib/pev_squad_web/live/home_live/index.html.heex:326
 #, elixir-autogen, elixir-format
 msgid "HANDS ON"
 msgstr ""
@@ -230,28 +231,28 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:249
+#: lib/pev_squad_web/live/home_live/index.html.heex:294
 #, elixir-autogen, elixir-format
 msgid "How to collaborate"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:250
+#: lib/pev_squad_web/live/home_live/index.html.heex:295
 #, elixir-autogen, elixir-format
 msgid "If It's Fun,"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:60
+#: lib/pev_squad_web/live/home_live/index.html.heex:94
 #, elixir-autogen, elixir-format
 msgid "Introducing EUC female rider squad."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:264
+#: lib/pev_squad_web/live/home_live/index.html.heex:309
 #, elixir-autogen, elixir-format
 msgid "Invite Us to Your Event"
 msgstr ""
 
 #: lib/pev_squad_web/live/community_live/index.ex:214
-#: lib/pev_squad_web/live/home_live/index.html.heex:110
+#: lib/pev_squad_web/live/home_live/index.html.heex:145
 #, elixir-autogen, elixir-format
 msgid "Join WhatsApp Group"
 msgstr ""
@@ -263,28 +264,28 @@ msgstr ""
 msgid "Join the Squad"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:123
+#: lib/pev_squad_web/live/home_live/index.html.heex:158
 #, elixir-autogen, elixir-format
 msgid "KM Logged"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:136
-#: lib/pev_squad_web/live/home_live/index.html.heex:138
+#: lib/pev_squad_web/live/home_live/index.html.heex:171
+#: lib/pev_squad_web/live/home_live/index.html.heex:173
 #, elixir-autogen, elixir-format
 msgid "LOGGED"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:175
+#: lib/pev_squad_web/components/layouts.ex:178
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:36
+#: lib/pev_squad_web/live/home_live/index.html.heex:70
 #, elixir-autogen, elixir-format
 msgid "Latest // Urban Playground"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:98
+#: lib/pev_squad_web/components/layouts.ex:99
 #: lib/pev_squad_web/live/auth_titles.ex:13
 #: lib/pev_squad_web/live/user_live/confirmation.ex:55
 #: lib/pev_squad_web/live/user_live/login.ex:15
@@ -292,84 +293,84 @@ msgstr ""
 msgid "Log in"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:95
+#: lib/pev_squad_web/components/layouts.ex:96
 #, elixir-autogen, elixir-format
 msgid "Log out"
 msgstr ""
 
 #: lib/pev_squad_web/live/community_live/index.ex:66
-#: lib/pev_squad_web/live/home_live/index.html.heex:127
+#: lib/pev_squad_web/live/home_live/index.html.heex:162
 #, elixir-autogen, elixir-format
 msgid "Meetups Held"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:109
-#: lib/pev_squad_web/components/layouts.ex:111
+#: lib/pev_squad_web/components/layouts.ex:110
+#: lib/pev_squad_web/components/layouts.ex:112
 #, elixir-autogen, elixir-format
 msgid "Menu"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:252
+#: lib/pev_squad_web/live/home_live/index.html.heex:297
 #, elixir-autogen, elixir-format
 msgid "Most of us have day jobs — this is what we do for fun. So the bar for working with PEV Squad isn't a media kit, it's one question: will it be fun? Get that right and we're already halfway there."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:275
+#: lib/pev_squad_web/live/home_live/index.html.heex:320
 #, elixir-autogen, elixir-format
 msgid "Need riders, footage, or a squad on camera? We're in — no fee required, just make it fun."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:37
+#: lib/pev_squad_web/live/home_live/index.html.heex:71
 #, elixir-autogen, elixir-format
 msgid "New drop"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:77
+#: lib/pev_squad_web/live/home_live/index.html.heex:112
 #, elixir-autogen, elixir-format
 msgid "Next ride TBA"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:65
+#: lib/pev_squad_web/live/home_live/index.html.heex:100
 #, elixir-autogen, elixir-format
 msgid "Next up"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:272
+#: lib/pev_squad_web/live/home_live/index.html.heex:317
 #, elixir-autogen, elixir-format
 msgid "ON CAMERA"
 msgstr ""
 
 #: lib/pev_squad_web/live/community_live/index.ex:50
-#: lib/pev_squad_web/live/home_live/index.html.heex:100
+#: lib/pev_squad_web/live/home_live/index.html.heex:135
 #, elixir-autogen, elixir-format
 msgid "PEV Squad members and their EUCs and scooters gathered in a parking garage"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:27
+#: lib/pev_squad_web/components/layouts.ex:28
 #, elixir-autogen, elixir-format
 msgid "PEV Squad — speed, adventure, freedom. Indonesia's personal electric vehicle community: racing, touring and commuting on EUCs, scooters and boards."
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:44
-#: lib/pev_squad_web/live/home_live/index.html.heex:153
+#: lib/pev_squad_web/live/home_live/index.html.heex:188
 #, elixir-autogen, elixir-format
 msgid "RACE"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:156
+#: lib/pev_squad_web/live/home_live/index.html.heex:191
 #, elixir-autogen, elixir-format
 msgid "Races and competitions — drag runs, cannonball races, anything with a start line. Performance EUCs, tuned scooters and boards, pushed to find out what they actually do."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:258
+#: lib/pev_squad_web/live/home_live/index.html.heex:303
 #, elixir-autogen, elixir-format
 msgid "Reach Out on WhatsApp"
 msgstr ""
 
 #: lib/pev_squad_web/components/layouts.ex:19
-#: lib/pev_squad_web/components/layouts.ex:144
+#: lib/pev_squad_web/components/layouts.ex:145
 #: lib/pev_squad_web/components/review_components.ex:84
-#: lib/pev_squad_web/live/home_live/index.html.heex:214
+#: lib/pev_squad_web/live/home_live/index.html.heex:249
 #: lib/pev_squad_web/live/model_live/show.ex:17
 #: lib/pev_squad_web/live/model_live/show.ex:35
 #: lib/pev_squad_web/live/review_live/index.ex:29
@@ -378,112 +379,112 @@ msgstr ""
 msgid "Reviews"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:196
+#: lib/pev_squad_web/live/home_live/index.html.heex:231
 #, elixir-autogen, elixir-format
 msgid "Riders from every corner of the city, one shared obsession with going fast on three wheels or less."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:263
+#: lib/pev_squad_web/live/home_live/index.html.heex:308
 #, elixir-autogen, elixir-format
 msgid "SHOW UP"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:135
-#: lib/pev_squad_web/live/home_live/index.html.heex:137
+#: lib/pev_squad_web/live/home_live/index.html.heex:170
+#: lib/pev_squad_web/live/home_live/index.html.heex:172
 #, elixir-autogen, elixir-format
 msgid "SPEED · ADVENTURE · FREEDOM"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:82
+#: lib/pev_squad_web/live/home_live/index.html.heex:117
 #, elixir-autogen, elixir-format
 msgid "See the Gallery"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:46
+#: lib/pev_squad_web/live/home_live/index.html.heex:80
 #, elixir-autogen, elixir-format
 msgid "Shaz is Back!"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:221
+#: lib/pev_squad_web/components/layouts.ex:224
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:45
-#: lib/pev_squad_web/live/home_live/index.html.heex:154
+#: lib/pev_squad_web/live/home_live/index.html.heex:189
 #, elixir-autogen, elixir-format
 msgid "Speed"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:33
-#: lib/pev_squad_web/live/home_live/index.html.heex:147
+#: lib/pev_squad_web/live/home_live/index.html.heex:182
 #, elixir-autogen, elixir-format
 msgid "Speed. Adventure."
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:54
-#: lib/pev_squad_web/live/home_live/index.html.heex:162
+#: lib/pev_squad_web/live/home_live/index.html.heex:197
 #, elixir-autogen, elixir-format
 msgid "TOUR"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:187
+#: lib/pev_squad_web/live/home_live/index.html.heex:222
 #, elixir-autogen, elixir-format
 msgid "The Index"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:216
+#: lib/pev_squad_web/live/home_live/index.html.heex:251
 #, elixir-autogen, elixir-format
 msgid "Unfiltered, ridden-not-sponsored breakdowns of EUCs, scooters, and boards — rated by riders who own them."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:43
+#: lib/pev_squad_web/live/home_live/index.html.heex:77
 #, elixir-autogen, elixir-format
 msgid "Urban Playground plate — Shaz riding an EUC on a parking level"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:56
+#: lib/pev_squad_web/live/home_live/index.html.heex:90
 #, elixir-autogen, elixir-format
 msgid "Urban Playground plate — the PEV Girls Squad with their EUCs"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:206
+#: lib/pev_squad_web/live/home_live/index.html.heex:241
 #, elixir-autogen, elixir-format
 msgid "Urban Playground — the squad's plate series of riders, machines, and car parks."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:273
+#: lib/pev_squad_web/live/home_live/index.html.heex:318
 #, elixir-autogen, elixir-format
 msgid "Use Us for Content"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:79
+#: lib/pev_squad_web/live/home_live/index.html.heex:114
 #, elixir-autogen, elixir-format
 msgid "WATCH THE WHATSAPP GROUP"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:209
+#: lib/pev_squad_web/components/layouts.ex:212
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:284
+#: lib/pev_squad_web/live/home_live/index.html.heex:329
 #, elixir-autogen, elixir-format
 msgid "We once marshalled a running event purely because we thought it'd be a laugh. Ask and find out."
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:250
+#: lib/pev_squad_web/live/home_live/index.html.heex:295
 #, elixir-autogen, elixir-format
 msgid "We're In."
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:32
-#: lib/pev_squad_web/live/home_live/index.html.heex:146
+#: lib/pev_squad_web/live/home_live/index.html.heex:181
 #, elixir-autogen, elixir-format
 msgid "What we're about"
 msgstr ""
 
-#: lib/pev_squad_web/live/home_live/index.html.heex:186
+#: lib/pev_squad_web/live/home_live/index.html.heex:221
 #, elixir-autogen, elixir-format
 msgid "Where to go"
 msgstr ""
@@ -493,7 +494,7 @@ msgstr ""
 msgid "close"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:117
+#: lib/pev_squad_web/live/event_live/show.ex:129
 #, elixir-autogen, elixir-format
 msgid "%{count} on the waitlist"
 msgstr ""
@@ -513,14 +514,14 @@ msgstr ""
 msgid "%{going} going"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:274
+#: lib/pev_squad_web/live/event_live/show.ex:287
 #, elixir-autogen, elixir-format
 msgid "1 seat left."
 msgid_plural "%{count} seats left."
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:79
+#: lib/pev_squad_web/live/event_live/show.ex:91
 #, elixir-autogen, elixir-format
 msgid "A PEV Squad member"
 msgstr ""
@@ -532,6 +533,7 @@ msgstr ""
 
 #: lib/pev_squad_web/live/community_live/index.ex:13
 #: lib/pev_squad_web/live/event_live/index.ex:10
+#: lib/pev_squad_web/live/post_live/index.ex:42
 #: lib/pev_squad_web/live/review_live/index.ex:12
 #, elixir-autogen, elixir-format
 msgid "All"
@@ -557,7 +559,7 @@ msgstr ""
 msgid "Brand Invite"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:138
+#: lib/pev_squad_web/live/event_live/show.ex:150
 #, elixir-autogen, elixir-format
 msgid "Cancel my RSVP"
 msgstr ""
@@ -603,7 +605,7 @@ msgstr ""
 msgid "Confirming..."
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:159
+#: lib/pev_squad_web/live/event_live/show.ex:171
 #: lib/pev_squad_web/live/user_live/registration.ex:41
 #, elixir-autogen, elixir-format
 msgid "Create an account"
@@ -620,16 +622,17 @@ msgid "Don't have an account?"
 msgstr ""
 
 #: lib/pev_squad_web/live/event_live/show.ex:41
+#: lib/pev_squad_web/live/post_live/show.ex:45
 #, elixir-autogen, elixir-format
 msgid "Draft — only staff can see this page until it's published."
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:190
+#: lib/pev_squad_web/live/event_live/show.ex:202
 #, elixir-autogen, elixir-format
 msgid "Edit event · see riders"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:183
+#: lib/pev_squad_web/live/event_live/show.ex:195
 #, elixir-autogen, elixir-format
 msgid "Edit ride · see riders"
 msgstr ""
@@ -652,23 +655,23 @@ msgstr ""
 msgid "Expedition"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:174
+#: lib/pev_squad_web/live/event_live/show.ex:186
 #, elixir-autogen, elixir-format
 msgid "First come, first served."
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:167
+#: lib/pev_squad_web/live/event_live/show.ex:179
 #, elixir-autogen, elixir-format
 msgid "First come, first served. You'll get a seat if someone cancels."
 msgstr ""
 
-#: lib/pev_squad_web/components/event_components.ex:204
-#: lib/pev_squad_web/live/event_live/show.ex:164
+#: lib/pev_squad_web/components/event_components.ex:205
+#: lib/pev_squad_web/live/event_live/show.ex:176
 #, elixir-autogen, elixir-format
 msgid "Full — join the waitlist"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:132
+#: lib/pev_squad_web/live/event_live/show.ex:144
 #, elixir-autogen, elixir-format
 msgid "Give up your seat? If the ride is full, the next rider on the waitlist takes it."
 msgstr ""
@@ -714,12 +717,12 @@ msgstr ""
 msgid "Host a Group Ride"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:70
+#: lib/pev_squad_web/live/event_live/show.ex:82
 #, elixir-autogen, elixir-format
 msgid "Hosted by"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:145
+#: lib/pev_squad_web/live/event_live/show.ex:157
 #, elixir-autogen, elixir-format
 msgid "If a seat opens up you'll be moved in automatically and we'll email you."
 msgstr ""
@@ -739,7 +742,7 @@ msgstr ""
 msgid "Keep me logged in on this device"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:148
+#: lib/pev_squad_web/live/event_live/show.ex:160
 #, elixir-autogen, elixir-format
 msgid "Leave the waitlist"
 msgstr ""
@@ -759,7 +762,7 @@ msgstr ""
 msgid "Log in only this time"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:154
+#: lib/pev_squad_web/live/event_live/show.ex:166
 #, elixir-autogen, elixir-format
 msgid "Log in to RSVP"
 msgstr ""
@@ -807,7 +810,7 @@ msgstr ""
 msgid "Media"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:67
+#: lib/pev_squad_web/live/event_live/show.ex:79
 #, elixir-autogen, elixir-format
 msgid "Meet at"
 msgstr ""
@@ -822,7 +825,7 @@ msgstr ""
 msgid "New Event"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:157
+#: lib/pev_squad_web/live/event_live/show.ex:169
 #, elixir-autogen, elixir-format
 msgid "New here?"
 msgstr ""
@@ -852,7 +855,7 @@ msgstr ""
 msgid "Only moderators and admins can open that page."
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:87
+#: lib/pev_squad_web/live/event_live/show.ex:99
 #, elixir-autogen, elixir-format
 msgid "PEV Squad as collaborator"
 msgstr ""
@@ -872,27 +875,27 @@ msgstr ""
 msgid "Past Events"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:106
+#: lib/pev_squad_web/live/event_live/show.ex:118
 #, elixir-autogen, elixir-format
 msgid "RSVP by"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:254
+#: lib/pev_squad_web/live/event_live/show.ex:267
 #, elixir-autogen, elixir-format
 msgid "RSVP cancelled."
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:171
+#: lib/pev_squad_web/live/event_live/show.ex:183
 #, elixir-autogen, elixir-format
 msgid "RSVP — I'm going"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:151
+#: lib/pev_squad_web/live/event_live/show.ex:163
 #, elixir-autogen, elixir-format
 msgid "RSVPs closed"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:245
+#: lib/pev_squad_web/live/event_live/show.ex:258
 #, elixir-autogen, elixir-format
 msgid "RSVPs for this event are closed."
 msgstr ""
@@ -903,6 +906,7 @@ msgid "Race"
 msgstr ""
 
 #: lib/pev_squad_web/live/event_live/index.ex:67
+#: lib/pev_squad_web/live/event_live/show.ex:59
 #, elixir-autogen, elixir-format
 msgid "Recap"
 msgstr ""
@@ -912,22 +916,22 @@ msgstr ""
 msgid "Register for an account"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:198
+#: lib/pev_squad_web/live/event_live/show.ex:210
 #, elixir-autogen, elixir-format
 msgid "Report this ride"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:240
+#: lib/pev_squad_web/live/event_live/show.ex:253
 #, elixir-autogen, elixir-format
 msgid "Ride's full — you're on the waitlist."
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:83
+#: lib/pev_squad_web/live/event_live/show.ex:95
 #, elixir-autogen, elixir-format
 msgid "Run by"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:112
+#: lib/pev_squad_web/live/event_live/show.ex:124
 #, elixir-autogen, elixir-format
 msgid "Seats"
 msgstr ""
@@ -962,7 +966,7 @@ msgstr ""
 msgid "Trail Ride"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:61
+#: lib/pev_squad_web/live/event_live/show.ex:73
 #, elixir-autogen, elixir-format
 msgid "Until"
 msgstr ""
@@ -992,12 +996,12 @@ msgstr ""
 msgid "Welcome back!"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:59
+#: lib/pev_squad_web/live/event_live/show.ex:71
 #, elixir-autogen, elixir-format
 msgid "When"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:64
+#: lib/pev_squad_web/live/event_live/show.ex:76
 #, elixir-autogen, elixir-format
 msgid "Where"
 msgstr ""
@@ -1007,7 +1011,7 @@ msgstr ""
 msgid "Where the squad shows up in person — trail expeditions, overnight getaways, brand collabs and community meetups. Some we organize, some we're invited to, and group rides are hosted by members. RSVP to grab a seat: limited rides are first come, first served."
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:91
+#: lib/pev_squad_web/live/event_live/show.ex:103
 #, elixir-autogen, elixir-format
 msgid "With"
 msgstr ""
@@ -1028,22 +1032,22 @@ msgstr ""
 msgid "You need to reauthenticate to perform sensitive actions on your account."
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:142
+#: lib/pev_squad_web/live/event_live/show.ex:154
 #, elixir-autogen, elixir-format
 msgid "You're #%{position} on the waitlist"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:126
+#: lib/pev_squad_web/live/event_live/show.ex:138
 #, elixir-autogen, elixir-format
 msgid "You're going"
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:235
+#: lib/pev_squad_web/live/event_live/show.ex:248
 #, elixir-autogen, elixir-format
 msgid "You're in. See you there."
 msgstr ""
 
-#: lib/pev_squad_web/live/event_live/show.ex:117
+#: lib/pev_squad_web/live/event_live/show.ex:129
 #: lib/pev_squad_web/live/group_ride_live/form.ex:280
 #, elixir-autogen, elixir-format
 msgid "going"
@@ -1465,7 +1469,7 @@ msgid "Class"
 msgstr ""
 
 #: lib/pev_squad_web/components/gallery_components.ex:83
-#: lib/pev_squad_web/components/layouts.ex:108
+#: lib/pev_squad_web/components/layouts.ex:109
 #, elixir-autogen, elixir-format
 msgid "Close"
 msgstr ""
@@ -1701,6 +1705,7 @@ msgstr ""
 msgid "JPG, PNG or WebP, up to 10 MB. We crop it to a portrait and strip location data."
 msgstr ""
 
+#: lib/pev_squad_web/live/post_live/show.ex:118
 #: lib/pev_squad_web/live/review_live/show.ex:139
 #, elixir-autogen, elixir-format
 msgid "Keep reading"
@@ -2856,4 +2861,209 @@ msgstr ""
 #: lib/pev_squad_web/components/partner_components.ex:61
 #, elixir-autogen, elixir-format
 msgid "What we do is connect PEV communities across Indonesia, so it's easier to coordinate bigger events like cross-city tours, races and brand collaborations. Together we also have more weight with national brands, and that benefits every community involved."
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:46
+#, elixir-autogen, elixir-format
+msgid "%{count} min read"
+msgstr ""
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:39
+#, elixir-autogen, elixir-format
+msgid "All news"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:79
+#, elixir-autogen, elixir-format
+msgid "Also in"
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:10
+#, elixir-autogen, elixir-format
+msgid "Article"
+msgstr ""
+
+#: lib/pev_squad_web/components/layouts.ex:149
+#: lib/pev_squad_web/live/post_live/index.ex:32
+#: lib/pev_squad_web/live/post_live/index.ex:95
+#: lib/pev_squad_web/live/post_live/show.ex:23
+#, elixir-autogen, elixir-format
+msgid "Articles"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:108
+#, elixir-autogen, elixir-format
+msgid "Edit post"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:73
+#, elixir-autogen, elixir-format
+msgid "Event"
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:18
+#, elixir-autogen, elixir-format
+msgid "Gear"
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:17
+#, elixir-autogen, elixir-format
+msgid "Guide"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:96
+#, elixir-autogen, elixir-format
+msgid "Guides, safety, maintenance and rider stories — the things worth knowing before and after you ride."
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:13
+#, elixir-autogen, elixir-format
+msgid "Industry"
+msgstr ""
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:38
+#, elixir-autogen, elixir-format
+msgid "Latest // News & Articles"
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:16
+#, elixir-autogen, elixir-format
+msgid "Maintenance"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:120
+#, elixir-autogen, elixir-format
+msgid "More Articles"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:120
+#, elixir-autogen, elixir-format
+msgid "More News"
+msgstr ""
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:285
+#, elixir-autogen, elixir-format
+msgid "NEWS · ARTICLES"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:36
+#, elixir-autogen, elixir-format
+msgid "New Article"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:36
+#, elixir-autogen, elixir-format
+msgid "New Post"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:71
+#, elixir-autogen, elixir-format
+msgid "Newer"
+msgstr ""
+
+#: lib/pev_squad_web/components/layouts.ex:22
+#: lib/pev_squad_web/components/layouts.ex:148
+#: lib/pev_squad_web/components/post_components.ex:9
+#: lib/pev_squad_web/live/home_live/index.html.heex:279
+#: lib/pev_squad_web/live/post_live/index.ex:29
+#: lib/pev_squad_web/live/post_live/index.ex:101
+#: lib/pev_squad_web/live/post_live/show.ex:23
+#, elixir-autogen, elixir-format
+msgid "News"
+msgstr ""
+
+#: lib/pev_squad_web/controllers/feed_controller.ex:44
+#, elixir-autogen, elixir-format
+msgid "News and articles from PEV Squad, Indonesia's personal electric vehicle community."
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:58
+#, elixir-autogen, elixir-format
+msgid "No articles yet — the first guides are on the way."
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:59
+#, elixir-autogen, elixir-format
+msgid "No news yet. Check back soon."
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:52
+#, elixir-autogen, elixir-format
+msgid "Not available in %{current} yet — showing the %{language} version."
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:79
+#, elixir-autogen, elixir-format
+msgid "Older"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:63
+#, elixir-autogen, elixir-format
+msgid "Page %{page}"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:62
+#, elixir-autogen, elixir-format
+msgid "Pages"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:18
+#, elixir-autogen, elixir-format
+msgid "Read up"
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:14
+#, elixir-autogen, elixir-format
+msgid "Regulation"
+msgstr ""
+
+#: lib/pev_squad_web/live/home_live/index.html.heex:281
+#, elixir-autogen, elixir-format
+msgid "Ride recaps, announcements and PEV news, plus guides on safety, maintenance and gear."
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:19
+#, elixir-autogen, elixir-format
+msgid "Rider Story"
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:15
+#, elixir-autogen, elixir-format
+msgid "Safety"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:47
+#, elixir-autogen, elixir-format
+msgid "Scheduled for %{date} — only staff can see it until then."
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:123
+#, elixir-autogen, elixir-format
+msgid "See all"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:91
+#, elixir-autogen, elixir-format
+msgid "Share"
+msgstr ""
+
+#: lib/pev_squad_web/components/post_components.ex:76
+#: lib/pev_squad_web/live/post_live/show.ex:67
+#, elixir-autogen, elixir-format
+msgid "Source"
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/show.ex:58
+#, elixir-autogen, elixir-format
+msgid "Translated automatically and not checked by a person yet."
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:102
+#, elixir-autogen, elixir-format
+msgid "What's happening in the squad and the wider PEV world — ride recaps, announcements, new gear and the rules of the road."
+msgstr ""
+
+#: lib/pev_squad_web/live/post_live/index.ex:19
+#, elixir-autogen, elixir-format
+msgid "off the wire"
 msgstr ""

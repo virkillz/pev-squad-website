@@ -174,6 +174,7 @@ msgstr "beri tahu rider alasannya"
 #: lib/pev_squad/events/event.ex:104
 #: lib/pev_squad/gallery/album.ex:44
 #: lib/pev_squad/partners/partner.ex:91
+#: lib/pev_squad/posts/post.ex:62
 #, elixir-autogen, elixir-format
 msgid "use lowercase letters, numbers and dashes"
 msgstr "gunakan huruf kecil, angka, dan tanda hubung"
@@ -192,3 +193,13 @@ msgstr "kamu sudah melaporkan ini — moderator sedang menanganinya"
 #, elixir-autogen, elixir-format
 msgid "you've already reviewed this model — edit that review instead"
 msgstr "kamu sudah mereview model ini — edit review itu saja"
+
+#: lib/pev_squad/posts/post.ex:93
+#, elixir-autogen, elixir-format
+msgid "must be a link starting with https://"
+msgstr "harus berupa link yang diawali https://"
+
+#: lib/pev_squad/posts/post.ex:79
+#, elixir-autogen, elixir-format
+msgid "write a title and text in at least one language"
+msgstr "isi judul dan teks minimal dalam satu bahasa"

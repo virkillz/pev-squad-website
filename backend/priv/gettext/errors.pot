@@ -189,6 +189,7 @@ msgstr ""
 #: lib/pev_squad/events/event.ex:104
 #: lib/pev_squad/gallery/album.ex:44
 #: lib/pev_squad/partners/partner.ex:91
+#: lib/pev_squad/posts/post.ex:62
 #, elixir-autogen, elixir-format
 msgid "use lowercase letters, numbers and dashes"
 msgstr ""
@@ -206,4 +207,14 @@ msgstr ""
 #: lib/pev_squad/reviews/review.ex:85
 #, elixir-autogen, elixir-format
 msgid "you've already reviewed this model — edit that review instead"
+msgstr ""
+
+#: lib/pev_squad/posts/post.ex:93
+#, elixir-autogen, elixir-format
+msgid "must be a link starting with https://"
+msgstr ""
+
+#: lib/pev_squad/posts/post.ex:79
+#, elixir-autogen, elixir-format
+msgid "write a title and text in at least one language"
 msgstr ""
