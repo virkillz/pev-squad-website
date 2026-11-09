@@ -101,7 +101,27 @@ defmodule PevSquadWeb.Router do
     get "/openapi", OpenApiSpex.Plug.RenderSpec, []
   end
 
+  # Public reads for the app. A token is optional; with one, the caller's
+  # blocks apply and listing contacts are included.
   scope "/api/v1", PevSquadWeb.API, as: :api do
+    pipe_through :api
+
+    get "/home", HomeController, :show
+    get "/events", EventController, :index
+    get "/events/:slug", EventController, :show
+    get "/posts", PostController, :index
+    get "/posts/:slug", PostController, :show
+    get "/listings", ListingController, :index
+    get "/listings/:id", ListingController, :show
+    get "/community", CommunityController, :show
+    get "/riders", CommunityController, :riders
+    get "/riders/:slug", CommunityController, :rider
+    get "/partners/:slug", CommunityController, :partner
+    get "/albums", AlbumController, :index
+    get "/albums/:slug", AlbumController, :show
+  end
+
+  scope "/api/v1", PevSquadWeb.API, as: :api_me do
     pipe_through [:api, :require_api_user]
 
     get "/me", MeController, :show

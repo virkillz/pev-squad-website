@@ -27,6 +27,7 @@ defmodule PevSquadWeb.API.Spec do
       servers: [%Server{url: PevSquadWeb.Endpoint.url()}],
       paths: Paths.from_router(PevSquadWeb.Router),
       components: %Components{
+        schemas: PevSquadWeb.API.PublicSchemas.components(),
         securitySchemes: %{
           "bearer" => %SecurityScheme{
             type: "http",
