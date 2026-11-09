@@ -139,6 +139,7 @@ Runtime config comes from `/home/deploy/pev_squad.env` (read by systemd and by
 | `PHX_SERVER` | `true` — makes the release start the web server |
 | `PORT` | `4000` (Caddy proxies to it) |
 | `UPLOADS_DIR` | `/var/lib/pev_squad/uploads` |
+| `BREVO_API_KEY` | Brevo v3 API key (`xkeysib-…`). If unset, emails are only written to the log — see [Email](#email-brevo) |
 
 After editing the file: `sudo systemctl restart pev_squad`.
 
@@ -213,6 +214,27 @@ restore if you picked the wrong night.
 
 ---
 
+## Email (Brevo)
+
+Transactional email (login links, confirmations, event/review notifications)
+goes through Brevo's API via `Swoosh.Adapters.Brevo`, configured in
+`config/runtime.exs`. Every email is sent from `noreply@pev-squad.org`.
+
+- **API key**: Brevo → *SMTP & API* → *API Keys* → generate a key, then put it in
+  `/home/deploy/pev_squad.env` as `BREVO_API_KEY=xkeysib-…` and
+  `sudo systemctl restart pev_squad`. Use an **API key**, not an SMTP key.
+- **Authorized IPs**: if Brevo's IP restriction is on (Security → Authorised
+  IPs), `159.223.73.156` must be on the list or sends fail with `401`.
+- **Domain**: `pev-squad.org` is authenticated in Brevo (*Senders, Domains &
+  Dedicated IPs* → *Domains*) via the TXT/CNAME records Brevo provides
+  (brevo-code, DKIM, DMARC). Without them mail lands in spam or is rejected.
+- **No key set?** Emails are logged instead of sent — find them with
+  `journalctl -u pev_squad | grep -A30 "Sending email"`.
+- **Failures** show up in `journalctl -u pev_squad` and in Brevo → *Transactional* → *Logs*.
+- Free plan limit: 300 emails/day.
+
+---
+
 ## Things that are *not* deployed by git
 
 - **Uploads** live only in `/var/lib/pev_squad/uploads` (plus the nightly
@@ -229,5 +251,5 @@ restore if you picked the wrong night.
 
 - **Backups are on the same droplet** — run `scripts/pull-backups.sh` regularly
   or enable DigitalOcean Droplet Backups for an off-server copy.
-- **No mailer configured** — `Swoosh` has no prod adapter, so sign-up
-  confirmation and password-reset emails are not sent.
+- **Email depends on `BREVO_API_KEY`** being set on the server — without it,
+  emails are logged, not sent.

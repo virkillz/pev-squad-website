@@ -105,21 +105,15 @@ if config_env() == :prod do
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.
 
-  # ## Configuring the mailer
+  # ## Mailer — Brevo transactional API (HTTP client: Req, set in config/prod.exs).
   #
-  # In production you need to configure the mailer to use a different adapter.
-  # Here is an example configuration for Mailgun:
-  #
-  #     config :pev_squad, PevSquad.Mailer,
-  #       adapter: Swoosh.Adapters.Mailgun,
-  #       api_key: System.get_env("MAILGUN_API_KEY"),
-  #       domain: System.get_env("MAILGUN_DOMAIN")
-  #
-  # Most non-SMTP adapters require an API client. Swoosh supports Req, Hackney,
-  # and Finch out-of-the-box. This configuration is typically done at
-  # compile-time in your config/prod.exs:
-  #
-  #     config :swoosh, :api_client, Swoosh.ApiClient.Req
-  #
-  # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+  # Without BREVO_API_KEY, emails are written to the log instead of sent
+  # (journalctl -u pev_squad), so a missing key never takes the site down.
+  case System.get_env("BREVO_API_KEY") do
+    key when key in [nil, ""] ->
+      config :pev_squad, PevSquad.Mailer, adapter: Swoosh.Adapters.Logger, level: :info
+
+    key ->
+      config :pev_squad, PevSquad.Mailer, adapter: Swoosh.Adapters.Brevo, api_key: key
+  end
 end
