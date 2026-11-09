@@ -339,6 +339,18 @@
   font-weight: 700;
 }
 
+/* Search box and sort menu above the squad roster */
+.roster-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  max-width: 40rem;
+}
+@media (max-width: 480px) {
+  .roster-controls { grid-template-columns: 1fr; }
+}
+
 /* Partner community logos on a rider card */
 .rider-communities { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
 .rider-community {

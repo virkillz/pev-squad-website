@@ -9,7 +9,13 @@ defmodule PevSquadWeb.ReportLiveTest do
 
   setup %{conn: conn} do
     target = user_scope_fixture()
-    {:ok, profile} = Riders.save_my_profile(target, %{"alias" => "Troll", "is_public" => "true"})
+
+    {:ok, profile} =
+      PevSquad.RidersFixtures.approved_profile(target, %{
+        "alias" => "Troll",
+        "is_public" => "true"
+      })
+
     %{conn: conn, profile: profile, target: target}
   end
 

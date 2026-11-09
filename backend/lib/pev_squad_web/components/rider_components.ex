@@ -49,7 +49,11 @@ defmodule PevSquadWeb.RiderComponents do
           {@rider.alias}
         </h3>
         <p class="card-meta">{card_meta(@rider)}</p>
-        <div :if={@rider.communities != []} class="rider-communities">
+        <%!-- The Squad mark first on every card, then the partner communities they also ride with. --%>
+        <div class="rider-communities">
+          <span class="rider-community" title="PEV Squad">
+            <img src={~p"/images/logo.jpg"} alt="PEV Squad logo" loading="lazy" />
+          </span>
           <span
             :for={p <- @rider.communities}
             class="rider-community"

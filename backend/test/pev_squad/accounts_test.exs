@@ -4,7 +4,9 @@ defmodule PevSquad.AccountsTest do
   alias PevSquad.Accounts
 
   import PevSquad.AccountsFixtures
-  alias PevSquad.Accounts.{User, UserToken}
+  import PevSquad.EventsFixtures
+  import PevSquad.RidersFixtures
+  alias PevSquad.Accounts.{Scope, User, UserToken}
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
@@ -392,6 +394,54 @@ defmodule PevSquad.AccountsTest do
   describe "inspect/2 for the User module" do
     test "does not include password" do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
+    end
+  end
+
+  describe "member list and roles" do
+    test "staff see every account with its rider profile, searchable and filterable" do
+      staff = staff_scope_fixture()
+      with_profile = user_fixture(email: "wynn@example.com")
+      {:ok, _} = approved_profile(Scope.for_user(with_profile), %{alias: "Wynn"})
+      without = user_fixture(email: "lurker@example.com")
+
+      members = Accounts.list_members(staff)
+      assert Enum.any?(members, &(&1.user.id == with_profile.id and &1.profile.alias == "Wynn"))
+      assert Enum.any?(members, &(&1.user.id == without.id and is_nil(&1.profile)))
+
+      assert [%{user: %{email: "wynn@example.com"}}] = Accounts.list_members(staff, search: "WYN")
+
+      assert [%{user: %{email: "wynn@example.com"}}] =
+               Accounts.list_members(staff, profile: :with)
+
+      refute Enum.any?(Accounts.list_members(staff, profile: :with), &(&1.user.id == without.id))
+
+      assert Enum.any?(
+               Accounts.list_members(staff, profile: :without),
+               &(&1.user.id == without.id)
+             )
+
+      assert Accounts.list_members(staff, search: "%") == []
+
+      assert_raise PevSquad.Accounts.NotAuthorizedError, fn ->
+        Accounts.list_members(user_scope_fixture())
+      end
+    end
+
+    test "only admins change roles, and never their own" do
+      admin = staff_scope_fixture(:admin)
+      moderator = staff_scope_fixture(:moderator)
+      member = user_fixture()
+
+      assert {:ok, %{role: :moderator}} = Accounts.change_role(admin, member, :moderator)
+      assert {:error, :own_role} = Accounts.change_role(admin, admin.user, :member)
+
+      assert_raise PevSquad.Accounts.NotAuthorizedError, fn ->
+        Accounts.change_role(moderator, member, :admin)
+      end
+
+      assert_raise PevSquad.Accounts.NotAuthorizedError, fn ->
+        Accounts.change_role(Scope.for_user(member), member, :admin)
+      end
     end
   end
 end

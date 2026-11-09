@@ -152,30 +152,31 @@ defmodule PevSquad.Reviews do
   Submits a review. When `new_model` attrs are given, the model is added to
   the catalog (pending) and the review attached to it.
 
-  Returns `{:ok, review}`, `{:error, :no_profile}`, or
+  Returns `{:ok, review}`, `{:error, :no_profile}`, `{:error, :pending}`, or
   `{:error, %Ecto.Changeset{}}` for either the review or the new model.
   """
   def create_review(%Scope{user: user} = scope, attrs, new_model \\ nil) do
-    profile = Repo.get_by(RiderProfile, user_id: user.id)
+    case PevSquad.Riders.can_post?(scope) do
+      {:error, _} = blocked -> blocked
+      :ok -> do_create_review(scope, user, attrs, new_model)
+    end
+  end
 
-    if is_nil(profile) do
-      {:error, :no_profile}
-    else
-      Multi.new()
-      |> maybe_insert_model(user, new_model)
-      |> Multi.insert(:review, fn changes ->
-        attrs =
-          if model = changes[:model], do: Map.put(attrs, "pev_model_id", model.id), else: attrs
+  defp do_create_review(scope, user, attrs, new_model) do
+    Multi.new()
+    |> maybe_insert_model(user, new_model)
+    |> Multi.insert(:review, fn changes ->
+      attrs =
+        if model = changes[:model], do: Map.put(attrs, "pev_model_id", model.id), else: attrs
 
-        %Review{author_id: user.id}
-        |> Review.changeset(attrs)
-        |> put_publication(scope)
-      end)
-      |> Repo.transact()
-      |> case do
-        {:ok, %{review: review}} -> {:ok, Repo.preload(review, :pev_model)}
-        {:error, _step, changeset, _} -> {:error, changeset}
-      end
+      %Review{author_id: user.id}
+      |> Review.changeset(attrs)
+      |> put_publication(scope)
+    end)
+    |> Repo.transact()
+    |> case do
+      {:ok, %{review: review}} -> {:ok, Repo.preload(review, :pev_model)}
+      {:error, _step, changeset, _} -> {:error, changeset}
     end
   end
 

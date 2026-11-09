@@ -5,6 +5,7 @@ defmodule PevSquad.RidersTest do
   import PevSquad.EventsFixtures
   import PevSquad.RidersFixtures
   import PevSquad.PartnersFixtures
+  import PevSquad.GalleryFixtures
 
   alias PevSquad.Riders
   alias PevSquad.Riders.{MemberImport, RiderProfile}
@@ -166,6 +167,131 @@ defmodule PevSquad.RidersTest do
     end
   end
 
+  describe "approval of new member profiles" do
+    test "a member's new profile waits for approval, hidden, and staff are emailed" do
+      admin = staff_scope_fixture(:admin)
+      admin_email = admin.user.email
+      member = user_scope_fixture()
+
+      {:ok, profile} =
+        Riders.save_my_profile(member, %{alias: "Newbie", is_public: true}, nil,
+          review_url: &"https://x/admin/riders/#{&1.id}/edit"
+        )
+
+      assert profile.status == :pending
+
+      assert_received {:email,
+                       %{
+                         subject: "New rider waiting for approval: Newbie",
+                         to: [{_, ^admin_email}]
+                       }}
+
+      assert Riders.list_public_riders() == []
+      assert_raise Ecto.NoResultsError, fn -> Riders.get_public_rider!(profile.slug) end
+      assert Riders.count_pending(admin) == 1
+      assert [%{alias: "Newbie"}] = Riders.list_all_riders(admin, status: :pending)
+      assert Riders.list_all_riders(admin, status: :active) == []
+
+      # Edits don't email staff again.
+      {:ok, _} = Riders.save_my_profile(member, %{bio: "Hi"}, nil, review_url: &"#{&1.id}")
+      refute_received {:email, %{subject: "New rider waiting" <> _}}
+    end
+
+    test "pending members can RSVP but not post photos, reviews or group rides" do
+      member = user_scope_fixture()
+      {:ok, _} = Riders.save_my_profile(member, %{alias: "Waiting"})
+
+      assert Riders.can_post?(member) == {:error, :pending}
+      assert {:ok, %{status: :going}} = PevSquad.Events.rsvp(member, event_fixture())
+
+      assert {:error, :pending} =
+               PevSquad.Gallery.upload_photo(member, album_fixture(), image_fixture())
+
+      assert {:error, :pending} = PevSquad.Reviews.create_review(member, %{})
+      assert {:error, :pending} = PevSquad.Events.can_host?(member)
+
+      assert Riders.can_post?(user_scope_fixture()) == {:error, :no_profile}
+    end
+
+    test "approving makes the profile live, unlocks posting and emails the member" do
+      member = user_scope_fixture()
+      member_email = member.user.email
+      {:ok, profile} = Riders.save_my_profile(member, %{alias: "Approved", is_public: true})
+
+      {:ok, approved} =
+        Riders.approve_rider(staff_scope_fixture(), profile, &"https://x/community/#{&1.slug}")
+
+      assert approved.status == :active
+      assert Riders.get_public_rider!(approved.slug)
+      assert Riders.can_post?(member) == :ok
+
+      assert_received {:email,
+                       %{subject: "You're in the Squad, Approved", to: [{_, ^member_email}]}}
+
+      assert_raise PevSquad.Riders.NotAuthorizedError, fn ->
+        Riders.approve_rider(member, profile)
+      end
+    end
+
+    test "staff's own profiles, staff-added and imported riders start active" do
+      staff = staff_scope_fixture()
+      {:ok, own} = Riders.save_my_profile(staff, %{alias: "Mod"})
+      {:ok, added} = Riders.create_rider(staff, %{alias: "Added"})
+
+      assert own.status == :active
+      assert added.status == :active
+      assert rider_fixture().status == :active
+      refute_received {:email, %{subject: "New rider waiting" <> _}}
+    end
+  end
+
+  describe "roster sorting and search" do
+    setup do
+      # Spread inserted_at so newest/oldest are deterministic.
+      for {name, city, ride, days_ago} <- [
+            {"Bravo", "Malang", "Veteran Lynx", 3},
+            {"alpha", "Jakarta", "Begode Master", 1},
+            {"Charlie", "Depok", "Kingsong S22", 2}
+          ] do
+        rider = rider_fixture(alias: name, city: city, main_ride: ride)
+        at = DateTime.add(DateTime.utc_now(:second), -days_ago, :day)
+        rider |> Ecto.Changeset.change(inserted_at: at) |> Repo.update!()
+      end
+
+      :ok
+    end
+
+    defp aliases(opts), do: opts |> Riders.list_public_riders() |> Enum.map(& &1.alias)
+
+    test "sorts A to Z (case-insensitive), Z to A, newest and oldest" do
+      assert aliases([]) == ["alpha", "Bravo", "Charlie"]
+      assert aliases(sort: :az) == ["alpha", "Bravo", "Charlie"]
+      assert aliases(sort: :za) == ["Charlie", "Bravo", "alpha"]
+      assert aliases(sort: :newest) == ["alpha", "Charlie", "Bravo"]
+      assert aliases(sort: :oldest) == ["Bravo", "Charlie", "alpha"]
+    end
+
+    test "inactive riders come last whatever the sort" do
+      bravo = Repo.get_by!(RiderProfile, alias: "Bravo")
+      {:ok, _} = Riders.update_rider(staff_scope_fixture(), bravo, %{status: :inactive})
+
+      assert aliases(sort: :za) == ["Charlie", "alpha", "Bravo"]
+    end
+
+    test "searches alias, city and ride, case-insensitively" do
+      assert aliases(search: "ALP") == ["alpha"]
+      assert aliases(search: "malang") == ["Bravo"]
+      assert aliases(search: "kingsong") == ["Charlie"]
+      assert aliases(search: "  ") == ["alpha", "Bravo", "Charlie"]
+      assert aliases(search: "zzz") == []
+    end
+
+    test "LIKE wildcards in a search are literal" do
+      assert aliases(search: "%") == []
+      assert aliases(search: "_") == []
+    end
+  end
+
   describe "status, hiding and deleting" do
     test "inactive riders stay listed, after active ones" do
       staff = staff_scope_fixture()
@@ -231,7 +357,7 @@ defmodule PevSquad.RidersTest do
           hidden_by_staff: true
         })
 
-      assert own.status == :active
+      assert own.status == :pending
       refute own.hidden_by_staff
 
       {:ok, _} =
@@ -332,7 +458,7 @@ defmodule PevSquad.RidersTest do
       member = user_scope_fixture()
 
       {:ok, own} =
-        Riders.save_my_profile(member, %{alias: "Selfie", is_public: true, communities: [1]})
+        approved_profile(member, %{alias: "Selfie", is_public: true, communities: [1]})
 
       partner = partner_fixture()
 

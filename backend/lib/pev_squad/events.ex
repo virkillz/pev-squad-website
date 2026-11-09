@@ -290,15 +290,15 @@ defmodule PevSquad.Events do
   @doc """
   Whether the member can post another group ride. Returns `:ok`,
   `{:error, :no_profile}` (they need a rider profile so riders know who's
-  hosting) or `{:error, :limit}` (already hosting the maximum upcoming rides).
+  hosting), `{:error, :pending}` (profile not approved yet) or `{:error, :limit}` (already hosting the maximum upcoming rides).
   """
   def can_host?(%Scope{user: user} = scope, now \\ DateTime.utc_now()) do
     cond do
       Scope.staff?(scope) ->
         :ok
 
-      is_nil(Repo.get_by(RiderProfile, user_id: user.id)) ->
-        {:error, :no_profile}
+      (blocked = PevSquad.Riders.can_post?(scope)) != :ok ->
+        blocked
 
       upcoming_hosted_count(user.id, now) >= @max_upcoming_per_host ->
         {:error, :limit}

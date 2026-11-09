@@ -125,14 +125,30 @@ defmodule PevSquadWeb.ReviewLive.Form do
          )
          |> push_navigate(to: ~p"/users/profile")}
 
+      %{status: :pending} = profile ->
+        if PevSquad.Accounts.Scope.staff?(scope) do
+          {:ok, mount_form(socket, scope, profile, params)}
+        else
+          {:ok,
+           socket
+           |> put_flash(
+             :error,
+             "You can write reviews once a moderator approves your rider profile."
+           )
+           |> push_navigate(to: ~p"/users/profile")}
+        end
+
       profile ->
-        {:ok,
-         socket
-         |> assign(:profile, profile)
-         |> assign(:trusted?, Reviews.trusted?(scope))
-         |> assign(:model_form, to_form(Reviews.change_model(%PevModel{}), as: :new_model))
-         |> apply_action(socket.assigns.live_action, params)}
+        {:ok, mount_form(socket, scope, profile, params)}
     end
+  end
+
+  defp mount_form(socket, scope, profile, params) do
+    socket
+    |> assign(:profile, profile)
+    |> assign(:trusted?, Reviews.trusted?(scope))
+    |> assign(:model_form, to_form(Reviews.change_model(%PevModel{}), as: :new_model))
+    |> apply_action(socket.assigns.live_action, params)
   end
 
   defp apply_action(socket, :new, params) do
@@ -214,7 +230,7 @@ defmodule PevSquadWeb.ReviewLive.Form do
         {:noreply,
          socket |> put_flash(:info, message) |> push_navigate(to: ~p"/reviews/#{review.id}")}
 
-      {:error, :no_profile} ->
+      {:error, reason} when reason in [:no_profile, :pending] ->
         {:noreply, push_navigate(socket, to: ~p"/users/profile")}
 
       {:error, %Ecto.Changeset{data: %PevModel{}} = changeset} ->

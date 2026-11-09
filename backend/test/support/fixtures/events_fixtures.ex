@@ -34,7 +34,7 @@ defmodule PevSquad.EventsFixtures do
     scope = user_scope_fixture()
 
     {:ok, _profile} =
-      PevSquad.Riders.save_my_profile(scope, %{
+      PevSquad.RidersFixtures.approved_profile(scope, %{
         alias: alias_name || "Host #{System.unique_integer([:positive])}",
         primary_pev_type: :euc,
         is_public: true

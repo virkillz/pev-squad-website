@@ -37,4 +37,8 @@ defmodule PevSquad.Accounts.Scope do
   """
   def staff?(%__MODULE__{user: %User{role: role}}), do: role in [:moderator, :admin]
   def staff?(_scope), do: false
+
+  @doc "True for admins only — the people who can change other members' roles."
+  def admin?(%__MODULE__{user: %User{role: :admin}}), do: true
+  def admin?(_scope), do: false
 end

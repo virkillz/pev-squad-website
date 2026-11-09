@@ -12,7 +12,9 @@ defmodule PevSquad.GalleryTest do
     scope = user_scope_fixture()
 
     {:ok, _} =
-      Riders.save_my_profile(scope, %{"alias" => "Snap#{System.unique_integer([:positive])}"})
+      PevSquad.RidersFixtures.approved_profile(scope, %{
+        "alias" => "Snap#{System.unique_integer([:positive])}"
+      })
 
     scope
   end

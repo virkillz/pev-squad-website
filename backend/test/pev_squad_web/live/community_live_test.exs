@@ -24,6 +24,13 @@ defmodule PevSquadWeb.CommunityLiveTest do
     refute html =~ "Wynn"
   end
 
+  test "riders without a partner community still show the Squad mark", %{conn: conn} do
+    rider_fixture(alias: "Solo")
+
+    {:ok, lv, _html} = live(conn, ~p"/community")
+    assert lv |> element("#roster .rider-community[title='PEV Squad'] img") |> has_element?()
+  end
+
   test "the roster shows 9 riders a page", %{conn: conn} do
     for i <- 1..10, do: rider_fixture(alias: "Rider #{String.pad_leading("#{i}", 2, "0")}")
 
@@ -44,6 +51,31 @@ defmodule PevSquadWeb.CommunityLiveTest do
 
     {:ok, lv, _html} = live(conn, ~p"/community?page=abc")
     assert has_element?(lv, "#roster", "Rider 01")
+  end
+
+  test "the roster searches and sorts, keeping both in the URL and pager", %{conn: conn} do
+    for i <- 1..10, do: rider_fixture(alias: "Rider #{String.pad_leading("#{i}", 2, "0")}")
+    rider_fixture(alias: "Wynn", city: "Malang")
+
+    {:ok, lv, _html} = live(conn, ~p"/community")
+
+    lv |> form("#roster-controls", q: "malang", sort: "az") |> render_change()
+    assert_patch(lv, "/community?q=malang")
+    assert lv |> element("#roster", "Wynn") |> has_element?()
+    refute lv |> element("#roster", "Rider 01") |> has_element?()
+
+    lv |> form("#roster-controls", q: "nobody", sort: "az") |> render_change()
+    assert render(lv) =~ "No riders match “nobody”."
+
+    lv |> form("#roster-controls", q: "rider", sort: "za") |> render_change()
+    assert_patch(lv, "/community?sort=za&q=rider")
+    assert lv |> element("#roster .card:first-child", "Rider 10") |> has_element?()
+
+    assert lv |> element("#roster-pager a[rel=next]") |> render() =~
+             "sort=za&amp;q=rider&amp;page=2"
+
+    {:ok, lv, _html} = live(conn, ~p"/community?sort=bogus&type=euc")
+    assert lv |> element("#roster-sort option[selected]") |> render() =~ "A to Z"
   end
 
   test "rider page", %{conn: conn} do
@@ -114,8 +146,14 @@ defmodule PevSquadWeb.CommunityLiveTest do
         )
         |> render_submit()
 
-      assert html =~ "Profile saved."
-      assert html =~ "/community/night-owl"
+      assert html =~ "A moderator will check it before it goes live."
+      assert has_element?(lv, "#profile-pending")
+
+      # Hidden until approved.
+      assert_raise Ecto.NoResultsError, fn -> live(conn, ~p"/community/night-owl") end
+
+      profile = PevSquad.Repo.get_by!(PevSquad.Riders.RiderProfile, alias: "Night Owl")
+      {:ok, _} = PevSquad.Riders.approve_rider(staff_scope_fixture(), profile)
 
       {:ok, _lv, html} = live(conn, ~p"/community/night-owl")
       assert html =~ ~r{/uploads/avatars/night-owl-.+\.webp}
@@ -160,6 +198,9 @@ defmodule PevSquadWeb.CommunityLiveTest do
 
       {:ok, _lv, html} = live(conn, ~p"/community")
       assert html =~ ~s(title="REJS")
+
+      # Every card leads with the Squad mark, affiliations or not.
+      assert html =~ ~r{title="PEV Squad".*title="REJS"}s
 
       {:ok, lv, _html} = live(conn, ~p"/community/#{rider.slug}")
       assert lv |> element("#rider-communities a", "REJS") |> has_element?()
@@ -268,6 +309,34 @@ defmodule PevSquadWeb.CommunityLiveTest do
 
       assert html =~ "Vanish deleted."
       refute PevSquad.Repo.get(PevSquad.Riders.RiderProfile, rider.id)
+    end
+
+    test "staff approve a pending profile from the dashboard", %{conn: conn} do
+      staff = staff_scope_fixture()
+      member = user_scope_fixture()
+      member_email = member.user.email
+      {:ok, profile} = PevSquad.Riders.save_my_profile(member, %{alias: "Fresh", is_public: true})
+      conn = log_in_user(conn, staff.user)
+
+      {:ok, lv, html} = live(conn, ~p"/admin")
+      assert html =~ "1 PENDING"
+
+      {:ok, lv, _html} =
+        lv |> element("a", "Riders") |> render_click() |> follow_redirect(conn)
+
+      assert lv |> element("#riders", "Fresh") |> has_element?()
+      assert lv |> element("#rider-status-filter .active", "Pending (1)") |> has_element?()
+
+      {:ok, lv, _html} = live(conn, ~p"/admin/riders/#{profile}/edit")
+      assert render(lv |> element("#rider-approval button", "Approve")) =~ "Approve"
+      lv |> element("#rider-approval button", "Approve") |> render_click()
+
+      assert render(lv) =~ "Fresh approved."
+      refute has_element?(lv, "#rider-approval")
+      assert_received {:email, %{subject: "You're in the Squad, Fresh", to: [{_, ^member_email}]}}
+
+      {:ok, _lv, html} = live(build_conn(), ~p"/community")
+      assert html =~ "Fresh"
     end
 
     test "members can't add riders", %{conn: conn} do

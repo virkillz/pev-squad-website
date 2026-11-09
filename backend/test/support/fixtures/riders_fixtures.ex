@@ -18,6 +18,16 @@ defmodule PevSquad.RidersFixtures do
     rider
   end
 
+  @doc """
+  A member's own profile, already approved by staff (new member profiles
+  start pending). Returns `{:ok, profile}` like `Riders.save_my_profile/2`.
+  """
+  def approved_profile(scope, attrs) do
+    {:ok, profile} = Riders.save_my_profile(scope, attrs)
+
+    Riders.approve_rider(PevSquad.EventsFixtures.staff_scope_fixture(), profile)
+  end
+
   @doc "Writes a plain orange JPEG and returns its path."
   def image_fixture(width \\ 600, height \\ 900) do
     path = Path.join(System.tmp_dir!(), "pev-test-#{System.unique_integer([:positive])}.jpg")

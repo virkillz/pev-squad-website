@@ -20,6 +20,10 @@ defmodule PevSquadWeb.UserLive.Profile do
             </:subtitle>
           </.header>
 
+          <p :if={@profile.status == :pending} class="notice" id="profile-pending">
+            <strong>Waiting for approval.</strong>
+            A moderator checks every new profile before it appears on the Community page, so nobody can claim to be in the Squad without us knowing them. We'll email you once you're approved. Until then you can still RSVP to rides; photos, reviews and hosting group rides open up after approval.
+          </p>
           <p :if={@profile.status == :banned} class="notice" id="profile-banned">
             Your profile has been banned by PEV Squad staff and can't be edited. Contact an admin if you think this is a mistake.
           </p>
@@ -34,7 +38,7 @@ defmodule PevSquadWeb.UserLive.Profile do
           <p
             :if={
               @profile.id && @profile.is_public && !@profile.hidden_by_staff &&
-                @profile.status != :banned
+                @profile.status in [:active, :inactive]
             }
             class="notice"
           >
@@ -200,20 +204,26 @@ defmodule PevSquadWeb.UserLive.Profile do
     # returns, so the save (and image processing) happens inside it.
     results =
       consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry ->
-        {:ok, Riders.save_my_profile(scope, params, path)}
+        {:ok, Riders.save_my_profile(scope, params, path, review_url: &admin_url/1)}
       end)
 
     result =
       case results do
         [result] -> result
-        [] -> Riders.save_my_profile(scope, params)
+        [] -> Riders.save_my_profile(scope, params, nil, review_url: &admin_url/1)
       end
 
     case result do
       {:ok, profile} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Profile saved.")
+         |> put_flash(
+           :info,
+           if(profile.status == :pending,
+             do: "Profile saved. A moderator will check it before it goes live.",
+             else: "Profile saved."
+           )
+         )
          |> assign(:profile, profile)
          |> assign(:form, to_form(Riders.change_profile(profile)))}
 
@@ -224,6 +234,8 @@ defmodule PevSquadWeb.UserLive.Profile do
         {:noreply, put_flash(socket, :error, "Your profile has been banned and can't be edited.")}
     end
   end
+
+  defp admin_url(profile), do: url(~p"/admin/riders/#{profile.id}/edit")
 
   defp review_status(%{status: :published}), do: "Live"
   defp review_status(%{status: :pending}), do: "Waiting for a moderator"

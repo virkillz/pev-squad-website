@@ -5,7 +5,7 @@ defmodule PevSquad.Riders.RiderProfile do
   alias PevSquad.Accounts.User
 
   @pev_types [:euc, :escooter, :esk8, :ebike, :other]
-  @statuses [:active, :inactive, :banned]
+  @statuses [:pending, :active, :inactive, :banned]
 
   schema "rider_profiles" do
     field :alias, :string
@@ -20,8 +20,9 @@ defmodule PevSquad.Riders.RiderProfile do
     field :is_public, :boolean, default: false
     field :featured_since, :utc_datetime
     field :source, Ecto.Enum, values: [:member, :import, :staff], default: :member
-    # Staff-only. Inactive riders stay listed with a badge; banned riders
-    # leave the roster but their page shows `ban_reason` publicly.
+    # Staff-only. Profiles members create start pending (hidden, can't post)
+    # until staff approve them. Inactive riders stay listed with a badge;
+    # banned riders leave the roster but their page shows `ban_reason`.
     field :status, Ecto.Enum, values: @statuses, default: :active
     field :ban_reason, :string
     field :banned_at, :utc_datetime

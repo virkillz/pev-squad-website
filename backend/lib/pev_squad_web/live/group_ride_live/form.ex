@@ -27,6 +27,10 @@ defmodule PevSquadWeb.GroupRideLive.Form do
             <.link navigate={~p"/users/profile"} class="btn btn-primary">Set up my profile</.link>
           </div>
 
+          <div :if={@blocked == :pending} class="notice" id="needs-approval">
+            Your rider profile is waiting for a moderator to approve it. You can host group rides once it's approved — RSVPing to rides works already.
+          </div>
+
           <div :if={@blocked == :limit} class="notice" id="host-limit">
             You're already hosting {Events.max_upcoming_per_host()} upcoming rides — that's the limit. Post the next one after one of them has happened.
           </div>

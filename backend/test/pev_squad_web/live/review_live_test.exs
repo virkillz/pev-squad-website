@@ -11,7 +11,7 @@ defmodule PevSquadWeb.ReviewLiveTest do
   defp with_profile(%{conn: conn}) do
     user = user_fixture()
     scope = PevSquad.Accounts.Scope.for_user(user)
-    {:ok, _} = Riders.save_my_profile(scope, %{"alias" => "Jarz"})
+    {:ok, _} = PevSquad.RidersFixtures.approved_profile(scope, %{"alias" => "Jarz"})
     %{conn: log_in_user(conn, user), scope: scope}
   end
 
@@ -19,7 +19,9 @@ defmodule PevSquadWeb.ReviewLiveTest do
     scope = user_scope_fixture()
 
     {:ok, _} =
-      Riders.save_my_profile(scope, %{"alias" => "Rev#{System.unique_integer([:positive])}"})
+      PevSquad.RidersFixtures.approved_profile(scope, %{
+        "alias" => "Rev#{System.unique_integer([:positive])}"
+      })
 
     {:ok, review} = Reviews.create_review(scope, review_attrs(%{"pev_model_id" => model.id}))
     {:ok, review} = Reviews.approve_review(staff_scope_fixture(), review, fn _ -> "x" end)
@@ -109,7 +111,7 @@ defmodule PevSquadWeb.ReviewLiveTest do
   describe "moderation" do
     test "staff approve from the queue", %{conn: conn} do
       scope = user_scope_fixture()
-      {:ok, _} = Riders.save_my_profile(scope, %{"alias" => "Nanda"})
+      {:ok, _} = PevSquad.RidersFixtures.approved_profile(scope, %{"alias" => "Nanda"})
       model = model_fixture()
       {:ok, review} = Reviews.create_review(scope, review_attrs(%{"pev_model_id" => model.id}))
 
@@ -124,7 +126,7 @@ defmodule PevSquadWeb.ReviewLiveTest do
 
     test "staff send a review back with a reason", %{conn: conn} do
       scope = user_scope_fixture()
-      {:ok, _} = Riders.save_my_profile(scope, %{"alias" => "Ed"})
+      {:ok, _} = PevSquad.RidersFixtures.approved_profile(scope, %{"alias" => "Ed"})
 
       {:ok, review} =
         Reviews.create_review(scope, review_attrs(%{"pev_model_id" => model_fixture().id}))

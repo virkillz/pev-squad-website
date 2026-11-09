@@ -15,7 +15,9 @@ defmodule PevSquad.ReviewsTest do
     scope = user_scope_fixture()
 
     {:ok, _profile} =
-      Riders.save_my_profile(scope, %{"alias" => "R#{System.unique_integer([:positive])}"})
+      PevSquad.RidersFixtures.approved_profile(scope, %{
+        "alias" => "R#{System.unique_integer([:positive])}"
+      })
 
     scope
   end

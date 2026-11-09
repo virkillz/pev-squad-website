@@ -13,6 +13,9 @@ defmodule PevSquad.Riders do
   * A banned rider's page stays up with staff's public statement, even if
     the rider unticks `is_public`, so the community can see action was taken.
   * `hidden_by_staff` hides a profile everywhere, whatever the rider chose.
+  * Profiles members create start `:pending`: hidden, and the member can't
+    post photos, reviews or group rides until staff approve them. RSVPs
+    are open to pending members. Staff-added and imported riders start active.
   """
 
   import Ecto.Query, warn: false
@@ -21,13 +24,25 @@ defmodule PevSquad.Riders do
   alias PevSquad.Accounts.Scope
   alias PevSquad.Repo
   alias PevSquad.Partners.Partner
-  alias PevSquad.Riders.{Avatar, RiderProfile}
+  alias PevSquad.Riders.{Avatar, Notifier, RiderProfile}
 
   @max_communities 3
 
   ## Public
 
-  @doc "Public profiles, optionally filtered by `:type`, minus `:exclude_users` (blocked members). Photos first, then by alias."
+  @sorts [:az, :za, :newest, :oldest]
+
+  def sorts, do: @sorts
+
+  @doc """
+  Listed profiles. Options:
+
+  * `:type` — only this primary PEV type
+  * `:search` — matches alias, city or ride model, case-insensitive
+  * `:sort` — `:az` (default), `:za`, `:newest` or `:oldest` (by when the
+    profile was added). Inactive riders always come after active ones.
+  * `:exclude_users` — member ids to leave out (blocked members)
+  """
   def list_public_riders(opts \\ []) do
     opts |> public_riders_query() |> Repo.all() |> put_communities()
   end
@@ -58,17 +73,36 @@ defmodule PevSquad.Riders do
   defp public_riders_query(opts) do
     listed_riders()
     |> filter_type(opts[:type])
+    |> search(opts[:search])
     |> exclude_users(opts[:exclude_users])
-    |> order_by([r],
-      asc: r.status == :inactive,
-      asc: is_nil(r.avatar_path),
-      asc: fragment("lower(?)", r.alias),
-      asc: r.id
+    |> order_by([r], asc: r.status == :inactive)
+    |> sort(opts[:sort] || :az)
+  end
+
+  defp sort(query, :az), do: order_by(query, [r], asc: fragment("lower(?)", r.alias), asc: r.id)
+  defp sort(query, :za), do: order_by(query, [r], desc: fragment("lower(?)", r.alias), desc: r.id)
+  defp sort(query, :newest), do: order_by(query, [r], desc: r.inserted_at, desc: r.id)
+  defp sort(query, :oldest), do: order_by(query, [r], asc: r.inserted_at, asc: r.id)
+
+  defp search(query, term) when term in [nil, ""], do: query
+
+  defp search(query, term) do
+    # Escape LIKE wildcards so "50%" or "a_b" match literally.
+    pattern = "%" <> String.replace(String.trim(term), ~r/[\\%_]/, "\\\\\\0") <> "%"
+
+    where(
+      query,
+      [r],
+      ilike(r.alias, ^pattern) or ilike(r.city, ^pattern) or ilike(r.main_ride, ^pattern)
     )
   end
 
   defp listed_riders do
-    where(RiderProfile, [r], r.is_public and not r.hidden_by_staff and r.status != :banned)
+    where(
+      RiderProfile,
+      [r],
+      r.is_public and not r.hidden_by_staff and r.status in [:active, :inactive]
+    )
   end
 
   defp exclude_users(query, ids) when ids in [nil, []], do: query
@@ -83,7 +117,7 @@ defmodule PevSquad.Riders do
   def get_public_rider!(slug) do
     RiderProfile
     |> where([r], r.slug == ^slug and not r.hidden_by_staff)
-    |> where([r], r.is_public or r.status == :banned)
+    |> where([r], (r.is_public and r.status in [:active, :inactive]) or r.status == :banned)
     |> Repo.one!()
     |> List.wrap()
     |> put_communities()
@@ -147,26 +181,70 @@ defmodule PevSquad.Riders do
   Creates or updates the current member's profile. `avatar_source`, when
   given, is a path to an uploaded image file.
   """
-  def save_my_profile(%Scope{user: user} = scope, attrs, avatar_source \\ nil) do
-    case get_my_profile(scope) || %RiderProfile{user_id: user.id, source: :member} do
+  def save_my_profile(%Scope{user: user} = scope, attrs, avatar_source \\ nil, opts \\ []) do
+    # Staff are already trusted; everyone else waits for approval.
+    new_status = if Scope.staff?(scope), do: :active, else: :pending
+
+    case get_my_profile(scope) ||
+           %RiderProfile{user_id: user.id, source: :member, status: new_status} do
       # The ban statement sits next to the profile; the member can't rewrite it.
       %RiderProfile{status: :banned} ->
         {:error, :banned}
 
       profile ->
+        new? = is_nil(profile.id)
+
         profile
         |> RiderProfile.changeset(attrs)
         |> Repo.insert_or_update()
         |> attach_avatar(avatar_source)
+        |> tap(fn
+          {:ok, %{status: :pending} = saved} when new? ->
+            notify_staff_of_new_profile(saved, opts[:review_url])
+
+          _ ->
+            :ok
+        end)
     end
+  end
+
+  @doc """
+  Whether the member may post photos, reviews and group rides: `:ok`,
+  `{:error, :no_profile}` or `{:error, :pending}` (waiting for approval).
+  Staff can always post.
+  """
+  def can_post?(%Scope{} = scope) do
+    if Scope.staff?(scope) do
+      :ok
+    else
+      case get_my_profile(scope) do
+        nil -> {:error, :no_profile}
+        %RiderProfile{status: :pending} -> {:error, :pending}
+        _ -> :ok
+      end
+    end
+  end
+
+  defp notify_staff_of_new_profile(_profile, nil), do: :ok
+
+  defp notify_staff_of_new_profile(profile, review_url_fun) do
+    url = review_url_fun.(profile)
+
+    for email <- Accounts.list_staff_emails() do
+      Notifier.deliver_profile_waiting(email, profile, url)
+    end
+
+    :ok
   end
 
   ## Staff
 
-  def list_all_riders(%Scope{} = scope) do
+  @doc "Every profile for the admin list, optionally only one `:status`."
+  def list_all_riders(%Scope{} = scope, opts \\ []) do
     ensure_staff!(scope)
 
     RiderProfile
+    |> then(fn q -> if s = opts[:status], do: where(q, status: ^s), else: q end)
     |> order_by([r], asc: fragment("lower(?)", r.alias))
     |> preload(:user)
     |> Repo.all()
@@ -175,6 +253,37 @@ defmodule PevSquad.Riders do
   def get_rider!(%Scope{} = scope, id) do
     ensure_staff!(scope)
     RiderProfile |> Repo.get!(id) |> Repo.preload(:user)
+  end
+
+  def count_pending(%Scope{} = scope) do
+    ensure_staff!(scope)
+    RiderProfile |> where(status: :pending) |> Repo.aggregate(:count)
+  end
+
+  @doc """
+  Approves a pending profile: it goes live (if the rider made it public)
+  and the member can post. Emails the member when `profile_url_fun` is given.
+  """
+  def approve_rider(
+        %Scope{} = scope,
+        %RiderProfile{status: :pending} = profile,
+        profile_url_fun \\ nil
+      ) do
+    ensure_staff!(scope)
+
+    with {:ok, approved} <- profile |> Ecto.Changeset.change(status: :active) |> Repo.update() do
+      approved = Repo.preload(approved, :user)
+
+      if profile_url_fun && approved.user do
+        Notifier.deliver_profile_approved(
+          approved.user.email,
+          approved,
+          profile_url_fun.(approved)
+        )
+      end
+
+      {:ok, approved}
+    end
   end
 
   def change_rider(%RiderProfile{} = profile, attrs \\ %{}),
@@ -280,6 +389,16 @@ defmodule PevSquad.Riders do
       Repo.get_by(RiderProfile, user_id: user.id) -> {:error, :member_has_profile}
       true -> profile |> Ecto.Changeset.change(user_id: user.id) |> Repo.update()
     end
+  end
+
+  @doc "Profiles not linked to any account yet, by alias — for linking from the member list."
+  def list_unclaimed_riders(%Scope{} = scope) do
+    ensure_staff!(scope)
+
+    RiderProfile
+    |> where([r], is_nil(r.user_id))
+    |> order_by([r], asc: fragment("lower(?)", r.alias))
+    |> Repo.all()
   end
 
   def unlink_member(%Scope{} = scope, %RiderProfile{} = profile) do

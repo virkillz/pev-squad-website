@@ -50,6 +50,7 @@ defmodule PevSquadWeb.Router do
       live "/events", EventLive.Index, :index
       live "/events/new", EventLive.Form, :new
       live "/events/:id/edit", EventLive.Form, :edit
+      live "/members", MemberLive.Index, :index
       live "/riders", RiderLive.Index, :index
       live "/riders/new", RiderLive.Edit, :new
       live "/riders/:id/edit", RiderLive.Edit, :edit

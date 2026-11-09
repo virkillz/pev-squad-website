@@ -129,12 +129,13 @@ defmodule PevSquad.Gallery do
 
   @doc """
   Processes and adds one photo. Returns `{:ok, photo}`, `{:error, :no_profile}`,
-  `{:error, :closed}`, `{:error, :unreadable}` or `{:error, changeset}`.
+  `{:error, :pending}` (profile not approved yet), `{:error, :closed}`,
+  `{:error, :unreadable}` or `{:error, changeset}`.
   """
   def upload_photo(%Scope{user: user} = scope, %Album{} = album, source, attrs \\ %{}) do
     cond do
-      not Scope.staff?(scope) and is_nil(Repo.get_by(RiderProfile, user_id: user.id)) ->
-        {:error, :no_profile}
+      (blocked = PevSquad.Riders.can_post?(scope)) != :ok ->
+        blocked
 
       not can_upload?(scope, album) ->
         {:error, :closed}

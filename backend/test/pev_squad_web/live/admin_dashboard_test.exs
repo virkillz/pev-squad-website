@@ -11,7 +11,10 @@ defmodule PevSquadWeb.AdminDashboardTest do
     target = user_scope_fixture()
 
     {:ok, profile} =
-      Riders.save_my_profile(target, %{"alias" => "Flagged", "is_public" => "true"})
+      PevSquad.RidersFixtures.approved_profile(target, %{
+        "alias" => "Flagged",
+        "is_public" => "true"
+      })
 
     {:ok, _} = Safety.report(user_scope_fixture(), :profile, profile.id, %{"reason" => "spam"})
 

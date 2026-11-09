@@ -27,7 +27,9 @@ defmodule PevSquadWeb.GalleryLiveTest do
     user = user_fixture()
 
     {:ok, _} =
-      Riders.save_my_profile(PevSquad.Accounts.Scope.for_user(user), %{"alias" => "Owlier"})
+      PevSquad.RidersFixtures.approved_profile(PevSquad.Accounts.Scope.for_user(user), %{
+        "alias" => "Owlier"
+      })
 
     album = album_fixture()
 
@@ -49,7 +51,7 @@ defmodule PevSquadWeb.GalleryLiveTest do
 
   test "staff approve from the photo queue", %{conn: conn} do
     scope = user_scope_fixture()
-    {:ok, _} = Riders.save_my_profile(scope, %{"alias" => "Saini"})
+    {:ok, _} = PevSquad.RidersFixtures.approved_profile(scope, %{"alias" => "Saini"})
 
     {:ok, photo} =
       Gallery.upload_photo(scope, album_fixture(), image_fixture(), %{"title" => "Lean"})

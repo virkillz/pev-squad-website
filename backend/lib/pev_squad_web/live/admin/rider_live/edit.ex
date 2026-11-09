@@ -32,6 +32,18 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
             </:subtitle>
           </.header>
 
+          <div
+            :if={@live_action == :edit && @rider.status == :pending}
+            class="notice space-y-3"
+            id="rider-approval"
+          >
+            <p>
+              <strong>Waiting for approval.</strong>
+              Hidden from the public site, and the member can't post photos, reviews or group rides yet. Approving makes the profile go live and emails the member.
+            </p>
+            <.button phx-click="approve" variant="primary">Approve</.button>
+          </div>
+
           <div :if={@live_action == :edit} class="notice space-y-3">
             <%= if @rider.user do %>
               <p>
@@ -151,7 +163,12 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
                   field={@form[:status]}
                   type="select"
                   label="Status"
-                  options={[{"Active", :active}, {"Inactive", :inactive}, {"Banned", :banned}]}
+                  options={[
+                    {"Pending approval", :pending},
+                    {"Active", :active},
+                    {"Inactive", :inactive},
+                    {"Banned", :banned}
+                  ]}
                 />
               </div>
               <.input
@@ -293,6 +310,17 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
     end
   end
 
+  def handle_event("approve", _params, socket) do
+    {:ok, rider} =
+      Riders.approve_rider(
+        socket.assigns.current_scope,
+        socket.assigns.rider,
+        &url(~p"/community/#{&1.slug}")
+      )
+
+    {:noreply, socket |> put_flash(:info, "#{rider.alias} approved.") |> reload()}
+  end
+
   def handle_event("delete", _params, socket) do
     {:ok, rider} = Riders.delete_rider(socket.assigns.current_scope, socket.assigns.rider)
 
@@ -305,7 +333,7 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
   def handle_event("link", %{"email" => email}, socket) do
     case Riders.link_to_member(socket.assigns.current_scope, socket.assigns.rider, email) do
       {:ok, _} ->
-        {:noreply, socket |> put_flash(:info, "Linked to #{email}.") |> reload()}
+        {:noreply, socket |> put_flash(:info, "Linked to #{String.trim(email)}.") |> reload()}
 
       {:error, reason} ->
         {:noreply, put_flash(socket, :error, link_error(reason))}

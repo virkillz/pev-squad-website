@@ -13,7 +13,7 @@ defmodule PevSquad.SafetyTest do
     scope = user_scope_fixture()
 
     {:ok, profile} =
-      Riders.save_my_profile(scope, %{
+      PevSquad.RidersFixtures.approved_profile(scope, %{
         "alias" => "M#{System.unique_integer([:positive])}",
         "is_public" => "true"
       })

@@ -31,6 +31,18 @@ defmodule PevSquadWeb.GroupRideLiveTest do
     refute has_element?(lv, "#group-ride-form")
   end
 
+  test "members waiting for approval can't host yet", %{conn: conn} do
+    user = user_fixture()
+
+    {:ok, _} =
+      PevSquad.Riders.save_my_profile(PevSquad.Accounts.Scope.for_user(user), %{alias: "Soon"})
+
+    {:ok, lv, _html} = live(log_in_user(conn, user), ~p"/group-rides/new")
+
+    assert has_element?(lv, "#needs-approval")
+    refute has_element?(lv, "#group-ride-form")
+  end
+
   test "a member hosts a ride; it goes live with their name on it", %{conn: conn} do
     host = host_scope_fixture("Rangga")
     conn = log_in_user(conn, host.user)

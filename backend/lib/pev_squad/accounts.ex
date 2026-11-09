@@ -6,9 +6,18 @@ defmodule PevSquad.Accounts do
   import Ecto.Query, warn: false
   alias PevSquad.Repo
 
-  alias PevSquad.Accounts.{User, UserToken, UserNotifier}
+  alias PevSquad.Accounts.{Scope, User, UserToken, UserNotifier}
+  alias PevSquad.Riders.RiderProfile
 
   ## Database getters
+
+  @doc "Emails of moderators and admins, for staff notifications."
+  def list_staff_emails do
+    User
+    |> where([u], u.role in [:moderator, :admin])
+    |> select([u], u.email)
+    |> Repo.all()
+  end
 
   @doc """
   Gets a user by email.
@@ -87,6 +96,57 @@ defmodule PevSquad.Accounts do
   """
   def set_user_role(%User{} = user, role) when role in [:member, :moderator, :admin] do
     user |> Ecto.Changeset.change(role: role) |> Repo.update()
+  end
+
+  ## Staff: the member list
+
+  @doc """
+  Every account with its rider profile (or nil), newest first, for staff.
+  Returns `[%{user: user, profile: profile_or_nil}]`. Options:
+
+  * `:search` — part of the email or the rider alias
+  * `:profile` — `:with` or `:without` a rider profile
+  """
+  def list_members(%Scope{} = scope, opts \\ []) do
+    ensure_staff!(scope)
+
+    from(u in User,
+      left_join: p in RiderProfile,
+      on: p.user_id == u.id,
+      order_by: [desc: u.inserted_at, desc: u.id],
+      select: %{user: u, profile: p}
+    )
+    |> filter_profile(opts[:profile])
+    |> search_members(opts[:search])
+    |> Repo.all()
+  end
+
+  defp filter_profile(query, :with), do: where(query, [_u, p], not is_nil(p.id))
+  defp filter_profile(query, :without), do: where(query, [_u, p], is_nil(p.id))
+  defp filter_profile(query, _), do: query
+
+  defp search_members(query, term) when term in [nil, ""], do: query
+
+  defp search_members(query, term) do
+    pattern = "%" <> String.replace(String.trim(term), ~r/[\\%_]/, "\\\\\\0") <> "%"
+    where(query, [u, p], ilike(u.email, ^pattern) or ilike(p.alias, ^pattern))
+  end
+
+  @doc """
+  Changes another member's role. Admins only, and never their own role,
+  so the last admin can't lock everyone out by accident.
+  """
+  def change_role(%Scope{user: me} = scope, %User{} = user, role)
+      when role in [:member, :moderator, :admin] do
+    cond do
+      not Scope.admin?(scope) -> raise PevSquad.Accounts.NotAuthorizedError
+      user.id == me.id -> {:error, :own_role}
+      true -> set_user_role(user, role)
+    end
+  end
+
+  defp ensure_staff!(scope) do
+    unless Scope.staff?(scope), do: raise(PevSquad.Accounts.NotAuthorizedError)
   end
 
   ## Settings
@@ -303,4 +363,8 @@ defmodule PevSquad.Accounts do
       end
     end)
   end
+end
+
+defmodule PevSquad.Accounts.NotAuthorizedError do
+  defexception message: "not allowed to manage members", plug_status: 403
 end

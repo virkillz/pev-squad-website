@@ -16,6 +16,13 @@ defmodule PevSquadWeb.CommunityLive.Index do
     {"E-Bike", :ebike}
   ]
 
+  @sorts [
+    {"A to Z", :az},
+    {"Z to A", :za},
+    {"Newest first", :newest},
+    {"Oldest first", :oldest}
+  ]
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -73,20 +80,48 @@ defmodule PevSquadWeb.CommunityLive.Index do
           </div>
         </div>
 
-        <div class="filters" style="margin-bottom:2rem;">
+        <div class="filters" style="margin-bottom:1rem;">
           <.link
             :for={{label, type} <- @filters}
-            patch={roster_path(type, 1)}
-            class={["filter-tag", @type == type && "active"]}
+            patch={roster_path(@query, type: type, page: 1)}
+            class={["filter-tag", @query.type == type && "active"]}
           >
             {label}
           </.link>
         </div>
 
+        <form
+          id="roster-controls"
+          phx-change="roster"
+          phx-submit="roster"
+          class="roster-controls"
+          role="search"
+        >
+          <label class="sr-only" for="roster-search">Search riders</label>
+          <input
+            id="roster-search"
+            type="search"
+            name="q"
+            value={@query.q}
+            placeholder="Search alias, city or ride"
+            class="input"
+            phx-debounce="300"
+            autocomplete="off"
+          />
+          <label class="sr-only" for="roster-sort">Sort riders</label>
+          <select id="roster-sort" name="sort" class="select">
+            <option :for={{label, sort} <- @sorts} value={sort} selected={@query.sort == sort}>
+              {label}
+            </option>
+          </select>
+        </form>
+
         <div class="grid grid-3" id="roster">
           <.rider_card :for={rider <- @roster.entries} rider={rider} />
         </div>
-        <p :if={@roster.entries == []} class="section-lede">No riders here yet.</p>
+        <p :if={@roster.entries == []} class="section-lede">
+          {if @query.q != "", do: "No riders match “#{@query.q}”.", else: "No riders here yet."}
+        </p>
 
         <nav :if={@roster.total_pages > 1} class="pager" id="roster-pager" aria-label="Roster pages">
           <span class="pager-count">
@@ -95,7 +130,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
           <div class="pager-links">
             <.link
               :if={@roster.page > 1}
-              patch={roster_path(@type, @roster.page - 1)}
+              patch={roster_path(@query, page: @roster.page - 1)}
               class="filter-tag"
               rel="prev"
             >
@@ -103,7 +138,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
             </.link>
             <.link
               :for={n <- 1..@roster.total_pages}
-              patch={roster_path(@type, n)}
+              patch={roster_path(@query, page: n)}
               class={["filter-tag", n == @roster.page && "active"]}
               aria-current={n == @roster.page && "page"}
             >
@@ -111,7 +146,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
             </.link>
             <.link
               :if={@roster.page < @roster.total_pages}
-              patch={roster_path(@type, @roster.page + 1)}
+              patch={roster_path(@query, page: @roster.page + 1)}
               class="filter-tag"
               rel="next"
             >
@@ -179,6 +214,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
        "The riders of PEV Squad — EUC, scooter, esk8 and e-bike riders across Indonesia — plus the communities and brands we ride with."
      )
      |> assign(:filters, @filters)
+     |> assign(:sorts, @sorts)
      |> assign(:stats, Riders.stats())
      |> assign(:meetups_held, length(Events.list_past_events(category: :official)))
      |> assign(:upcoming, length(Events.list_upcoming_events()))
@@ -188,20 +224,39 @@ defmodule PevSquadWeb.CommunityLive.Index do
 
   @impl true
   def handle_params(params, _uri, socket) do
-    type = parse_type(params["type"])
+    query = %{
+      type: parse_type(params["type"]),
+      sort: parse_sort(params["sort"]),
+      q: params["q"] |> to_string() |> String.trim() |> String.slice(0, 60)
+    }
 
     {:noreply,
      socket
-     |> assign(:type, type)
+     |> assign(:query, query)
      |> assign(
        :roster,
        Riders.paginate_public_riders(
-         type: type,
+         type: query.type,
+         sort: query.sort,
+         search: query.q,
          page: parse_page(params["page"]),
          per_page: @per_page,
          exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
        )
      )}
+  end
+
+  @impl true
+  def handle_event("roster", params, socket) do
+    query = %{
+      socket.assigns.query
+      | q: String.trim(params["q"] || ""),
+        sort: parse_sort(params["sort"])
+    }
+
+    # No #squad anchor here, so the page doesn't jump while someone types.
+    path = query |> roster_path(page: 1) |> String.replace_suffix("#squad", "")
+    {:noreply, push_patch(socket, to: path, replace: true)}
   end
 
   defp parse_page(page) do
@@ -211,20 +266,31 @@ defmodule PevSquadWeb.CommunityLive.Index do
     end
   end
 
-  # Page 1 and "All" are left out of the URL; #squad keeps the roster in view.
-  defp roster_path(type, page) do
-    query =
-      Enum.reject([type: type, page: page != 1 && page], fn {_k, v} -> v in [nil, false] end)
+  # Defaults (All, A to Z, no search, page 1) are left out of the URL;
+  # #squad keeps the roster in view.
+  defp roster_path(query, changes) do
+    %{type: type, sort: sort, q: q} = Map.merge(query, Map.new(Keyword.delete(changes, :page)))
+    page = Keyword.get(changes, :page, 1)
 
-    case query do
+    params =
+      Enum.reject(
+        [type: type, sort: sort != :az && sort, q: q != "" && q, page: page != 1 && page],
+        fn {_k, v} -> v in [nil, false] end
+      )
+
+    case params do
       [] -> "/community#squad"
-      query -> "/community?" <> URI.encode_query(query) <> "#squad"
+      params -> "/community?" <> URI.encode_query(params) <> "#squad"
     end
   end
 
   defp range_label(%{page: page, per_page: per_page, entries: entries}) do
     first = (page - 1) * per_page + 1
     "#{first}–#{first + length(entries) - 1}"
+  end
+
+  defp parse_sort(sort) do
+    Enum.find_value(@sorts, :az, fn {_label, s} -> to_string(s) == sort && s end)
   end
 
   defp parse_type(type) do

@@ -2,7 +2,6 @@ defmodule PevSquadWeb.GalleryLive.Upload do
   use PevSquadWeb, :live_view
 
   alias PevSquad.{Gallery, Riders}
-  alias PevSquad.Accounts.Scope
   alias PevSquad.Gallery.Processing
 
   @max_files 10
@@ -91,13 +90,10 @@ defmodule PevSquadWeb.GalleryLive.Upload do
     album = Gallery.get_album_for_upload!(scope, slug)
 
     cond do
-      not Scope.staff?(scope) and is_nil(Riders.get_my_profile(scope)) ->
+      (blocked = Riders.can_post?(scope)) != :ok ->
         {:ok,
          socket
-         |> put_flash(
-           :error,
-           "Set up your rider profile first — photos are credited to your alias."
-         )
+         |> put_flash(:error, blocked_message(blocked))
          |> push_navigate(to: ~p"/users/profile")}
 
       not Gallery.can_upload?(scope, album) ->
@@ -180,4 +176,10 @@ defmodule PevSquadWeb.GalleryLive.Upload do
   defp error_text(:not_accepted), do: "Use JPG, PNG or WebP."
   defp error_text(:too_many_files), do: "Up to #{@max_files} photos at a time."
   defp error_text(_), do: "Upload failed — try again."
+
+  defp blocked_message({:error, :no_profile}),
+    do: "Set up your rider profile first — photos are credited to your alias."
+
+  defp blocked_message({:error, :pending}),
+    do: "You can share photos once a moderator approves your rider profile."
 end
