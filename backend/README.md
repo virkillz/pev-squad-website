@@ -7,7 +7,7 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+Deploying to production (pev-squad.org): see [`docs/DEPLOYMENT.md`](../docs/DEPLOYMENT.md). In short: push to `main`, then `ssh deploy@159.223.73.156 ./deploy.sh`.
 
 ## Learn more
 
