@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "PEV Squad",
+    "slug": "pev-squad",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "pevsquad",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "org.pevsquad.app",
+      "supportsTablet": false,
+      "associatedDomains": ["applinks:pev-squad.org"]
+    },
+    "android": {
+      "package": "org.pevsquad.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#FF4800",
+        "foregroundImage": "./assets/images/icon.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FF4800",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 160
+        }
+      ],
+      "expo-localization",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
