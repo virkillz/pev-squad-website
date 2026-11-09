@@ -147,10 +147,76 @@ Compile-time config (`config/prod.exs`, e.g. `force_ssl`) needs a full
 
 ---
 
+## Backups
+
+A systemd timer runs `/usr/local/bin/pev-backup` (as `deploy`) **every night at
+03:00 WIB**. Retention is **7 days**. Everything lands in `/var/backups/pev_squad/`:
+
+| Path | What |
+|---|---|
+| `db/pev_squad_prod_<YYYY-MM-DD_HHMM>.dump` | `pg_dump` custom-format, one per night, last 7 kept |
+| `uploads/` | mirror of `/var/lib/pev_squad/uploads` as of the last run |
+| `uploads-changed/<stamp>/` | files that were deleted or overwritten since the previous night, kept 7 days |
+
+```bash
+# On the server
+systemctl list-timers pev-backup.timer    # next scheduled run
+journalctl -u pev-backup -n 20            # last runs ("backup ok: ...")
+sudo systemctl start pev-backup           # take a backup right now (as root)
+```
+
+These backups live **on the droplet** — if the droplet is lost, so are they.
+Pull a copy to your Mac regularly (and/or enable DigitalOcean Droplet Backups
+for a weekly whole-server snapshot).
+
+### Downloading backups to your Mac
+
+```bash
+scripts/pull-backups.sh                 # -> ~/Backups/pev_squad
+scripts/pull-backups.sh ~/Dropbox/pev   # or any folder
+```
+
+Incremental rsync over SSH, so after the first run it only fetches new dumps
+and new photos. Your local copy keeps every dump you've ever pulled — delete
+old ones yourself if you want. The folder is `chmod 700`: dumps contain user
+emails and password hashes, so don't put them anywhere public.
+
+### Restoring
+
+The server runs Postgres 16; Homebrew's `postgresql@14` can't read its dumps,
+so use the `@17` client tools locally:
+`PGBIN=/opt/homebrew/opt/postgresql@17/bin`.
+
+**Look at production data locally** (overwrites your dev DB):
+
+```bash
+$PGBIN/pg_restore --clean --if-exists --no-owner -h localhost -U postgres \
+  -d pev_squad_dev ~/Backups/pev_squad/db/pev_squad_prod_<stamp>.dump
+rsync -a ~/Backups/pev_squad/uploads/ backend/priv/uploads/
+```
+
+**Restore production from a backup** (on the server, as root — the app is
+down while it runs):
+
+```bash
+systemctl stop pev_squad
+# --role keeps tables owned by pev_squad, so later migrations still work
+sudo -u postgres pg_restore --clean --if-exists --no-owner --role=pev_squad \
+  --single-transaction -d pev_squad_prod /var/backups/pev_squad/db/pev_squad_prod_<stamp>.dump
+rsync -a /var/backups/pev_squad/uploads/ /var/lib/pev_squad/uploads/
+chown -R deploy:deploy /var/lib/pev_squad
+systemctl start pev_squad
+```
+
+Take a fresh backup first (`systemctl start pev-backup`) so you can undo the
+restore if you picked the wrong night.
+
+---
+
 ## Things that are *not* deployed by git
 
-- **Uploads** live only in `/var/lib/pev_squad/uploads`. A deploy never touches
-  them, but they are also not backed up anywhere yet.
+- **Uploads** live only in `/var/lib/pev_squad/uploads` (plus the nightly
+  backup). A deploy never touches them.
 - **Database content** lives only in `pev_squad_prod`. Production is now the
   source of truth — don't overwrite it from a local dev database.
 - **`priv/repo/seeds.exs` must not be run in production.** It creates demo
@@ -161,6 +227,7 @@ Compile-time config (`config/prod.exs`, e.g. `force_ssl`) needs a full
 
 ## Known gaps
 
-- **No backups yet** — set up a nightly `pg_dump` + copy of the uploads dir.
+- **Backups are on the same droplet** — run `scripts/pull-backups.sh` regularly
+  or enable DigitalOcean Droplet Backups for an off-server copy.
 - **No mailer configured** — `Swoosh` has no prod adapter, so sign-up
   confirmation and password-reset emails are not sent.
