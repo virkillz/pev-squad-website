@@ -29,6 +29,16 @@ mix precommit    # run before finishing a change
 
 The "Kinetic" design system from the prototype lives in `backend/assets/css/kinetic.css`, imported into Tailwind's `components` layer. App-only UI (forms, flashes, tables, panels) is in `forms.css`. daisyUI is removed because its class names clash with Kinetic, and `hero-*` is reserved for heroicons. See `docs/DESIGN.md` for details.
 
+## Languages (Indonesian / English)
+
+The public site and member pages are translated with Gettext; the admin area is English only. Indonesian is the default.
+
+- `PevSquadWeb.Locale` picks the language (`?locale=`, session, `Accept-Language`, default) and is both a plug and an `on_mount` hook. The ID/EN switch goes through `/locale/:locale`. Members' choice is saved in `users.locale` and used for their emails (`PevSquad.Mailer.in_locale/2`).
+- Wrap new UI text in `gettext("...")` (use `%{name}` placeholders, never string interpolation). Labels in core modules use `gettext_noop` and are translated by their label functions. Custom changeset messages use `dgettext_noop("errors", ...)`.
+- Dates: `PevSquadWeb.Locale.strftime/2`, not `Calendar.strftime/2`, for anything riders see.
+- After changing text: `mix gettext.extract --merge`, then fill the empty `msgstr ""` entries in `priv/gettext/id/LC_MESSAGES/*.po`. Clear any `#, fuzzy` guesses gettext adds; they're usually wrong.
+- Tests run with English as the default (`config/test.exs`); Indonesian is covered in `test/pev_squad_web/locale_test.exs`.
+
 ## Production server
 
 Full runbook: `docs/DEPLOYMENT.md`. Key facts for connecting and operating:

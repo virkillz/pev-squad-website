@@ -1,6 +1,7 @@
 defmodule PevSquad.Reviews.PevModel do
   use Ecto.Schema
   import Ecto.Changeset
+  use Gettext, backend: PevSquadWeb.Gettext
 
   alias PevSquad.Riders.RiderProfile
 
@@ -26,11 +27,14 @@ defmodule PevSquad.Reviews.PevModel do
     |> validate_length(:brand, max: 40)
     |> validate_length(:name, max: 60)
     |> put_slug()
-    |> unique_constraint(:slug, error_key: :name, message: "is already in the catalog")
+    |> unique_constraint(:slug,
+      error_key: :name,
+      message: dgettext_noop("errors", "is already in the catalog")
+    )
     |> unique_constraint([:brand, :name],
       name: :pev_models_brand_name_index,
       error_key: :name,
-      message: "is already in the catalog"
+      message: dgettext_noop("errors", "is already in the catalog")
     )
   end
 

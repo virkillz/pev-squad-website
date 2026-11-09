@@ -1,5 +1,6 @@
 defmodule PevSquad.Riders.Notifier do
   import Swoosh.Email
+  use Gettext, backend: PevSquadWeb.Gettext
 
   require Logger
 
@@ -7,44 +8,53 @@ defmodule PevSquad.Riders.Notifier do
   alias PevSquad.Riders.RiderProfile
 
   # Sent synchronously; a failed send is logged, never blocks the save.
-  def deliver_profile_waiting(to_email, %RiderProfile{} = profile, url) do
-    new()
-    |> to(to_email)
-    |> from({"PEV Squad", "noreply@pev-squad.org"})
-    |> subject("New rider waiting for approval: #{profile.alias}")
-    |> text_body("""
+  # `staff` is the moderator being told (anything with :email and :locale).
+  def deliver_profile_waiting(staff, %RiderProfile{} = profile, url) do
+    Mailer.in_locale(staff, fn ->
+      rider = if profile.city, do: "#{profile.alias} (#{profile.city})", else: profile.alias
 
-    ==============================
-
-    #{profile.alias}#{if profile.city, do: " (#{profile.city})"} just created a rider
-    profile. It stays hidden, and they can't post photos, reviews or group
-    rides, until a moderator approves it.
-
-    #{url}
-
-    ==============================
-    """)
-    |> deliver()
+      new()
+      |> to(staff.email)
+      |> from({"PEV Squad", "noreply@pev-squad.org"})
+      |> subject(gettext("New rider waiting for approval: %{rider}", rider: profile.alias))
+      |> text_body(
+        Mailer.framed(
+          gettext(
+            "%{rider} just created a rider\nprofile. It stays hidden, and they can't post photos, reviews or group\nrides, until a moderator approves it.\n\n%{url}",
+            rider: rider,
+            url: url
+          )
+        )
+      )
+      |> deliver()
+    end)
   end
 
-  def deliver_profile_approved(to_email, %RiderProfile{} = profile, url) do
-    new()
-    |> to(to_email)
-    |> from({"PEV Squad", "noreply@pev-squad.org"})
-    |> subject("You're in the Squad, #{profile.alias}")
-    |> text_body("""
+  def deliver_profile_approved(user, %RiderProfile{} = profile, url) do
+    Mailer.in_locale(user, fn ->
+      intro =
+        if profile.is_public,
+          do:
+            gettext(
+              "Your PEV Squad rider profile has been approved. It's now on the Community page:"
+            ),
+          else: gettext("Your PEV Squad rider profile has been approved.")
 
-    ==============================
-
-    Your PEV Squad rider profile has been approved.#{if profile.is_public, do: " It's now on the Community page:", else: ""}
-
-    #{url}
-
-    You can now share photos in the gallery, write reviews and host group rides.
-
-    ==============================
-    """)
-    |> deliver()
+      new()
+      |> to(user.email)
+      |> from({"PEV Squad", "noreply@pev-squad.org"})
+      |> subject(gettext("You're in the Squad, %{rider}", rider: profile.alias))
+      |> text_body(
+        Mailer.framed(
+          intro <>
+            "\n\n#{url}\n\n" <>
+            gettext(
+              "You can now share photos in the gallery, write reviews and host group rides."
+            )
+        )
+      )
+      |> deliver()
+    end)
   end
 
   defp deliver(email) do

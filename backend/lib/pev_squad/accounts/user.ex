@@ -1,6 +1,7 @@
 defmodule PevSquad.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  use Gettext, backend: PevSquadWeb.Gettext
 
   schema "users" do
     field :email, :string
@@ -9,8 +10,16 @@ defmodule PevSquad.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
     field :role, Ecto.Enum, values: [:member, :moderator, :admin], default: :member
+    field :locale, :string
 
     timestamps(type: :utc_datetime)
+  end
+
+  @doc "Sets the language emails are sent in."
+  def locale_changeset(user_or_changeset, attrs) do
+    user_or_changeset
+    |> cast(attrs, [:locale])
+    |> validate_inclusion(:locale, PevSquadWeb.Locale.supported())
   end
 
   @doc """
@@ -35,7 +44,7 @@ defmodule PevSquad.Accounts.User do
       changeset
       |> validate_required([:email])
       |> validate_format(:email, ~r/^[^@,;\s]+@[^@,;\s]+$/,
-        message: "must have the @ sign and no spaces"
+        message: dgettext_noop("errors", "must have the @ sign and no spaces")
       )
       |> validate_length(:email, max: 160)
 
@@ -51,7 +60,7 @@ defmodule PevSquad.Accounts.User do
 
   defp validate_email_changed(changeset) do
     if get_field(changeset, :email) && get_change(changeset, :email) == nil do
-      add_error(changeset, :email, "did not change")
+      add_error(changeset, :email, dgettext_noop("errors", "did not change"))
     else
       changeset
     end
@@ -75,7 +84,9 @@ defmodule PevSquad.Accounts.User do
   def password_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:password])
-    |> validate_confirmation(:password, message: "does not match password")
+    |> validate_confirmation(:password,
+      message: dgettext_noop("errors", "does not match password")
+    )
     |> validate_password(opts)
   end
 

@@ -13,7 +13,9 @@ defmodule PevSquadWeb.ModelLive.Show do
       <section class="page-header">
         <div class="meta-row">
           <span class="eyebrow">
-            <.link navigate={~p"/reviews"} style="text-decoration:none;">04 / Reviews</.link>
+            <.link navigate={~p"/reviews"} style="text-decoration:none;">
+              04 / {gettext("Reviews")}
+            </.link>
           </span>
           <span class="badge" style="background:var(--black); color:var(--orange);">
             {type_label(@model.pev_type)}
@@ -26,11 +28,11 @@ defmodule PevSquadWeb.ModelLive.Show do
         <div class="statbar">
           <div class="stat">
             <div class="stat-n">{fmt(@row.overall)}</div>
-            <div class="stat-l">Overall</div>
+            <div class="stat-l">{gettext("Overall")}</div>
           </div>
           <div class="stat">
             <div class="stat-n">{@row.reviews}</div>
-            <div class="stat-l">Reviews</div>
+            <div class="stat-l">{gettext("Reviews")}</div>
           </div>
         </div>
       </section>
@@ -38,17 +40,17 @@ defmodule PevSquadWeb.ModelLive.Show do
       <section class="band band-white">
         <div class="section-head">
           <div>
-            <span class="eyebrow">From riders who own one</span>
-            <h2 class="section-title">The Reviews</h2>
+            <span class="eyebrow">{gettext("From riders who own one")}</span>
+            <h2 class="section-title">{gettext("The Reviews")}</h2>
           </div>
           <.link navigate={~p"/reviews/new?model=#{@model.slug}"} class="btn btn-primary">
-            Review this model
+            {gettext("Review this model")}
           </.link>
         </div>
         <div :if={@reviews != []} class="grid grid-3">
           <.review_card :for={review <- @reviews} review={review} />
         </div>
-        <p :if={@reviews == []} class="section-lede">No reviews yet — be the first.</p>
+        <p :if={@reviews == []} class="section-lede">{gettext("No reviews yet — be the first.")}</p>
       </section>
     </Layouts.app>
     """
@@ -63,7 +65,7 @@ defmodule PevSquadWeb.ModelLive.Show do
      |> assign(:page_title, model_name(model))
      |> assign(
        :page_description,
-       "#{model_name(model)} reviews from PEV Squad riders who own one."
+       gettext("%{model} reviews from PEV Squad riders who own one.", model: model_name(model))
      )
      |> assign(:model, model)
      |> assign(:row, row)

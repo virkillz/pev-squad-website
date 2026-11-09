@@ -14,21 +14,17 @@ defmodule PevSquadWeb.PartnerComponents do
     end
   end
 
-  @focus_labels %{
-    euc: "EUC",
-    escooter: "E-Scooter",
-    esk8: "Esk8",
-    ebike: "E-Bike",
-    mixed: "All PEVs"
-  }
-
   def focus_label(nil), do: nil
-  def focus_label(focus), do: Map.fetch!(@focus_labels, focus)
+  def focus_label(:euc), do: "EUC"
+  def focus_label(:escooter), do: "E-Scooter"
+  def focus_label(:esk8), do: "Esk8"
+  def focus_label(:ebike), do: "E-Bike"
+  def focus_label(:mixed), do: gettext("All PEVs")
 
   def focus_options, do: Enum.map(Partner.vehicle_focuses(), &{focus_label(&1), &1})
 
-  def kind_label(:community), do: "Partner Community"
-  def kind_label(:brand), do: "Brand Partner"
+  def kind_label(:community), do: gettext("Partner Community")
+  def kind_label(:brand), do: gettext("Brand Partner")
 
   @doc "\"Surabaya & Malang · EUC\" for communities, \"Sponsor · Venue\" for brands."
   def partner_meta(%Partner{kind: :community} = p),
@@ -38,12 +34,11 @@ defmodule PevSquadWeb.PartnerComponents do
     do: Enum.map_join(p.collaboration_types, " · ", &Partner.collaboration_label/1)
 
   def together_label(0), do: nil
-  def together_label(1), do: "1 event together"
-  def together_label(n), do: "#{n} events together"
+  def together_label(n), do: ngettext("1 event together", "%{count} events together", n)
 
   def social_links(%Partner{} = p) do
     [
-      p.website && {"Website", p.website},
+      p.website && {gettext("Website"), p.website},
       p.instagram && {"Instagram", "https://instagram.com/#{p.instagram}"},
       p.tiktok && {"TikTok", "https://www.tiktok.com/@#{p.tiktok}"},
       p.youtube && {"YouTube", p.youtube}
@@ -61,7 +56,7 @@ defmodule PevSquadWeb.PartnerComponents do
       <img
         :if={@partner.logo_path}
         src={@partner.logo_path}
-        alt={"#{@partner.name} logo"}
+        alt={gettext("%{name} logo", name: @partner.name)}
         loading="lazy"
       />
       <span :if={!@partner.logo_path} class="partner-logo-initials">{initials(@partner.name)}</span>
@@ -79,7 +74,7 @@ defmodule PevSquadWeb.PartnerComponents do
         <span :if={@partner.kind == :community && @partner.vehicle_focus} class="badge">
           {focus_label(@partner.vehicle_focus)}
         </span>
-        <span :if={@partner.kind == :brand} class="badge">Brand</span>
+        <span :if={@partner.kind == :brand} class="badge">{gettext("Brand")}</span>
       </div>
       <.partner_logo partner={@partner} />
       <div class="card-body">
@@ -89,7 +84,9 @@ defmodule PevSquadWeb.PartnerComponents do
       </div>
       <div :if={@partner.event_count > 0 or @partner.partner_since} class="card-foot">
         <span>{together_label(@partner.event_count)}</span>
-        <span :if={@partner.partner_since}>Since {@partner.partner_since.year}</span>
+        <span :if={@partner.partner_since}>
+          {gettext("Since %{year}", year: @partner.partner_since.year)}
+        </span>
       </div>
     </.link>
     """

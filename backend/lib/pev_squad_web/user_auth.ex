@@ -38,8 +38,23 @@ defmodule PevSquadWeb.UserAuth do
 
     conn
     |> create_or_extend_session(user, params)
+    |> sync_locale(user)
     |> delete_session(:user_return_to)
     |> redirect(to: user_return_to || signed_in_path(conn))
+  end
+
+  # The account remembers the rider's language. A language picked in the
+  # switcher just now wins and is saved; otherwise the saved one is used,
+  # and an account without one takes the language they're browsing in.
+  defp sync_locale(conn, user) do
+    session_locale = get_session(conn, "locale")
+
+    if get_session(conn, "locale_chosen") || is_nil(user.locale) do
+      if session_locale, do: Accounts.update_user_locale(user, session_locale)
+      conn
+    else
+      put_session(conn, "locale", user.locale)
+    end
   end
 
   @doc """
@@ -145,12 +160,12 @@ defmodule PevSquadWeb.UserAuth do
   defp renew_session(conn, _user) do
     delete_csrf_token()
     # The rider's language choice survives logging in and out.
-    locale = get_session(conn, "locale")
+    kept = Map.take(get_session(conn), ["locale", "locale_chosen"])
 
     conn
     |> configure_session(renew: true)
     |> clear_session()
-    |> then(&if(locale, do: put_session(&1, "locale", locale), else: &1))
+    |> then(&Enum.reduce(kept, &1, fn {k, v}, conn -> put_session(conn, k, v) end))
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}, _),

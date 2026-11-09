@@ -1,17 +1,18 @@
 defmodule PevSquad.Partners.Partner do
   use Ecto.Schema
   import Ecto.Changeset
+  use Gettext, backend: PevSquadWeb.Gettext
 
   @kinds [:community, :brand]
   @vehicle_focuses [:euc, :escooter, :esk8, :ebike, :mixed]
   @collaboration_types [
-    sponsor: "Sponsor",
-    dealer: "Dealer",
-    gear: "Gear & parts",
-    venue: "Venue",
-    food_drink: "Food & drink",
-    media: "Media",
-    event_partner: "Event partner"
+    sponsor: gettext_noop("Sponsor"),
+    dealer: gettext_noop("Dealer"),
+    gear: gettext_noop("Gear & parts"),
+    venue: gettext_noop("Venue"),
+    food_drink: gettext_noop("Food & drink"),
+    media: gettext_noop("Media"),
+    event_partner: gettext_noop("Event partner")
   ]
 
   schema "partners" do
@@ -46,8 +47,13 @@ defmodule PevSquad.Partners.Partner do
 
   def kinds, do: @kinds
   def vehicle_focuses, do: @vehicle_focuses
-  def collaboration_types, do: @collaboration_types
-  def collaboration_label(type), do: Keyword.fetch!(@collaboration_types, type)
+
+  def collaboration_types,
+    do: Enum.map(@collaboration_types, fn {k, label} -> {k, translate(label)} end)
+
+  def collaboration_label(type), do: @collaboration_types |> Keyword.fetch!(type) |> translate()
+
+  defp translate(label), do: Gettext.gettext(PevSquadWeb.Gettext, label)
 
   def changeset(partner, attrs) do
     partner
@@ -75,14 +81,14 @@ defmodule PevSquad.Partners.Partner do
     |> update_change(:instagram, &handle/1)
     |> update_change(:tiktok, &handle/1)
     |> validate_format(:website, ~r{^https?://\S+$},
-      message: "must start with http:// or https://"
+      message: dgettext_noop("errors", "must start with http:// or https://")
     )
     |> validate_format(:youtube, ~r{^https?://\S+$},
-      message: "paste the full channel link (https://youtube.com/@…)"
+      message: dgettext_noop("errors", "paste the full channel link (https://youtube.com/@…)")
     )
     |> put_slug()
     |> validate_format(:slug, ~r/^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-      message: "use lowercase letters, numbers and dashes"
+      message: dgettext_noop("errors", "use lowercase letters, numbers and dashes")
     )
     |> unique_constraint(:slug)
   end

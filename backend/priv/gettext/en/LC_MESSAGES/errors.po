@@ -11,6 +11,8 @@ msgstr ""
 "Language: en\n"
 
 ## From Ecto.Changeset.cast/4
+#: lib/pev_squad/reviews/review.ex:73
+#, elixir-autogen
 msgid "can't be blank"
 msgstr ""
 
@@ -109,4 +111,103 @@ msgid "must be greater than or equal to %{number}"
 msgstr ""
 
 msgid "must be equal to %{number}"
+msgstr ""
+
+#: lib/pev_squad/riders.ex:453
+#, elixir-autogen, elixir-format
+msgid "couldn't read that image — try a JPG or PNG"
+msgstr ""
+
+#: lib/pev_squad/accounts/user.ex:63
+#, elixir-autogen, elixir-format
+msgid "did not change"
+msgstr ""
+
+#: lib/pev_squad/accounts/user.ex:87
+#, elixir-autogen, elixir-format
+msgid "does not match password"
+msgstr ""
+
+#: lib/pev_squad/reviews/pev_model.ex:30
+#: lib/pev_squad/reviews/pev_model.ex:34
+#, elixir-autogen, elixir-format
+msgid "is already in the catalog"
+msgstr ""
+
+#: lib/pev_squad/riders/rider_profile.ex:75
+#: lib/pev_squad/riders/rider_profile.ex:78
+#, elixir-autogen, elixir-format
+msgid "is already taken by another rider"
+msgstr ""
+
+#: lib/pev_squad/riders/rider_profile.ex:68
+#, elixir-autogen, elixir-format
+msgid "just the handle, e.g. pevsquad"
+msgstr ""
+
+#: lib/pev_squad/riders/rider_profile.ex:61
+#, elixir-autogen, elixir-format
+msgid "letters, numbers, spaces, dots, dashes and underscores only"
+msgstr ""
+
+#: lib/pev_squad/events/event.ex:197
+#, elixir-autogen, elixir-format
+msgid "must be after the start"
+msgstr ""
+
+#: lib/pev_squad/reviews/score.ex:24
+#, elixir-autogen, elixir-format
+msgid "must be between 0 and 10"
+msgstr ""
+
+#: lib/pev_squad/events/event.ex:138
+#, elixir-autogen, elixir-format
+msgid "must be between 1 and 30"
+msgstr ""
+
+#: lib/pev_squad/accounts/user.ex:47
+#, elixir-autogen, elixir-format
+msgid "must have the @ sign and no spaces"
+msgstr ""
+
+#: lib/pev_squad/partners/partner.ex:83
+#, elixir-autogen, elixir-format
+msgid "must start with http:// or https://"
+msgstr ""
+
+#: lib/pev_squad/partners/partner.ex:86
+#, elixir-autogen, elixir-format
+msgid "paste the full channel link (https://youtube.com/@…)"
+msgstr ""
+
+#: lib/pev_squad/safety/report.ex:42
+#, elixir-autogen, elixir-format
+msgid "pick a reason"
+msgstr ""
+
+#: lib/pev_squad/reviews.ex:290
+#, elixir-autogen, elixir-format
+msgid "tell the rider why"
+msgstr ""
+
+#: lib/pev_squad/events/event.ex:104
+#: lib/pev_squad/gallery/album.ex:44
+#: lib/pev_squad/partners/partner.ex:90
+#, elixir-autogen, elixir-format
+msgid "use lowercase letters, numbers and dashes"
+msgstr ""
+
+#: lib/pev_squad/riders/rider_profile.ex:98
+#, elixir-autogen, elixir-format
+msgid "write the public statement for the ban"
+msgstr ""
+
+#: lib/pev_squad/safety/report.ex:47
+#, elixir-autogen, elixir-format
+msgid "you've already reported this — the moderators are on it"
+msgstr ""
+
+#: lib/pev_squad/reviews/review.ex:85
+#, elixir-autogen, elixir-format
+msgid "you've already reviewed this model — edit that review instead"
 msgstr ""

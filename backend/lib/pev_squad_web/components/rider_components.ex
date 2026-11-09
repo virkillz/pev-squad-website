@@ -4,9 +4,11 @@ defmodule PevSquadWeb.RiderComponents do
 
   alias PevSquad.Riders.RiderProfile
 
-  @type_labels %{euc: "EUC", escooter: "Scooter", esk8: "Esk8", ebike: "E-Bike", other: "Other"}
-
-  def type_label(type), do: Map.fetch!(@type_labels, type)
+  def type_label(:euc), do: "EUC"
+  def type_label(:escooter), do: gettext("Scooter")
+  def type_label(:esk8), do: "Esk8"
+  def type_label(:ebike), do: "E-Bike"
+  def type_label(:other), do: gettext("Other")
 
   def type_options, do: Enum.map(RiderProfile.pev_types(), &{type_label(&1), &1})
 
@@ -33,7 +35,9 @@ defmodule PevSquadWeb.RiderComponents do
       <div class="card-head">
         <span class="card-initials">{initials(@rider.alias)}</span>
         <span class="flex gap-1">
-          <span :if={@rider.status == :inactive} class="badge badge-grey">Inactive</span>
+          <span :if={@rider.status == :inactive} class="badge badge-grey">
+            {gettext("Inactive")}
+          </span>
           <span class="badge">{type_label(@rider.primary_pev_type)}</span>
         </span>
       </div>
@@ -41,7 +45,12 @@ defmodule PevSquadWeb.RiderComponents do
         :if={@rider.avatar_path}
         class="card-photo"
         src={@rider.avatar_path}
-        alt={"#{@rider.alias} with their #{@rider.main_ride || type_label(@rider.primary_pev_type)}"}
+        alt={
+          gettext("%{rider} with their %{ride}",
+            rider: @rider.alias,
+            ride: @rider.main_ride || type_label(@rider.primary_pev_type)
+          )
+        }
         loading="lazy"
       />
       <div class="card-body">
@@ -52,14 +61,19 @@ defmodule PevSquadWeb.RiderComponents do
         <%!-- The Squad mark first on every card, then the partner communities they also ride with. --%>
         <div class="rider-communities">
           <span class="rider-community" title="PEV Squad">
-            <img src={~p"/images/logo.jpg"} alt="PEV Squad logo" loading="lazy" />
+            <img src={~p"/images/logo.jpg"} alt={gettext("PEV Squad logo")} loading="lazy" />
           </span>
           <span
             :for={p <- @rider.communities}
             class="rider-community"
             title={p.name}
           >
-            <img :if={p.logo_path} src={p.logo_path} alt={"#{p.name} logo"} loading="lazy" />
+            <img
+              :if={p.logo_path}
+              src={p.logo_path}
+              alt={gettext("%{name} logo", name: p.name)}
+              loading="lazy"
+            />
             <span :if={!p.logo_path}>{PevSquadWeb.PartnerComponents.initials(p.name)}</span>
           </span>
         </div>

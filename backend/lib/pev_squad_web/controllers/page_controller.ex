@@ -1,12 +1,10 @@
 defmodule PevSquadWeb.PageController do
   use PevSquadWeb, :controller
 
-  @sections %{
-    "for-sale" => {:for_sale, "05", "For Sale"}
-  }
+  defp section("for-sale"), do: {:for_sale, "05", gettext("For Sale")}
 
   def coming_soon(conn, _params) do
-    {active, num, title} = Map.fetch!(@sections, hd(conn.path_info))
+    {active, num, title} = section(hd(conn.path_info))
 
     render(conn, :coming_soon, active: active, num: num, title: title, page_title: title)
   end
@@ -17,7 +15,14 @@ defmodule PevSquadWeb.PageController do
   # already stored the locale from the path; send the rider back to the
   # page they were on. Only the path of the referer is kept, so this can't
   # redirect off-site.
-  def locale(conn, _params), do: redirect(conn, to: back_path(conn))
+  # A logged-in rider's choice is also saved to their account, for emails.
+  def locale(conn, _params) do
+    with %{user: %PevSquad.Accounts.User{} = user} <- conn.assigns.current_scope do
+      PevSquad.Accounts.update_user_locale(user, conn.assigns.locale)
+    end
+
+    redirect(conn, to: back_path(conn))
+  end
 
   defp back_path(conn) do
     with [referer | _] <- get_req_header(conn, "referer"),

@@ -4,6 +4,7 @@ defmodule PevSquad.Reviews.Score do
   sorting and averaging in SQL stay exact.
   """
   use Ecto.Type
+  use Gettext, backend: PevSquadWeb.Gettext
 
   def type, do: :integer
 
@@ -20,7 +21,7 @@ defmodule PevSquad.Reviews.Score do
   def cast(_), do: :error
 
   defp check(float) when float >= 0 and float <= 10, do: {:ok, Float.round(float, 1)}
-  defp check(_), do: {:error, message: "must be between 0 and 10"}
+  defp check(_), do: {:error, message: dgettext_noop("errors", "must be between 0 and 10")}
 
   def load(tenths) when is_integer(tenths), do: {:ok, tenths / 10}
   def dump(score) when is_float(score), do: {:ok, round(score * 10)}

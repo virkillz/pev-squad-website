@@ -13,26 +13,35 @@ defmodule PevSquadWeb.UserLive.Profile do
       <section class="band band-black">
         <div class="panel panel-wide space-y-4">
           <.header>
-            Rider profile
+            {gettext("Rider profile")}
             <:subtitle>
-              How you show up on the Community page. Your real name stays private.
-              Login details live in <.link navigate={~p"/users/settings"} class="link-orange">email &amp; password settings</.link>.
+              {gettext("How you show up on the Community page. Your real name stays private.")}
+              {gettext("Login details live in")}
+              <.link navigate={~p"/users/settings"} class="link-orange">
+                {gettext("email & password settings")}
+              </.link>
             </:subtitle>
           </.header>
 
           <p :if={@profile.status == :pending} class="notice" id="profile-pending">
-            <strong>Waiting for approval.</strong>
-            A moderator checks every new profile before it appears on the Community page, so nobody can claim to be in the Squad without us knowing them. We'll email you once you're approved. Until then you can still RSVP to rides; photos, reviews and hosting group rides open up after approval.
+            <strong>{gettext("Waiting for approval.")}</strong>
+            {gettext(
+              "A moderator checks every new profile before it appears on the Community page, so nobody can claim to be in the Squad without us knowing them. We'll email you once you're approved. Until then you can still RSVP to rides; photos, reviews and hosting group rides open up after approval."
+            )}
           </p>
           <p :if={@profile.status == :banned} class="notice" id="profile-banned">
-            Your profile has been banned by PEV Squad staff and can't be edited. Contact an admin if you think this is a mistake.
+            {gettext(
+              "Your profile has been banned by PEV Squad staff and can't be edited. Contact an admin if you think this is a mistake."
+            )}
           </p>
           <p
             :if={@profile.hidden_by_staff && @profile.status != :banned}
             class="notice"
             id="profile-hidden"
           >
-            Staff have hidden your profile from the public site. Contact an admin to find out why.
+            {gettext(
+              "Staff have hidden your profile from the public site. Contact an admin to find out why."
+            )}
           </p>
 
           <p
@@ -42,7 +51,7 @@ defmodule PevSquadWeb.UserLive.Profile do
             }
             class="notice"
           >
-            Live at
+            {gettext("Live at")}
             <.link navigate={~p"/community/#{@profile.slug}"} class="link-orange">
               /community/{@profile.slug}
             </.link>
@@ -57,36 +66,41 @@ defmodule PevSquadWeb.UserLive.Profile do
             class="space-y-2"
           >
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <.input field={@form[:alias]} type="text" label="Alias (shown publicly)" required />
-              <.input field={@form[:full_name]} type="text" label="Real name (private)" />
+              <.input
+                field={@form[:alias]}
+                type="text"
+                label={gettext("Alias (shown publicly)")}
+                required
+              />
+              <.input field={@form[:full_name]} type="text" label={gettext("Real name (private)")} />
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <.input
                 field={@form[:primary_pev_type]}
                 type="select"
-                label="Main PEV"
+                label={gettext("Main PEV")}
                 options={type_options()}
               />
               <.input
                 field={@form[:main_ride]}
                 type="text"
-                label="Model"
+                label={gettext("Model")}
                 placeholder="Veteran Sherman L"
               />
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <.input field={@form[:city]} type="text" label="City" placeholder="Jakarta" />
+              <.input field={@form[:city]} type="text" label={gettext("City")} placeholder="Jakarta" />
               <.input field={@form[:instagram]} type="text" label="Instagram" placeholder="pevsquad" />
             </div>
-            <.input field={@form[:bio]} type="textarea" label="Bio (max 500 characters)" />
+            <.input field={@form[:bio]} type="textarea" label={gettext("Bio (max 500 characters)")} />
 
             <div class="fieldset mb-2">
-              <span class="label mb-1">Photo — you with your ride</span>
+              <span class="label mb-1">{gettext("Photo — you with your ride")}</span>
               <div class="flex gap-4 items-start">
                 <img
                   :if={@profile.avatar_path && @uploads.avatar.entries == []}
                   src={@profile.avatar_path}
-                  alt="Current photo"
+                  alt={gettext("Current photo")}
                   style="width:96px; aspect-ratio:4/5; object-fit:cover; border:var(--bw) solid var(--black);"
                 />
                 <.live_img_preview
@@ -97,7 +111,9 @@ defmodule PevSquadWeb.UserLive.Profile do
                 <div class="flex-1 space-y-2">
                   <.live_file_input upload={@uploads.avatar} class="input" />
                   <p class="panel-sub" style="margin-top:0;">
-                    JPG, PNG or WebP, up to 10 MB. We crop it to a portrait and strip location data.
+                    {gettext(
+                      "JPG, PNG or WebP, up to 10 MB. We crop it to a portrait and strip location data."
+                    )}
                   </p>
                   <p :for={err <- upload_errors(@uploads.avatar)} class="text-error">
                     {upload_error(err)}
@@ -113,11 +129,13 @@ defmodule PevSquadWeb.UserLive.Profile do
             <.input
               field={@form[:is_public]}
               type="checkbox"
-              label="Show my profile on the public Community page"
+              label={gettext("Show my profile on the public Community page")}
             />
 
             <div class="flex gap-3 pt-4">
-              <.button phx-disable-with="Saving..." variant="primary">Save profile</.button>
+              <.button phx-disable-with={gettext("Saving...")} variant="primary">
+                {gettext("Save profile")}
+              </.button>
             </div>
           </.form>
         </div>
@@ -126,10 +144,12 @@ defmodule PevSquadWeb.UserLive.Profile do
       <section :if={@profile.id} class="band band-white">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Your reviews</span>
-            <h2 class="section-title">My Reviews</h2>
+            <span class="eyebrow">{gettext("Your reviews")}</span>
+            <h2 class="section-title">{gettext("My Reviews")}</h2>
           </div>
-          <.link navigate={~p"/reviews/new"} class="btn btn-primary">Write a Review</.link>
+          <.link navigate={~p"/reviews/new"} class="btn btn-primary">
+            {gettext("Write a Review")}
+          </.link>
         </div>
         <.table
           :if={@my_reviews != []}
@@ -137,27 +157,29 @@ defmodule PevSquadWeb.UserLive.Profile do
           rows={@my_reviews}
           row_click={fn r -> JS.navigate(~p"/reviews/#{r.id}") end}
         >
-          <:col :let={r} label="Model">{PevSquad.Reviews.PevModel.full_name(r.pev_model)}</:col>
-          <:col :let={r} label="Headline">{r.headline}</:col>
-          <:col :let={r} label="Status">{review_status(r)}</:col>
+          <:col :let={r} label={gettext("Model")}>
+            {PevSquad.Reviews.PevModel.full_name(r.pev_model)}
+          </:col>
+          <:col :let={r} label={gettext("Headline")}>{r.headline}</:col>
+          <:col :let={r} label={gettext("Status")}>{review_status(r)}</:col>
         </.table>
         <p :if={@my_reviews == []} class="section-lede">
-          No reviews yet. Own a wheel, board or scooter? Tell the squad how it rides.
+          {gettext("No reviews yet. Own a wheel, board or scooter? Tell the squad how it rides.")}
         </p>
       </section>
 
       <section :if={@blocked != []} class="band band-black">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Hidden from you</span>
-            <h2 class="section-title">Blocked Riders</h2>
+            <span class="eyebrow">{gettext("Hidden from you")}</span>
+            <h2 class="section-title">{gettext("Blocked Riders")}</h2>
           </div>
         </div>
         <ul class="attendee-list" id="blocked">
           <li :for={b <- @blocked} class="flex gap-3 items-center">
-            {b.alias || "Member without a profile"}
+            {b.alias || gettext("Member without a profile")}
             <button type="button" phx-click="unblock" phx-value-id={b.user_id} class="link-orange">
-              Unblock
+              {gettext("Unblock")}
             </button>
           </li>
         </ul>
@@ -173,7 +195,7 @@ defmodule PevSquadWeb.UserLive.Profile do
 
     {:ok,
      socket
-     |> assign(:page_title, "Rider profile")
+     |> assign(:page_title, gettext("Rider profile"))
      |> assign(:profile, profile)
      |> assign(:my_reviews, PevSquad.Reviews.list_my_reviews(socket.assigns.current_scope))
      |> assign(:blocked, PevSquad.Safety.list_blocked(socket.assigns.current_scope))
@@ -220,8 +242,8 @@ defmodule PevSquadWeb.UserLive.Profile do
          |> put_flash(
            :info,
            if(profile.status == :pending,
-             do: "Profile saved. A moderator will check it before it goes live.",
-             else: "Profile saved."
+             do: gettext("Profile saved. A moderator will check it before it goes live."),
+             else: gettext("Profile saved.")
            )
          )
          |> assign(:profile, profile)
@@ -231,26 +253,27 @@ defmodule PevSquadWeb.UserLive.Profile do
         {:noreply, assign(socket, :form, to_form(changeset))}
 
       {:error, :banned} ->
-        {:noreply, put_flash(socket, :error, "Your profile has been banned and can't be edited.")}
+        {:noreply,
+         put_flash(socket, :error, gettext("Your profile has been banned and can't be edited."))}
     end
   end
 
   defp admin_url(profile), do: url(~p"/admin/riders/#{profile.id}/edit")
 
-  defp review_status(%{status: :published}), do: "Live"
-  defp review_status(%{status: :pending}), do: "Waiting for a moderator"
-  defp review_status(%{status: :rejected}), do: "Sent back — edit and resubmit"
+  defp review_status(%{status: :published}), do: gettext("Live")
+  defp review_status(%{status: :pending}), do: gettext("Waiting for a moderator")
+  defp review_status(%{status: :rejected}), do: gettext("Sent back — edit and resubmit")
 
   defp avatar_errors(form) do
     Enum.map(form.errors, fn
-      {:avatar_path, {msg, _}} -> msg
+      {:avatar_path, error} -> translate_error(error)
       _ -> nil
     end)
     |> Enum.reject(&is_nil/1)
   end
 
-  defp upload_error(:too_large), do: "That photo is over 10 MB."
-  defp upload_error(:not_accepted), do: "Use a JPG, PNG or WebP photo."
-  defp upload_error(:too_many_files), do: "One photo at a time."
-  defp upload_error(_), do: "Upload failed — try again."
+  defp upload_error(:too_large), do: gettext("That photo is over 10 MB.")
+  defp upload_error(:not_accepted), do: gettext("Use a JPG, PNG or WebP photo.")
+  defp upload_error(:too_many_files), do: gettext("One photo at a time.")
+  defp upload_error(_), do: gettext("Upload failed — try again.")
 end

@@ -1,6 +1,7 @@
 defmodule PevSquad.Riders.RiderProfile do
   use Ecto.Schema
   import Ecto.Changeset
+  use Gettext, backend: PevSquadWeb.Gettext
 
   alias PevSquad.Accounts.User
 
@@ -57,21 +58,27 @@ defmodule PevSquad.Riders.RiderProfile do
     |> update_change(:alias, &String.trim/1)
     |> validate_length(:alias, min: 2, max: 30)
     |> validate_format(:alias, ~r/^[\p{L}\p{N} ._-]+$/u,
-      message: "letters, numbers, spaces, dots, dashes and underscores only"
+      message:
+        dgettext_noop("errors", "letters, numbers, spaces, dots, dashes and underscores only")
     )
     |> validate_length(:city, max: 60)
     |> validate_length(:main_ride, max: 80)
     |> validate_length(:bio, max: 500)
     |> update_change(:instagram, &normalize_instagram/1)
     |> validate_format(:instagram, ~r/^[A-Za-z0-9._]{1,30}$/,
-      message: "just the handle, e.g. pevsquad"
+      message: dgettext_noop("errors", "just the handle, e.g. pevsquad")
     )
     |> put_slug()
     |> validate_change(:slug, fn :slug, slug ->
       if slug == "", do: [alias: "needs at least one letter or number"], else: []
     end)
-    |> unique_constraint(:alias, message: "is already taken by another rider")
-    |> unique_constraint(:slug, message: "is already taken by another rider", error_key: :alias)
+    |> unique_constraint(:alias,
+      message: dgettext_noop("errors", "is already taken by another rider")
+    )
+    |> unique_constraint(:slug,
+      message: dgettext_noop("errors", "is already taken by another rider"),
+      error_key: :alias
+    )
     |> unique_constraint(:user_id)
   end
 
@@ -89,7 +96,9 @@ defmodule PevSquad.Riders.RiderProfile do
     case get_field(changeset, :status) do
       :banned ->
         changeset
-        |> validate_required([:ban_reason], message: "write the public statement for the ban")
+        |> validate_required([:ban_reason],
+          message: dgettext_noop("errors", "write the public statement for the ban")
+        )
         |> validate_length(:ban_reason, max: 1000)
         |> then(fn cs ->
           if get_field(cs, :banned_at),

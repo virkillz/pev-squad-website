@@ -16,23 +16,34 @@ defmodule PevSquadWeb.GroupRideLive.Form do
           <.header>
             {@page_title}
             <:subtitle>
-              Group rides are hosted by members and go live straight away. Times are in the ride's local timezone.
+              {gettext(
+                "Group rides are hosted by members and go live straight away. Times are in the ride's local timezone."
+              )}
             </:subtitle>
           </.header>
 
           <div :if={@blocked == :no_profile} class="notice space-y-3" id="needs-profile">
             <p>
-              Riders want to know who they're rolling with, so hosting needs a rider profile first.
+              {gettext(
+                "Riders want to know who they're rolling with, so hosting needs a rider profile first."
+              )}
             </p>
-            <.link navigate={~p"/users/profile"} class="btn btn-primary">Set up my profile</.link>
+            <.link navigate={~p"/users/profile"} class="btn btn-primary">
+              {gettext("Set up my profile")}
+            </.link>
           </div>
 
           <div :if={@blocked == :pending} class="notice" id="needs-approval">
-            Your rider profile is waiting for a moderator to approve it. You can host group rides once it's approved — RSVPing to rides works already.
+            {gettext(
+              "Your rider profile is waiting for a moderator to approve it. You can host group rides once it's approved — RSVPing to rides works already."
+            )}
           </div>
 
           <div :if={@blocked == :limit} class="notice" id="host-limit">
-            You're already hosting {Events.max_upcoming_per_host()} upcoming rides — that's the limit. Post the next one after one of them has happened.
+            {gettext(
+              "You're already hosting %{count} upcoming rides — that's the limit. Post the next one after one of them has happened.",
+              count: Events.max_upcoming_per_host()
+            )}
           </div>
 
           <.form
@@ -46,7 +57,7 @@ defmodule PevSquadWeb.GroupRideLive.Form do
             <.input
               field={@form[:title]}
               type="text"
-              label="Title"
+              label={gettext("Title")}
               placeholder="Sunday Morning Loop"
               required
             />
@@ -54,7 +65,7 @@ defmodule PevSquadWeb.GroupRideLive.Form do
               <.input
                 field={@form[:kind]}
                 type="select"
-                label="Kind"
+                label={gettext("Kind")}
                 options={group_ride_kind_options()}
               />
               <.input
@@ -62,7 +73,7 @@ defmodule PevSquadWeb.GroupRideLive.Form do
                 type="number"
                 min="1"
                 max={Event.group_ride_max_capacity()}
-                label={"Seats (max #{Event.group_ride_max_capacity()})"}
+                label={gettext("Seats (max %{max})", max: Event.group_ride_max_capacity())}
                 required
               />
             </div>
@@ -72,19 +83,19 @@ defmodule PevSquadWeb.GroupRideLive.Form do
                 field={@form[:starts_at]}
                 value={local_input_value(@form[:starts_at], @tz)}
                 type="datetime-local"
-                label="Starts"
+                label={gettext("Starts")}
                 required
               />
               <.input
                 field={@form[:ends_at]}
                 value={local_input_value(@form[:ends_at], @tz)}
                 type="datetime-local"
-                label="Ends (optional)"
+                label={gettext("Ends (optional)")}
               />
               <.input
                 field={@form[:timezone]}
                 type="select"
-                label="Timezone"
+                label={gettext("Timezone")}
                 options={timezone_options()}
               />
             </div>
@@ -92,42 +103,42 @@ defmodule PevSquadWeb.GroupRideLive.Form do
             <.input
               field={@form[:location_name]}
               type="text"
-              label="Area"
+              label={gettext("Area")}
               placeholder="Senayan, Jakarta"
               required
             />
             <.input
               field={@form[:meeting_point]}
               type="text"
-              label="Meeting point"
+              label={gettext("Meeting point")}
               placeholder="FX Sudirman, lobby parking"
             />
             <.input
               field={@form[:description]}
               type="textarea"
-              label="Route, pace and what to bring"
-              placeholder="~25 km, easy pace, regroup every 5 km. Helmet required."
+              label={gettext("Route, pace and what to bring")}
+              placeholder={gettext("~25 km, easy pace, regroup every 5 km. Helmet required.")}
             />
             <.input
               field={@form[:rsvp_deadline]}
               value={local_input_value(@form[:rsvp_deadline], @tz)}
               type="datetime-local"
-              label="RSVP deadline (optional)"
+              label={gettext("RSVP deadline (optional)")}
             />
 
             <div class="flex flex-wrap gap-3 pt-4">
-              <.button phx-disable-with="Saving..." variant="primary">
-                {if @live_action == :new, do: "Post Ride", else: "Save Ride"}
+              <.button phx-disable-with={gettext("Saving...")} variant="primary">
+                {if @live_action == :new, do: gettext("Post Ride"), else: gettext("Save Ride")}
               </.button>
-              <.button navigate={cancel_path(@event)}>Back</.button>
+              <.button navigate={cancel_path(@event)}>{gettext("Back")}</.button>
               <.button
                 :if={@live_action == :edit and @event.status in [:published, :hidden]}
                 type="button"
                 phx-click="cancel_ride"
-                data-confirm="Cancel this ride? Everyone who RSVP'd gets an email."
+                data-confirm={gettext("Cancel this ride? Everyone who RSVP'd gets an email.")}
                 class="btn btn-ghost"
               >
-                Cancel the ride
+                {gettext("Cancel the ride")}
               </.button>
             </div>
           </.form>
@@ -138,18 +149,20 @@ defmodule PevSquadWeb.GroupRideLive.Form do
         <div class="section-head">
           <div>
             <span class="eyebrow">{seats_label(@event)}</span>
-            <h2 class="section-title">Riders</h2>
+            <h2 class="section-title">{gettext("Riders")}</h2>
           </div>
         </div>
         <.table id="rsvps" rows={@rsvps}>
           <:col :let={rsvp} label="#">{rsvp.position}</:col>
-          <:col :let={rsvp} label="Rider">{rsvp.rider_alias || "Member without a profile"}</:col>
-          <:col :let={rsvp} label="Status">{rsvp.status}</:col>
-          <:col :let={rsvp} label="RSVP'd at">
-            {Calendar.strftime(local(rsvp.inserted_at, @event.timezone), "%d %b %H:%M")}
+          <:col :let={rsvp} label={gettext("Rider")}>
+            {rsvp.rider_alias || gettext("Member without a profile")}
+          </:col>
+          <:col :let={rsvp} label={gettext("Status")}>{rsvp_status(rsvp.status)}</:col>
+          <:col :let={rsvp} label={gettext("RSVP'd at")}>
+            {PevSquadWeb.Locale.strftime(local(rsvp.inserted_at, @event.timezone), "%d %b %H:%M")}
           </:col>
         </.table>
-        <p :if={@rsvps == []} class="event-desc">No RSVPs yet.</p>
+        <p :if={@rsvps == []} class="event-desc">{gettext("No RSVPs yet.")}</p>
       </section>
     </Layouts.app>
     """
@@ -170,7 +183,7 @@ defmodule PevSquadWeb.GroupRideLive.Form do
       end
 
     socket
-    |> assign(:page_title, "Host a Group Ride")
+    |> assign(:page_title, gettext("Host a Group Ride"))
     |> assign(:blocked, blocked)
     |> assign(:event, event)
     |> assign(:tz, event.timezone)
@@ -185,7 +198,7 @@ defmodule PevSquadWeb.GroupRideLive.Form do
       push_navigate(socket, to: ~p"/admin/events/#{event.id}/edit")
     else
       socket
-      |> assign(:page_title, "Edit Group Ride")
+      |> assign(:page_title, gettext("Edit Group Ride"))
       |> assign(:blocked, nil)
       |> assign(:event, event)
       |> assign(:tz, event.timezone)
@@ -226,7 +239,7 @@ defmodule PevSquadWeb.GroupRideLive.Form do
 
     {:noreply,
      socket
-     |> put_flash(:info, "Ride cancelled. Everyone who RSVP'd has been emailed.")
+     |> put_flash(:info, gettext("Ride cancelled. Everyone who RSVP'd has been emailed."))
      |> push_navigate(to: ~p"/events/#{event.slug}")}
   end
 
@@ -235,7 +248,7 @@ defmodule PevSquadWeb.GroupRideLive.Form do
       {:ok, event} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Your ride is live. Share the link in the WhatsApp group.")
+         |> put_flash(:info, gettext("Your ride is live. Share the link in the WhatsApp group."))
          |> push_navigate(to: ~p"/events/#{event.slug}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -256,13 +269,17 @@ defmodule PevSquadWeb.GroupRideLive.Form do
       {:ok, event} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Ride saved.")
+         |> put_flash(:info, gettext("Ride saved."))
          |> push_navigate(to: ~p"/events/#{event.slug}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
+
+  defp rsvp_status(:going), do: gettext("going")
+  defp rsvp_status(:waitlist), do: gettext("waitlist")
+  defp rsvp_status(other), do: to_string(other)
 
   defp cancel_path(%Event{slug: nil}), do: ~p"/events?show=group"
   defp cancel_path(%Event{slug: slug}), do: ~p"/events/#{slug}"

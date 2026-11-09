@@ -6,7 +6,9 @@ defmodule PevSquadWeb.GalleryComponents do
 
   def pad(n), do: n |> Integer.to_string() |> String.pad_leading(2, "0")
 
-  def credit(%Photo{uploader_profile: %{alias: alias_name}}), do: "Shot by #{alias_name}"
+  def credit(%Photo{uploader_profile: %{alias: alias_name}}),
+    do: gettext("Shot by %{rider}", rider: alias_name)
+
   def credit(_photo), do: nil
 
   attr :album, Album, required: true
@@ -18,7 +20,8 @@ defmodule PevSquadWeb.GalleryComponents do
     <div class="section-head">
       <div>
         <span class="eyebrow">
-          Album {pad(@number)}{if @album.subtitle, do: " · #{@album.subtitle}"}
+          {gettext("Album %{number}", number: pad(@number))}{if @album.subtitle,
+            do: " · #{@album.subtitle}"}
         </span>
         <h2 class="section-title">
           <.link :if={@link} navigate={~p"/gallery/#{@album.slug}"} style="text-decoration:none;">
@@ -27,7 +30,7 @@ defmodule PevSquadWeb.GalleryComponents do
           <span :if={!@link}>{@album.title}</span>
         </h2>
       </div>
-      <span class="sticker">{pad(@album.photo_count)} Frames</span>
+      <span class="sticker">{gettext("%{count} Frames", count: pad(@album.photo_count))}</span>
     </div>
     """
   end
@@ -71,24 +74,24 @@ defmodule PevSquadWeb.GalleryComponents do
       hidden
       role="dialog"
       aria-modal="true"
-      aria-label="Photo viewer"
+      aria-label={gettext("Photo viewer")}
       phx-update="ignore"
     >
       <div class="lb-bar">
-        <span>The Archive // PEV Squad</span>
+        <span>{gettext("The Archive")} // PEV Squad</span>
         <span class="lb-count">01 / 01</span>
-        <button type="button" class="lb-close">Close ✕</button>
+        <button type="button" class="lb-close">{gettext("Close")} ✕</button>
       </div>
       <div class="lb-stage">
-        <button type="button" class="lb-nav lb-prev" aria-label="Previous photo">←</button>
+        <button type="button" class="lb-nav lb-prev" aria-label={gettext("Previous photo")}>←</button>
         <img class="lb-img" src="" alt="" />
-        <button type="button" class="lb-nav lb-next" aria-label="Next photo">→</button>
+        <button type="button" class="lb-nav lb-next" aria-label={gettext("Next photo")}>→</button>
       </div>
       <div class="lb-foot">
         <h2 class="lb-title"></h2>
         <p class="lb-desc"></p>
         <div class="lb-meta"></div>
-        <a class="lb-report" href="#">Report this photo</a>
+        <a class="lb-report" href="#">{gettext("Report this photo")}</a>
       </div>
     </div>
     """
@@ -108,14 +111,14 @@ defmodule PevSquadWeb.GalleryComponents do
       id="featured-carousel"
       phx-hook="Carousel"
       aria-roledescription="carousel"
-      aria-label="Featured photos"
+      aria-label={gettext("Featured photos")}
     >
       <div class="carousel-track" tabindex="0">
         <figure
           :for={{photo, i} <- Enum.with_index(@photos, 1)}
           class="carousel-slide"
           aria-roledescription="slide"
-          aria-label={"#{i} of #{length(@photos)}"}
+          aria-label={gettext("%{index} of %{total}", index: i, total: length(@photos))}
         >
           <img
             src={photo.large_path}
@@ -134,13 +137,23 @@ defmodule PevSquadWeb.GalleryComponents do
         </figure>
       </div>
       <div :if={length(@photos) > 1} class="carousel-controls">
-        <button type="button" class="carousel-btn" data-carousel="prev" aria-label="Previous photo">
+        <button
+          type="button"
+          class="carousel-btn"
+          data-carousel="prev"
+          aria-label={gettext("Previous photo")}
+        >
           ←
         </button>
         <span class="carousel-count" aria-live="polite">
           <b data-carousel="current">01</b> / {pad(length(@photos))}
         </span>
-        <button type="button" class="carousel-btn" data-carousel="next" aria-label="Next photo">
+        <button
+          type="button"
+          class="carousel-btn"
+          data-carousel="next"
+          aria-label={gettext("Next photo")}
+        >
           →
         </button>
       </div>

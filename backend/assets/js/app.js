@@ -49,7 +49,7 @@ document.addEventListener("click", e => {
   const nav = document.getElementById(toggle.getAttribute("aria-controls"))
   if (!nav) return
   const open = nav.classList.toggle("open")
-  toggle.textContent = open ? "Close" : "Menu"
+  toggle.textContent = open ? toggle.dataset.labelOpen : toggle.dataset.labelClosed
   toggle.setAttribute("aria-expanded", open ? "true" : "false")
 })
 

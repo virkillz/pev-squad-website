@@ -1,16 +1,17 @@
 defmodule PevSquad.Reviews.Review do
   use Ecto.Schema
   import Ecto.Changeset
+  use Gettext, backend: PevSquadWeb.Gettext
 
   alias PevSquad.Reviews.{PevModel, Score}
 
   @criteria [
-    power: "Power",
-    range: "Range",
-    comfort: "Comfort",
-    build: "Build",
-    value: "Value",
-    app: "App/FW"
+    power: gettext_noop("Power"),
+    range: gettext_noop("Range"),
+    comfort: gettext_noop("Comfort"),
+    build: gettext_noop("Build"),
+    value: gettext_noop("Value"),
+    app: gettext_noop("App/FW")
   ]
 
   schema "reviews" do
@@ -44,13 +45,15 @@ defmodule PevSquad.Reviews.Review do
   end
 
   @doc "[{:power, \"Power\"}, ...] — the criteria in display order."
-  def criteria, do: @criteria
+  def criteria, do: Enum.map(@criteria, fn {k, label} -> {k, translate(label)} end)
+
+  defp translate(label), do: Gettext.gettext(PevSquadWeb.Gettext, label)
 
   def score_field(criterion), do: :"score_#{criterion}"
 
   @doc "[{\"Power\", 9.4}, ...] for the criteria this review scored."
   def scores(%__MODULE__{} = review) do
-    for {key, label} <- @criteria, score = Map.get(review, score_field(key)), do: {label, score}
+    for {key, label} <- criteria(), score = Map.get(review, score_field(key)), do: {label, score}
   end
 
   @required_scores ~w(score_power score_range score_comfort score_build score_value)a
@@ -67,7 +70,7 @@ defmodule PevSquad.Reviews.Review do
       :score_app | @required_scores
     ])
     |> validate_required([:pev_model_id, :headline, :summary, :the_ride | @required_scores],
-      message: "can't be blank"
+      message: dgettext_noop("errors", "can't be blank")
     )
     |> validate_length(:headline, max: 60)
     |> validate_length(:summary, max: 280)
@@ -78,7 +81,8 @@ defmodule PevSquad.Reviews.Review do
     |> assoc_constraint(:pev_model)
     |> unique_constraint([:pev_model_id, :author_id],
       error_key: :pev_model_id,
-      message: "you've already reviewed this model — edit that review instead"
+      message:
+        dgettext_noop("errors", "you've already reviewed this model — edit that review instead")
     )
   end
 

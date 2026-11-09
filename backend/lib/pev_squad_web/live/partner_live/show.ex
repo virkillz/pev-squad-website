@@ -16,7 +16,7 @@ defmodule PevSquadWeb.PartnerLive.Show do
         <div class="meta-row">
           <span class="eyebrow">
             <.link navigate={back_path(@partner)} style="text-decoration:none;">
-              02 / {kind_label(@partner.kind)}s
+              02 / {plural_kind_label(@partner.kind)}
             </.link>
           </span>
           <span
@@ -39,7 +39,7 @@ defmodule PevSquadWeb.PartnerLive.Show do
             </div>
 
             <div :if={@partner.collaboration_note} class="space-y-3">
-              <span class="eyebrow">How we work together</span>
+              <span class="eyebrow">{gettext("How we work together")}</span>
               <div class="prose-body">
                 <p :for={para <- paragraphs(@partner.collaboration_note)}>{para}</p>
               </div>
@@ -47,20 +47,20 @@ defmodule PevSquadWeb.PartnerLive.Show do
 
             <ul class="event-facts">
               <li :if={@partner.region}>
-                <span class="k">Rides in</span><span>{@partner.region}</span>
+                <span class="k">{gettext("Rides in")}</span><span>{@partner.region}</span>
               </li>
               <li :if={@partner.collaboration_types != []}>
-                <span class="k">Partnership</span>
+                <span class="k">{gettext("Partnership")}</span>
                 <span>
                   {Enum.map_join(@partner.collaboration_types, " · ", &Partner.collaboration_label/1)}
                 </span>
               </li>
               <li :if={@partner.partner_since}>
-                <span class="k">Since</span>
-                <span>{Calendar.strftime(@partner.partner_since, "%B %Y")}</span>
+                <span class="k">{gettext("Since")}</span>
+                <span>{PevSquadWeb.Locale.strftime(@partner.partner_since, "%B %Y")}</span>
               </li>
               <li :if={@events != []}>
-                <span class="k">Together</span><span>{together_label(length(@events))}</span>
+                <span class="k">{gettext("Together")}</span><span>{together_label(length(@events))}</span>
               </li>
             </ul>
           </div>
@@ -83,7 +83,7 @@ defmodule PevSquadWeb.PartnerLive.Show do
               navigate={~p"/admin/partners/#{@partner.id}/edit"}
               class="btn btn-ghost w-full text-center"
             >
-              Edit partner
+              {gettext("Edit partner")}
             </.link>
           </aside>
         </div>
@@ -92,8 +92,8 @@ defmodule PevSquadWeb.PartnerLive.Show do
       <section :if={@riders != []} class="band band-white">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Also in The Squad</span>
-            <h2 class="section-title">Our Riders</h2>
+            <span class="eyebrow">{gettext("Also in The Squad")}</span>
+            <h2 class="section-title">{gettext("Our Riders")}</h2>
           </div>
         </div>
         <div class="grid grid-3" id="partner-riders">
@@ -107,8 +107,8 @@ defmodule PevSquadWeb.PartnerLive.Show do
       >
         <div class="section-head">
           <div>
-            <span class="eyebrow">Track record</span>
-            <h2 class="section-title">Events Together</h2>
+            <span class="eyebrow">{gettext("Track record")}</span>
+            <h2 class="section-title">{gettext("Events Together")}</h2>
           </div>
         </div>
         <div class="index-list" id="partner-events">
@@ -126,7 +126,10 @@ defmodule PevSquadWeb.PartnerLive.Show do
     {:ok,
      socket
      |> assign(:page_title, partner.name)
-     |> assign(:page_description, partner.tagline || "#{kind_label(partner.kind)} of PEV Squad.")
+     |> assign(
+       :page_description,
+       partner.tagline || gettext("%{kind} of PEV Squad.", kind: kind_label(partner.kind))
+     )
      |> assign(:partner, partner)
      |> assign(:links, social_links(partner))
      |> assign(:events, Partners.list_partner_events(partner))
@@ -147,6 +150,9 @@ defmodule PevSquadWeb.PartnerLive.Show do
 
   defp back_path(%Partner{kind: :community}), do: ~p"/community#partner-communities"
   defp back_path(%Partner{kind: :brand}), do: ~p"/community#brand-partners"
+
+  defp plural_kind_label(:community), do: gettext("Partner Communities")
+  defp plural_kind_label(:brand), do: gettext("Brand Partners")
 
   defp paragraphs(text), do: String.split(text, ~r/\n\s*\n/, trim: true)
 end

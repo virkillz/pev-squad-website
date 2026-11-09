@@ -15,12 +15,12 @@ defmodule PevSquadWeb.ReviewLive.Show do
       <div :if={@review.status != :published} class="band band-tight band-white">
         <div class="notice">
           <%= if @review.status == :pending do %>
-            <strong>Waiting for a moderator.</strong>
-            Only you and the moderators can see this until it's approved.
+            <strong>{gettext("Waiting for a moderator.")}</strong>
+            {gettext("Only you and the moderators can see this until it's approved.")}
           <% else %>
-            <strong>Sent back by a moderator:</strong> {@review.rejection_reason}
+            <strong>{gettext("Sent back by a moderator:")}</strong> {@review.rejection_reason}
             <.link navigate={~p"/reviews/#{@review.id}/edit"} class="link-orange">
-              Edit and resubmit
+              {gettext("Edit and resubmit")}
             </.link>
           <% end %>
         </div>
@@ -30,7 +30,7 @@ defmodule PevSquadWeb.ReviewLive.Show do
         <div class="detail-cell detail-rail">
           <div class="detail-rail-inner">
             <span class="meta-text">
-              Review {String.pad_leading(to_string(@review.id), 2, "0")}
+              {gettext("Review %{number}", number: String.pad_leading(to_string(@review.id), 2, "0"))}
             </span>
             <span class="detail-rail-title">{model_name(@review.pev_model)}</span>
             <span class="meta-text">{type_label(@review.pev_model.pev_type)}</span>
@@ -38,10 +38,10 @@ defmodule PevSquadWeb.ReviewLive.Show do
         </div>
 
         <div class="detail-cell detail-main">
-          <span class="detail-badge">Overall: {fmt(@review.overall)} / 10</span>
+          <span class="detail-badge">{gettext("Overall")}: {fmt(@review.overall)} / 10</span>
           <div>
             <span class="eyebrow">
-              Rider Review · {model_name(@review.pev_model)}
+              {gettext("Rider Review")} · {model_name(@review.pev_model)}
             </span>
             <h1 class={[
               "detail-headline",
@@ -52,11 +52,11 @@ defmodule PevSquadWeb.ReviewLive.Show do
           </div>
           <div class="detail-body">
             <div>
-              <h3>[01] The Ride</h3>
+              <h3>[01] {gettext("The Ride")}</h3>
               <p :for={para <- paragraphs(@review.the_ride)}>{para}</p>
             </div>
             <div :if={@review.the_catch}>
-              <h3>[02] The Catch</h3>
+              <h3>[02] {gettext("The Catch")}</h3>
               <p :for={para <- paragraphs(@review.the_catch)}>{para}</p>
             </div>
           </div>
@@ -70,19 +70,19 @@ defmodule PevSquadWeb.ReviewLive.Show do
           >
             <img src={@review.author_profile.avatar_path} alt={author_name(@review)} />
             <figcaption class="detail-figure-label">
-              <span class="detail-figure-title">The Reviewer</span>
+              <span class="detail-figure-title">{gettext("The Reviewer")}</span>
               <span class="meta-text">{author_name(@review)}</span>
             </figcaption>
           </figure>
           <div class="detail-data">
             <div class="detail-data-head">
-              <h2 class="detail-data-title">Rating Data</h2>
+              <h2 class="detail-data-title">{gettext("Rating Data")}</h2>
               <span :if={@review.km_on_unit} class="meta-text">
-                {format_km(@review.km_on_unit)} km on unit
+                {gettext("%{km} km on unit", km: format_km(@review.km_on_unit))}
               </span>
             </div>
             <div class="stat-row">
-              <span>Reviewer</span>
+              <span>{gettext("Reviewer")}</span>
               <b>
                 <.link
                   :if={@review.author_profile && @review.author_profile.is_public}
@@ -96,9 +96,11 @@ defmodule PevSquadWeb.ReviewLive.Show do
               </b>
             </div>
             <div class="stat-row">
-              <span>Class</span><b>{type_label(@review.pev_model.pev_type)}</b>
+              <span>{gettext("Class")}</span><b>{type_label(@review.pev_model.pev_type)}</b>
             </div>
-            <div class="stat-row"><span>Rating</span><b>{stars(@review.overall)}</b></div>
+            <div class="stat-row">
+              <span>{gettext("Rating")}</span><b>{stars(@review.overall)}</b>
+            </div>
             <div style="margin: 1.25rem 0 1.5rem;">
               <.rating_row
                 :for={{label, score} <- Review.scores(@review)}
@@ -111,10 +113,12 @@ defmodule PevSquadWeb.ReviewLive.Show do
               navigate={~p"/models/#{@review.pev_model.slug}"}
               class="detail-cta"
             >
-              All {model_name(@review.pev_model)} Reviews ≫
+              {gettext("All %{model} Reviews", model: model_name(@review.pev_model))} ≫
             </.link>
             <div :if={@can_edit?} class="flex gap-3" style="margin-top:1rem;">
-              <.link navigate={~p"/reviews/#{@review.id}/edit"} class="btn btn-outline">Edit</.link>
+              <.link navigate={~p"/reviews/#{@review.id}/edit"} class="btn btn-outline">
+                {gettext("Edit")}
+              </.link>
             </div>
             <.link
               :if={!@can_edit? && @review.status == :published}
@@ -122,7 +126,7 @@ defmodule PevSquadWeb.ReviewLive.Show do
               class="meta-text"
               style="display:inline-block; margin-top:1rem; text-decoration:underline;"
             >
-              Report this review
+              {gettext("Report this review")}
             </.link>
             <div class="cross cross-b"></div>
           </div>
@@ -132,10 +136,10 @@ defmodule PevSquadWeb.ReviewLive.Show do
       <section :if={@more != []} class="band band-black">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Keep reading</span>
-            <h2 class="section-title">Next on the Sheet</h2>
+            <span class="eyebrow">{gettext("Keep reading")}</span>
+            <h2 class="section-title">{gettext("Next on the Sheet")}</h2>
           </div>
-          <.link navigate={~p"/reviews"} class="btn btn-outline">Back to Reviews</.link>
+          <.link navigate={~p"/reviews"} class="btn btn-outline">{gettext("Back to Reviews")}</.link>
         </div>
         <div class="index-list">
           <.link
@@ -177,7 +181,7 @@ defmodule PevSquadWeb.ReviewLive.Show do
 
     {:ok,
      socket
-     |> assign(:page_title, "#{model_name(review.pev_model)} review")
+     |> assign(:page_title, gettext("%{model} review", model: model_name(review.pev_model)))
      |> assign(:page_description, review.summary)
      |> assign(:review, review)
      |> assign(:can_edit?, Reviews.own?(scope, review))

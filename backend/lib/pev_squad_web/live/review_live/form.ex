@@ -17,15 +17,16 @@ defmodule PevSquadWeb.ReviewLive.Form do
           <.header>
             {@page_title}
             <:subtitle>
-              Ridden, not sponsored: review gear you own. Your review appears under your alias <strong>{@profile.alias}</strong>.
+              {gettext("Ridden, not sponsored: review gear you own.")}
+              {gettext("Your review appears under your alias")} <strong>{@profile.alias}</strong>.
               <span :if={!@trusted?}>
-                A moderator checks new members' reviews before they go live.
+                {gettext("A moderator checks new members' reviews before they go live.")}
               </span>
             </:subtitle>
           </.header>
 
           <p :if={@review.status == :rejected} class="notice">
-            <strong>Moderator's note:</strong> {@review.rejection_reason}
+            <strong>{gettext("Moderator's note:")}</strong> {@review.rejection_reason}
           </p>
 
           <.form
@@ -38,51 +39,66 @@ defmodule PevSquadWeb.ReviewLive.Form do
             <.input
               field={@form[:pev_model_id]}
               type="select"
-              label="Model"
-              prompt="Pick the model you ride"
+              label={gettext("Model")}
+              prompt={gettext("Pick the model you ride")}
               options={@model_options}
               disabled={@live_action == :edit}
             />
 
             <div :if={@adding_model?} class="notice space-y-2" id="new-model">
-              <p>Add it to the catalog — a moderator will check it.</p>
+              <p>{gettext("Add it to the catalog — a moderator will check it.")}</p>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <.input
                   field={@model_form[:pev_type]}
                   type="select"
-                  label="Type"
+                  label={gettext("Type")}
                   options={type_options()}
                 />
-                <.input field={@model_form[:brand]} type="text" label="Brand" placeholder="Begode" />
-                <.input field={@model_form[:name]} type="text" label="Model" placeholder="Master Pro" />
+                <.input
+                  field={@model_form[:brand]}
+                  type="text"
+                  label={gettext("Brand")}
+                  placeholder="Begode"
+                />
+                <.input
+                  field={@model_form[:name]}
+                  type="text"
+                  label={gettext("Model")}
+                  placeholder="Master Pro"
+                />
               </div>
             </div>
 
             <.input
               field={@form[:headline]}
               type="text"
-              label="Headline — your verdict in a few words"
-              placeholder="Most planted wheel"
+              label={gettext("Headline — your verdict in a few words")}
+              placeholder={gettext("Most planted wheel")}
             />
             <.input
               field={@form[:summary]}
               type="textarea"
-              label="Summary (max 280 characters, shown on the card)"
+              label={gettext("Summary (max 280 characters, shown on the card)")}
             />
             <.input
               field={@form[:the_ride]}
               type="textarea"
-              label="The Ride — what it's like to live with"
+              label={gettext("The Ride — what it's like to live with")}
             />
             <.input
               field={@form[:the_catch]}
               type="textarea"
-              label="The Catch — what you'd warn a friend about (optional)"
+              label={gettext("The Catch — what you'd warn a friend about (optional)")}
             />
-            <.input field={@form[:km_on_unit]} type="number" min="0" label="Km on your unit" />
+            <.input
+              field={@form[:km_on_unit]}
+              type="number"
+              min="0"
+              label={gettext("Km on your unit")}
+            />
 
             <div class="fieldset">
-              <span class="label mb-1">Scores, 0–10 (one decimal)</span>
+              <span class="label mb-1">{gettext("Scores, 0–10 (one decimal)")}</span>
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <.input
                   :for={{key, label} <- Review.criteria()}
@@ -91,17 +107,19 @@ defmodule PevSquadWeb.ReviewLive.Form do
                   step="0.1"
                   min="0"
                   max="10"
-                  label={if key == :app, do: "#{label} (optional)", else: label}
+                  label={
+                    if key == :app, do: gettext("%{label} (optional)", label: label), else: label
+                  }
                 />
               </div>
             </div>
 
             <div class="flex gap-3 pt-4">
-              <.button phx-disable-with="Saving..." variant="primary">
-                {if @trusted?, do: "Publish review", else: "Submit for review"}
+              <.button phx-disable-with={gettext("Saving...")} variant="primary">
+                {if @trusted?, do: gettext("Publish review"), else: gettext("Submit for review")}
               </.button>
               <.button navigate={if @review.id, do: ~p"/reviews/#{@review.id}", else: ~p"/reviews"}>
-                Cancel
+                {gettext("Cancel")}
               </.button>
             </div>
           </.form>
@@ -121,7 +139,7 @@ defmodule PevSquadWeb.ReviewLive.Form do
          socket
          |> put_flash(
            :error,
-           "Set up your rider profile first — reviews are shown under your alias."
+           gettext("Set up your rider profile first — reviews are shown under your alias.")
          )
          |> push_navigate(to: ~p"/users/profile")}
 
@@ -133,7 +151,7 @@ defmodule PevSquadWeb.ReviewLive.Form do
            socket
            |> put_flash(
              :error,
-             "You can write reviews once a moderator approves your rider profile."
+             gettext("You can write reviews once a moderator approves your rider profile.")
            )
            |> push_navigate(to: ~p"/users/profile")}
         end
@@ -158,7 +176,7 @@ defmodule PevSquadWeb.ReviewLive.Form do
     review = %Review{pev_model_id: preselected && preselected.id}
 
     socket
-    |> assign(:page_title, "Write a review")
+    |> assign(:page_title, gettext("Write a review"))
     |> assign(:review, review)
     |> assign(:model_options, model_options(models, true))
     |> assign(:adding_model?, false)
@@ -170,7 +188,7 @@ defmodule PevSquadWeb.ReviewLive.Form do
     review = Reviews.get_my_review!(scope, id)
 
     socket
-    |> assign(:page_title, "Edit review")
+    |> assign(:page_title, gettext("Edit review"))
     |> assign(:review, review)
     |> assign(:model_options, model_options(Reviews.list_selectable_models(scope), false))
     |> assign(:adding_model?, false)
@@ -180,10 +198,10 @@ defmodule PevSquadWeb.ReviewLive.Form do
   defp model_options(models, allow_new?) do
     options =
       Enum.map(models, fn m ->
-        {PevModel.full_name(m) <> if(m.approved, do: "", else: " (pending)"), m.id}
+        {PevModel.full_name(m) <> if(m.approved, do: "", else: " " <> gettext("(pending)")), m.id}
       end)
 
-    if allow_new?, do: options ++ [{"Not listed — add it…", @new_model}], else: options
+    if allow_new?, do: options ++ [{gettext("Not listed — add it…"), @new_model}], else: options
   end
 
   @impl true
@@ -224,8 +242,8 @@ defmodule PevSquadWeb.ReviewLive.Form do
       {:ok, review} ->
         message =
           if review.status == :published,
-            do: "Review published.",
-            else: "Thanks! A moderator will check it shortly."
+            do: gettext("Review published."),
+            else: gettext("Thanks! A moderator will check it shortly.")
 
         {:noreply,
          socket |> put_flash(:info, message) |> push_navigate(to: ~p"/reviews/#{review.id}")}

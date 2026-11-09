@@ -19,6 +19,7 @@ defmodule PevSquad.Riders do
   """
 
   import Ecto.Query, warn: false
+  use Gettext, backend: PevSquadWeb.Gettext
 
   alias PevSquad.Accounts
   alias PevSquad.Accounts.Scope
@@ -230,8 +231,8 @@ defmodule PevSquad.Riders do
   defp notify_staff_of_new_profile(profile, review_url_fun) do
     url = review_url_fun.(profile)
 
-    for email <- Accounts.list_staff_emails() do
-      Notifier.deliver_profile_waiting(email, profile, url)
+    for staff <- Accounts.list_staff_contacts() do
+      Notifier.deliver_profile_waiting(staff, profile, url)
     end
 
     :ok
@@ -276,7 +277,7 @@ defmodule PevSquad.Riders do
 
       if profile_url_fun && approved.user do
         Notifier.deliver_profile_approved(
-          approved.user.email,
+          approved.user,
           approved,
           profile_url_fun.(approved)
         )
@@ -447,7 +448,10 @@ defmodule PevSquad.Riders do
         changeset =
           profile
           |> Ecto.Changeset.change()
-          |> Ecto.Changeset.add_error(:avatar_path, "couldn't read that image — try a JPG or PNG")
+          |> Ecto.Changeset.add_error(
+            :avatar_path,
+            dgettext_noop("errors", "couldn't read that image — try a JPG or PNG")
+          )
 
         {:error, %{changeset | action: :update}}
     end

@@ -6,6 +6,10 @@ defmodule PevSquadWeb.Locale do
   switcher), the browser's `Accept-Language` header, then the configured
   default (`config :pev_squad, PevSquadWeb.Gettext, default_locale: ...`).
 
+  A locale picked with the param (the switcher) is marked as an explicit
+  choice in the session (`"locale_chosen"`), so logging in saves it to the
+  account rather than replacing it with the account's saved language.
+
   Used as a plug in the `:browser` pipeline and as an `on_mount` hook for
   LiveViews, which run in their own process and must set the locale again.
   """
@@ -42,9 +46,12 @@ defmodule PevSquadWeb.Locale do
     # the session) agree with the page the plug rendered.
     conn = assign(conn, :locale, locale)
 
-    if get_session(conn, "locale") == locale,
-      do: conn,
-      else: put_session(conn, "locale", locale)
+    conn =
+      if get_session(conn, "locale") == locale,
+        do: conn,
+        else: put_session(conn, "locale", locale)
+
+    if supported?(param), do: put_session(conn, "locale_chosen", true), else: conn
   end
 
   defp from_accept_language(conn) do

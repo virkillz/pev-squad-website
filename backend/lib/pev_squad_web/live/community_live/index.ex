@@ -8,20 +8,24 @@ defmodule PevSquadWeb.CommunityLive.Index do
 
   @per_page 9
 
-  @filters [
-    {"All", nil},
-    {"EUC", :euc},
-    {"Scooter", :escooter},
-    {"Esk8", :esk8},
-    {"E-Bike", :ebike}
-  ]
+  defp filters do
+    [
+      {gettext("All"), nil},
+      {"EUC", :euc},
+      {gettext("Scooter"), :escooter},
+      {"Esk8", :esk8},
+      {"E-Bike", :ebike}
+    ]
+  end
 
-  @sorts [
-    {"A to Z", :az},
-    {"Z to A", :za},
-    {"Newest first", :newest},
-    {"Oldest first", :oldest}
-  ]
+  defp sorts do
+    [
+      {gettext("A to Z"), :az},
+      {gettext("Z to A"), :za},
+      {gettext("Newest first"), :newest},
+      {gettext("Oldest first"), :oldest}
+    ]
+  end
 
   @impl true
   def render(assigns) do
@@ -29,19 +33,21 @@ defmodule PevSquadWeb.CommunityLive.Index do
     <Layouts.app flash={@flash} current_scope={@current_scope} active={:community}>
       <section class="page-header">
         <div class="meta-row">
-          <span class="eyebrow">02 / Who rides with us</span>
-          <span class="tag-scribble">show up</span>
+          <span class="eyebrow">02 / {gettext("Who rides with us")}</span>
+          <span class="tag-scribble">{gettext("show up")}</span>
         </div>
-        <h1 class="page-title">Community</h1>
+        <h1 class="page-title">{gettext("Community")}</h1>
         <p class="page-intro">
-          PEV Squad is a collective of riders across Indonesia — mostly performance EUC, plus e-bikes and the occasional electric skateboard. Jakarta to Malang, Depok to Banjarnegara. No entry fee, just show up and ride.
+          {gettext(
+            "PEV Squad is a collective of riders across Indonesia — mostly performance EUC, plus e-bikes and the occasional electric skateboard. Jakarta to Malang, Depok to Banjarnegara. No entry fee, just show up and ride."
+          )}
         </p>
       </section>
 
       <div class="bleed">
         <img
           src={~p"/images/community.png"}
-          alt="PEV Squad members and their EUCs and scooters gathered in a parking garage"
+          alt={gettext("PEV Squad members and their EUCs and scooters gathered in a parking garage")}
         />
       </div>
 
@@ -49,19 +55,19 @@ defmodule PevSquadWeb.CommunityLive.Index do
         <div class="statbar">
           <div class="stat">
             <div class="stat-n">{@stats.riders}</div>
-            <div class="stat-l">Riders on the roster</div>
+            <div class="stat-l">{gettext("Riders on the roster")}</div>
           </div>
           <div class="stat">
             <div class="stat-n">{@stats.cities}</div>
-            <div class="stat-l">Cities</div>
+            <div class="stat-l">{gettext("Cities")}</div>
           </div>
           <div class="stat">
             <div class="stat-n">{@meetups_held}</div>
-            <div class="stat-l">Meetups Held</div>
+            <div class="stat-l">{gettext("Meetups Held")}</div>
           </div>
           <div class="stat">
             <div class="stat-n">{@upcoming}</div>
-            <div class="stat-l">Rides Coming Up</div>
+            <div class="stat-l">{gettext("Rides Coming Up")}</div>
           </div>
         </div>
       </section>
@@ -69,13 +75,13 @@ defmodule PevSquadWeb.CommunityLive.Index do
       <section class="band band-white" id="squad">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Rider roster</span>
-            <h2 class="section-title">The Squad</h2>
+            <span class="eyebrow">{gettext("Rider roster")}</span>
+            <h2 class="section-title">{gettext("The Squad")}</h2>
             <p class="section-lede">
-              From daily commuters to mountain offroaders. Riding with us? <.link
-                navigate={~p"/users/profile"}
-                class="link-orange"
-              >Add your profile</.link>.
+              {gettext("From daily commuters to mountain offroaders. Riding with us?")}
+              <.link navigate={~p"/users/profile"} class="link-orange">
+                {gettext("Add your profile.")}
+              </.link>
             </p>
           </div>
         </div>
@@ -97,18 +103,18 @@ defmodule PevSquadWeb.CommunityLive.Index do
           class="roster-controls"
           role="search"
         >
-          <label class="sr-only" for="roster-search">Search riders</label>
+          <label class="sr-only" for="roster-search">{gettext("Search riders")}</label>
           <input
             id="roster-search"
             type="search"
             name="q"
             value={@query.q}
-            placeholder="Search alias, city or ride"
+            placeholder={gettext("Search alias, city or ride")}
             class="input"
             phx-debounce="300"
             autocomplete="off"
           />
-          <label class="sr-only" for="roster-sort">Sort riders</label>
+          <label class="sr-only" for="roster-sort">{gettext("Sort riders")}</label>
           <select id="roster-sort" name="sort" class="select">
             <option :for={{label, sort} <- @sorts} value={sort} selected={@query.sort == sort}>
               {label}
@@ -120,12 +126,19 @@ defmodule PevSquadWeb.CommunityLive.Index do
           <.rider_card :for={rider <- @roster.entries} rider={rider} />
         </div>
         <p :if={@roster.entries == []} class="section-lede">
-          {if @query.q != "", do: "No riders match “#{@query.q}”.", else: "No riders here yet."}
+          {if @query.q != "",
+            do: gettext("No riders match “%{query}”.", query: @query.q),
+            else: gettext("No riders here yet.")}
         </p>
 
-        <nav :if={@roster.total_pages > 1} class="pager" id="roster-pager" aria-label="Roster pages">
+        <nav
+          :if={@roster.total_pages > 1}
+          class="pager"
+          id="roster-pager"
+          aria-label={gettext("Roster pages")}
+        >
           <span class="pager-count">
-            {range_label(@roster)} of {@roster.total} riders
+            {gettext("%{range} of %{total} riders", range: range_label(@roster), total: @roster.total)}
           </span>
           <div class="pager-links">
             <.link
@@ -134,7 +147,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
               class="filter-tag"
               rel="prev"
             >
-              ← Prev
+              ← {gettext("Prev")}
             </.link>
             <.link
               :for={n <- 1..@roster.total_pages}
@@ -150,7 +163,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
               class="filter-tag"
               rel="next"
             >
-              Next →
+              {gettext("Next")} →
             </.link>
           </div>
         </nav>
@@ -159,10 +172,12 @@ defmodule PevSquadWeb.CommunityLive.Index do
       <section :if={@communities != []} class="band band-black" id="partner-communities">
         <div class="section-head">
           <div>
-            <span class="eyebrow">The network</span>
-            <h2 class="section-title">Partner<br />Communities</h2>
+            <span class="eyebrow">{gettext("The network")}</span>
+            <h2 class="section-title">{gettext("Partner")}<br />{gettext("Communities")}</h2>
             <p class="section-lede">
-              Local crews and single-vehicle groups we ride with. They run their own group rides; we team up for the big ones and keep the PEV network connected across Indonesia.
+              {gettext(
+                "Local crews and single-vehicle groups we ride with. They run their own group rides; we team up for the big ones and keep the PEV network connected across Indonesia."
+              )}
             </p>
           </div>
         </div>
@@ -174,10 +189,12 @@ defmodule PevSquadWeb.CommunityLive.Index do
       <section :if={@brands != []} class="band band-white" id="brand-partners">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Who backs the rides</span>
-            <h2 class="section-title">Brand<br />Partners</h2>
+            <span class="eyebrow">{gettext("Who backs the rides")}</span>
+            <h2 class="section-title">{gettext("Brand")}<br />{gettext("Partners")}</h2>
             <p class="section-lede">
-              Brands that have ridden, hosted, fed or filmed with us. Want to be on this list? Reach out on WhatsApp — if it's fun, we're in.
+              {gettext(
+                "Brands that have ridden, hosted, fed or filmed with us. Want to be on this list? Reach out on WhatsApp — if it's fun, we're in."
+              )}
             </p>
           </div>
         </div>
@@ -189,14 +206,16 @@ defmodule PevSquadWeb.CommunityLive.Index do
       <section class="band band-orange">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Find us</span>
-            <h2 class="section-title">Where We<br />Actually Talk</h2>
+            <span class="eyebrow">{gettext("Find us")}</span>
+            <h2 class="section-title">{gettext("Where We")}<br />{gettext("Actually Talk")}</h2>
             <p class="section-lede">
-              Our community lives on chat, not inboxes. Join the WhatsApp group to get in the loop on rides and drops.
+              {gettext(
+                "Our community lives on chat, not inboxes. Join the WhatsApp group to get in the loop on rides and drops."
+              )}
             </p>
           </div>
           <a href="#" class="btn btn-solid" style="background:var(--black); color:var(--orange);">
-            Join WhatsApp Group
+            {gettext("Join WhatsApp Group")}
           </a>
         </div>
       </section>
@@ -208,13 +227,15 @@ defmodule PevSquadWeb.CommunityLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:page_title, "Community")
+     |> assign(:page_title, gettext("Community"))
      |> assign(
        :page_description,
-       "The riders of PEV Squad — EUC, scooter, esk8 and e-bike riders across Indonesia — plus the communities and brands we ride with."
+       gettext(
+         "The riders of PEV Squad — EUC, scooter, esk8 and e-bike riders across Indonesia — plus the communities and brands we ride with."
+       )
      )
-     |> assign(:filters, @filters)
-     |> assign(:sorts, @sorts)
+     |> assign(:filters, filters())
+     |> assign(:sorts, sorts())
      |> assign(:stats, Riders.stats())
      |> assign(:meetups_held, length(Events.list_past_events(category: :official)))
      |> assign(:upcoming, length(Events.list_upcoming_events()))
@@ -290,10 +311,10 @@ defmodule PevSquadWeb.CommunityLive.Index do
   end
 
   defp parse_sort(sort) do
-    Enum.find_value(@sorts, :az, fn {_label, s} -> to_string(s) == sort && s end)
+    Enum.find_value(sorts(), :az, fn {_label, s} -> to_string(s) == sort && s end)
   end
 
   defp parse_type(type) do
-    Enum.find_value(@filters, fn {_label, t} -> t && to_string(t) == type && t end)
+    Enum.find_value(filters(), fn {_label, t} -> t && to_string(t) == type && t end)
   end
 end

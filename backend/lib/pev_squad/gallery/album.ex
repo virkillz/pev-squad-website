@@ -1,6 +1,7 @@
 defmodule PevSquad.Gallery.Album do
   use Ecto.Schema
   import Ecto.Changeset
+  use Gettext, backend: PevSquadWeb.Gettext
 
   alias PevSquad.Riders.RiderProfile
 
@@ -40,7 +41,7 @@ defmodule PevSquad.Gallery.Album do
     |> validate_length(:subtitle, max: 80)
     |> put_slug()
     |> validate_format(:slug, ~r/^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-      message: "use lowercase letters, numbers and dashes"
+      message: dgettext_noop("errors", "use lowercase letters, numbers and dashes")
     )
     |> unique_constraint(:slug)
   end

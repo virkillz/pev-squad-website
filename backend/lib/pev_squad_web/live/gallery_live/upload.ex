@@ -13,11 +13,16 @@ defmodule PevSquadWeb.GalleryLive.Upload do
       <section class="band band-black">
         <div class="panel panel-wide space-y-4">
           <.header>
-            Add photos
+            {gettext("Add photos")}
             <:subtitle>
-              To <.link navigate={~p"/gallery/#{@album.slug}"} class="link-orange">{@album.title}</.link>.
-              Up to {@max_files} at a time, 20 MB each. Location data is stripped from every photo.
-              <span :if={!@trusted?}>A moderator checks new members' photos before they go up.</span>
+              {gettext("To")}
+              <.link navigate={~p"/gallery/#{@album.slug}"} class="link-orange">{@album.title}</.link>. {gettext(
+                "Up to %{count} at a time, 20 MB each. Location data is stripped from every photo.",
+                count: @max_files
+              )}
+              <span :if={!@trusted?}>
+                {gettext("A moderator checks new members' photos before they go up.")}
+              </span>
             </:subtitle>
           </.header>
 
@@ -38,7 +43,7 @@ defmodule PevSquadWeb.GalleryLive.Upload do
                   name={"details[#{entry.ref}][title]"}
                   value={get_in(@details, [entry.ref, "title"])}
                   class="input"
-                  placeholder="Title (optional) — e.g. Purple Hour"
+                  placeholder={gettext("Title (optional) — e.g. Purple Hour")}
                   maxlength="60"
                 />
                 <input
@@ -46,7 +51,7 @@ defmodule PevSquadWeb.GalleryLive.Upload do
                   name={"details[#{entry.ref}][caption]"}
                   value={get_in(@details, [entry.ref, "caption"])}
                   class="input"
-                  placeholder="Caption (optional)"
+                  placeholder={gettext("Caption (optional)")}
                   maxlength="300"
                 />
                 <div class="seat-meter" aria-hidden="true">
@@ -61,7 +66,7 @@ defmodule PevSquadWeb.GalleryLive.Upload do
                 phx-click="cancel"
                 phx-value-ref={entry.ref}
                 class="btn btn-ghost btn-sm"
-                aria-label="Remove"
+                aria-label={gettext("Remove")}
               >
                 ✕
               </button>
@@ -70,12 +75,12 @@ defmodule PevSquadWeb.GalleryLive.Upload do
             <div class="flex gap-3 pt-2">
               <.button
                 variant="primary"
-                phx-disable-with="Uploading..."
+                phx-disable-with={gettext("Uploading...")}
                 disabled={@uploads.photos.entries == []}
               >
-                {if @trusted?, do: "Publish photos", else: "Submit photos"}
+                {if @trusted?, do: gettext("Publish photos"), else: gettext("Submit photos")}
               </.button>
-              <.button navigate={~p"/gallery/#{@album.slug}"}>Back to album</.button>
+              <.button navigate={~p"/gallery/#{@album.slug}"}>{gettext("Back to album")}</.button>
             </div>
           </form>
         </div>
@@ -99,13 +104,13 @@ defmodule PevSquadWeb.GalleryLive.Upload do
       not Gallery.can_upload?(scope, album) ->
         {:ok,
          socket
-         |> put_flash(:error, "This album isn't taking new photos.")
+         |> put_flash(:error, gettext("This album isn't taking new photos."))
          |> push_navigate(to: ~p"/gallery")}
 
       true ->
         {:ok,
          socket
-         |> assign(:page_title, "Add photos · #{album.title}")
+         |> assign(:page_title, gettext("Add photos") <> " · " <> album.title)
          |> assign(:album, album)
          |> assign(:trusted?, Gallery.trusted?(scope))
          |> assign(:max_files, @max_files)
@@ -143,9 +148,20 @@ defmodule PevSquadWeb.GalleryLive.Upload do
 
     message =
       cond do
-        ok == 0 -> nil
-        published == ok -> "#{ok} #{plural(ok)} added to #{album.title}."
-        true -> "#{ok} #{plural(ok)} sent to the moderators — they'll be up once approved."
+        ok == 0 ->
+          nil
+
+        published == ok ->
+          ngettext("1 photo added to %{album}.", "%{count} photos added to %{album}.", ok,
+            album: album.title
+          )
+
+        true ->
+          ngettext(
+            "1 photo sent to the moderators — it'll be up once approved.",
+            "%{count} photos sent to the moderators — they'll be up once approved.",
+            ok
+          )
       end
 
     socket =
@@ -158,7 +174,11 @@ defmodule PevSquadWeb.GalleryLive.Upload do
             put_flash(
               &1,
               :error,
-              "#{failed} #{plural(failed)} couldn't be read — try JPG or PNG."
+              ngettext(
+                "1 photo couldn't be read — try JPG or PNG.",
+                "%{count} photos couldn't be read — try JPG or PNG.",
+                failed
+              )
             ),
           else: &1
         )
@@ -169,17 +189,17 @@ defmodule PevSquadWeb.GalleryLive.Upload do
       else: {:noreply, socket}
   end
 
-  defp plural(1), do: "photo"
-  defp plural(_), do: "photos"
+  defp error_text(:too_large), do: gettext("Over 20 MB.")
+  defp error_text(:not_accepted), do: gettext("Use JPG, PNG or WebP.")
 
-  defp error_text(:too_large), do: "Over 20 MB."
-  defp error_text(:not_accepted), do: "Use JPG, PNG or WebP."
-  defp error_text(:too_many_files), do: "Up to #{@max_files} photos at a time."
-  defp error_text(_), do: "Upload failed — try again."
+  defp error_text(:too_many_files),
+    do: gettext("Up to %{count} photos at a time.", count: @max_files)
+
+  defp error_text(_), do: gettext("Upload failed — try again.")
 
   defp blocked_message({:error, :no_profile}),
-    do: "Set up your rider profile first — photos are credited to your alias."
+    do: gettext("Set up your rider profile first — photos are credited to your alias.")
 
   defp blocked_message({:error, :pending}),
-    do: "You can share photos once a moderator approves your rider profile."
+    do: gettext("You can share photos once a moderator approves your rider profile.")
 end

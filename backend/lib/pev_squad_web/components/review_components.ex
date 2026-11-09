@@ -20,7 +20,7 @@ defmodule PevSquadWeb.ReviewComponents do
   def fmt(score), do: :erlang.float_to_binary(score * 1.0, decimals: 1)
 
   def author_name(%Review{author_profile: %{alias: alias_name}}), do: alias_name
-  def author_name(_review), do: "Deleted rider"
+  def author_name(_review), do: gettext("Deleted rider")
 
   attr :label, :string, required: true
   attr :score, :float, required: true
@@ -47,7 +47,8 @@ defmodule PevSquadWeb.ReviewComponents do
         <h3 class="card-title">{model_name(@review.pev_model)}</h3>
         <p class="card-meta">
           {String.upcase(
-            "#{type_label(@review.pev_model.pev_type)} · reviewed by #{author_name(@review)}"
+            type_label(@review.pev_model.pev_type) <>
+              " · " <> gettext("reviewed by %{rider}", rider: author_name(@review))
           )}
         </p>
         <div class="stars">{stars(@review.overall)}</div>
@@ -62,7 +63,7 @@ defmodule PevSquadWeb.ReviewComponents do
           class="btn btn-outline"
           style="margin-top:1.25rem;"
         >
-          Read Full Review
+          {gettext("Read Full Review")}
         </.link>
       </div>
     </article>
@@ -78,10 +79,10 @@ defmodule PevSquadWeb.ReviewComponents do
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Model</th>
-            <th scope="col">Class</th>
-            <th scope="col" style="text-align:right;">Reviews</th>
-            <th scope="col" style="text-align:right;">Overall</th>
+            <th scope="col">{gettext("Model")}</th>
+            <th scope="col">{gettext("Class")}</th>
+            <th scope="col" style="text-align:right;">{gettext("Reviews")}</th>
+            <th scope="col" style="text-align:right;">{gettext("Overall")}</th>
           </tr>
         </thead>
         <tbody>

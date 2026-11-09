@@ -1,6 +1,7 @@
 defmodule PevSquad.Events.Event do
   use Ecto.Schema
   import Ecto.Changeset
+  use Gettext, backend: PevSquadWeb.Gettext
 
   alias PevSquad.Accounts.User
   alias PevSquad.Events.Rsvp
@@ -100,7 +101,7 @@ defmodule PevSquad.Events.Event do
     |> validate_number(:capacity, greater_than: 0)
     |> put_slug()
     |> validate_format(:slug, ~r/^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-      message: "use lowercase letters, numbers and dashes"
+      message: dgettext_noop("errors", "use lowercase letters, numbers and dashes")
     )
     |> validate_ends_after_start()
     |> unique_constraint(:slug)
@@ -132,7 +133,9 @@ defmodule PevSquad.Events.Event do
     |> validate_number(:capacity,
       greater_than: 0,
       less_than_or_equal_to: @group_ride_max_capacity,
-      message: "must be between 1 and #{@group_ride_max_capacity}"
+      # Literal so it can be extracted for translation; keep in step with
+      # @group_ride_max_capacity.
+      message: dgettext_noop("errors", "must be between 1 and 30")
     )
     |> put_group_ride_slug()
     |> validate_ends_after_start()
@@ -191,7 +194,7 @@ defmodule PevSquad.Events.Event do
     ends_at = get_field(changeset, :ends_at)
 
     if starts_at && ends_at && DateTime.compare(ends_at, starts_at) == :lt do
-      add_error(changeset, :ends_at, "must be after the start")
+      add_error(changeset, :ends_at, dgettext_noop("errors", "must be after the start"))
     else
       changeset
     end

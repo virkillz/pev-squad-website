@@ -1,5 +1,6 @@
 defmodule PevSquad.Reviews.Notifier do
   import Swoosh.Email
+  use Gettext, backend: PevSquadWeb.Gettext
 
   alias PevSquad.Mailer
   alias PevSquad.Reviews.PevModel
@@ -10,7 +11,7 @@ defmodule PevSquad.Reviews.Notifier do
       |> to(recipient)
       |> from({"PEV Squad", "noreply@pev-squad.org"})
       |> subject(subject)
-      |> text_body(body)
+      |> text_body(Mailer.framed(body))
 
     with {:ok, _metadata} <- Mailer.deliver(email) do
       {:ok, email}
@@ -18,44 +19,35 @@ defmodule PevSquad.Reviews.Notifier do
   end
 
   def deliver_review_approved(review, url) do
-    deliver(
-      review.author.email,
-      "Your #{PevModel.full_name(review.pev_model)} review is live",
-      """
+    model = PevModel.full_name(review.pev_model)
 
-      ==============================
-
-      Your review of the #{PevModel.full_name(review.pev_model)} has been approved
-      and is now on the Sheet:
-
-      #{url}
-
-      Thanks for riding, and for writing it up.
-
-      ==============================
-      """
-    )
+    Mailer.in_locale(review.author, fn ->
+      deliver(
+        review.author.email,
+        gettext("Your %{model} review is live", model: model),
+        gettext(
+          "Your review of the %{model} has been approved\nand is now on the Sheet:\n\n%{url}\n\nThanks for riding, and for writing it up.",
+          model: model,
+          url: url
+        )
+      )
+    end)
   end
 
   def deliver_review_rejected(review, edit_url) do
-    deliver(
-      review.author.email,
-      "Your #{PevModel.full_name(review.pev_model)} review needs changes",
-      """
+    model = PevModel.full_name(review.pev_model)
 
-      ==============================
-
-      A moderator sent your review of the #{PevModel.full_name(review.pev_model)}
-      back with this note:
-
-        #{review.rejection_reason}
-
-      Edit and resubmit it here:
-
-      #{edit_url}
-
-      ==============================
-      """
-    )
+    Mailer.in_locale(review.author, fn ->
+      deliver(
+        review.author.email,
+        gettext("Your %{model} review needs changes", model: model),
+        gettext(
+          "A moderator sent your review of the %{model}\nback with this note:\n\n  %{note}\n\nEdit and resubmit it here:\n\n%{url}",
+          model: model,
+          note: review.rejection_reason,
+          url: edit_url
+        )
+      )
+    end)
   end
 end

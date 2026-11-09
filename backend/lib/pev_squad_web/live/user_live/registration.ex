@@ -62,7 +62,7 @@ defmodule PevSquadWeb.UserLive.Registration do
 
   @impl true
   def handle_event("save", %{"user" => user_params}, socket) do
-    case Accounts.register_user(user_params) do
+    case Accounts.register_user(Map.put(user_params, "locale", socket.assigns.locale)) do
       {:ok, user} ->
         {:ok, _} =
           Accounts.deliver_login_instructions(

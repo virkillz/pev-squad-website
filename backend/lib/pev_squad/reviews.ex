@@ -14,6 +14,7 @@ defmodule PevSquad.Reviews do
   """
 
   import Ecto.Query, warn: false
+  use Gettext, backend: PevSquadWeb.Gettext
 
   alias Ecto.Multi
   alias PevSquad.Accounts.Scope
@@ -286,7 +287,9 @@ defmodule PevSquad.Reviews do
         published_at: nil,
         moderated_by_id: scope.user.id
       )
-      |> Ecto.Changeset.validate_required(:rejection_reason, message: "tell the rider why")
+      |> Ecto.Changeset.validate_required(:rejection_reason,
+        message: dgettext_noop("errors", "tell the rider why")
+      )
       |> Repo.update()
 
     with {:ok, review} <- result do

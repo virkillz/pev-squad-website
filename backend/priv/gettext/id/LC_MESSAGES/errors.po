@@ -11,6 +11,8 @@ msgstr ""
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: lib/pev_squad/reviews/review.ex:73
+#, elixir-autogen
 msgid "can't be blank"
 msgstr "tidak boleh kosong"
 
@@ -91,3 +93,102 @@ msgstr "harus lebih dari atau sama dengan %{number}"
 
 msgid "must be equal to %{number}"
 msgstr "harus sama dengan %{number}"
+
+#: lib/pev_squad/riders.ex:453
+#, elixir-autogen, elixir-format
+msgid "couldn't read that image — try a JPG or PNG"
+msgstr "gambar tidak bisa dibaca — coba JPG atau PNG"
+
+#: lib/pev_squad/accounts/user.ex:63
+#, elixir-autogen, elixir-format
+msgid "did not change"
+msgstr "tidak berubah"
+
+#: lib/pev_squad/accounts/user.ex:87
+#, elixir-autogen, elixir-format
+msgid "does not match password"
+msgstr "tidak cocok dengan password"
+
+#: lib/pev_squad/reviews/pev_model.ex:30
+#: lib/pev_squad/reviews/pev_model.ex:34
+#, elixir-autogen, elixir-format
+msgid "is already in the catalog"
+msgstr "sudah ada di katalog"
+
+#: lib/pev_squad/riders/rider_profile.ex:75
+#: lib/pev_squad/riders/rider_profile.ex:78
+#, elixir-autogen, elixir-format
+msgid "is already taken by another rider"
+msgstr "sudah dipakai rider lain"
+
+#: lib/pev_squad/riders/rider_profile.ex:68
+#, elixir-autogen, elixir-format
+msgid "just the handle, e.g. pevsquad"
+msgstr "cukup username-nya, mis. pevsquad"
+
+#: lib/pev_squad/riders/rider_profile.ex:61
+#, elixir-autogen, elixir-format
+msgid "letters, numbers, spaces, dots, dashes and underscores only"
+msgstr "hanya huruf, angka, spasi, titik, tanda hubung, dan garis bawah"
+
+#: lib/pev_squad/events/event.ex:197
+#, elixir-autogen, elixir-format
+msgid "must be after the start"
+msgstr "harus setelah waktu mulai"
+
+#: lib/pev_squad/reviews/score.ex:24
+#, elixir-autogen, elixir-format
+msgid "must be between 0 and 10"
+msgstr "harus antara 0 dan 10"
+
+#: lib/pev_squad/events/event.ex:138
+#, elixir-autogen, elixir-format
+msgid "must be between 1 and 30"
+msgstr "harus antara 1 dan 30"
+
+#: lib/pev_squad/accounts/user.ex:47
+#, elixir-autogen, elixir-format
+msgid "must have the @ sign and no spaces"
+msgstr "harus ada tanda @ dan tanpa spasi"
+
+#: lib/pev_squad/partners/partner.ex:83
+#, elixir-autogen, elixir-format
+msgid "must start with http:// or https://"
+msgstr "harus diawali http:// atau https://"
+
+#: lib/pev_squad/partners/partner.ex:86
+#, elixir-autogen, elixir-format
+msgid "paste the full channel link (https://youtube.com/@…)"
+msgstr "tempel link channel lengkap (https://youtube.com/@…)"
+
+#: lib/pev_squad/safety/report.ex:42
+#, elixir-autogen, elixir-format
+msgid "pick a reason"
+msgstr "pilih alasan"
+
+#: lib/pev_squad/reviews.ex:290
+#, elixir-autogen, elixir-format
+msgid "tell the rider why"
+msgstr "beri tahu rider alasannya"
+
+#: lib/pev_squad/events/event.ex:104
+#: lib/pev_squad/gallery/album.ex:44
+#: lib/pev_squad/partners/partner.ex:90
+#, elixir-autogen, elixir-format
+msgid "use lowercase letters, numbers and dashes"
+msgstr "gunakan huruf kecil, angka, dan tanda hubung"
+
+#: lib/pev_squad/riders/rider_profile.ex:98
+#, elixir-autogen, elixir-format
+msgid "write the public statement for the ban"
+msgstr "tulis pernyataan publik untuk pengeluaran ini"
+
+#: lib/pev_squad/safety/report.ex:47
+#, elixir-autogen, elixir-format
+msgid "you've already reported this — the moderators are on it"
+msgstr "kamu sudah melaporkan ini — moderator sedang menanganinya"
+
+#: lib/pev_squad/reviews/review.ex:85
+#, elixir-autogen, elixir-format
+msgid "you've already reviewed this model — edit that review instead"
+msgstr "kamu sudah mereview model ini — edit review itu saja"

@@ -11,11 +11,11 @@ defmodule PevSquad.Accounts do
 
   ## Database getters
 
-  @doc "Emails of moderators and admins, for staff notifications."
-  def list_staff_emails do
+  @doc "Moderators and admins, as `%{email, locale}` for notifications."
+  def list_staff_contacts do
     User
     |> where([u], u.role in [:moderator, :admin])
-    |> select([u], u.email)
+    |> select([u], %{email: u.email, locale: u.locale})
     |> Repo.all()
   end
 
@@ -86,7 +86,15 @@ defmodule PevSquad.Accounts do
   def register_user(attrs) do
     %User{}
     |> User.email_changeset(attrs)
+    |> User.locale_changeset(Map.take(attrs, ["locale", :locale]))
     |> Repo.insert()
+  end
+
+  @doc "Saves the language a member's emails are sent in. Unknown locales are ignored."
+  def update_user_locale(%User{locale: locale} = user, locale), do: {:ok, user}
+
+  def update_user_locale(%User{} = user, locale) do
+    user |> User.locale_changeset(%{locale: locale}) |> Repo.update()
   end
 
   @doc """

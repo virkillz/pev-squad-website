@@ -1,15 +1,18 @@
 defmodule PevSquad.Safety.Report do
   use Ecto.Schema
   import Ecto.Changeset
+  use Gettext, backend: PevSquadWeb.Gettext
 
+  # Labels are marked for extraction here and translated in reasons/0 and
+  # reason_label/1, in the caller's locale.
   @reasons [
-    spam: "Spam or advertising",
-    offensive: "Offensive or hateful",
-    harassment: "Harassment or bullying",
-    dangerous: "Dangerous riding or illegal activity",
-    private_info: "Shares someone's private information",
-    not_theirs: "Not theirs — copied photo or impersonation",
-    other: "Something else"
+    spam: gettext_noop("Spam or advertising"),
+    offensive: gettext_noop("Offensive or hateful"),
+    harassment: gettext_noop("Harassment or bullying"),
+    dangerous: gettext_noop("Dangerous riding or illegal activity"),
+    private_info: gettext_noop("Shares someone's private information"),
+    not_theirs: gettext_noop("Not theirs — copied photo or impersonation"),
+    other: gettext_noop("Something else")
   ]
 
   schema "reports" do
@@ -28,18 +31,20 @@ defmodule PevSquad.Safety.Report do
     timestamps(type: :utc_datetime)
   end
 
-  def reasons, do: @reasons
-  def reason_label(reason), do: Keyword.fetch!(@reasons, reason)
+  def reasons, do: Enum.map(@reasons, fn {k, label} -> {k, translate(label)} end)
+  def reason_label(reason), do: @reasons |> Keyword.fetch!(reason) |> translate()
+
+  defp translate(label), do: Gettext.gettext(PevSquadWeb.Gettext, label)
 
   def changeset(report, attrs) do
     report
     |> cast(attrs, [:reason, :notes])
-    |> validate_required([:reason], message: "pick a reason")
+    |> validate_required([:reason], message: dgettext_noop("errors", "pick a reason"))
     |> validate_length(:notes, max: 1000)
     |> unique_constraint([:reporter_id, :target_type, :target_id],
       name: :reports_one_open_per_reporter_index,
       error_key: :reason,
-      message: "you've already reported this — the moderators are on it"
+      message: dgettext_noop("errors", "you've already reported this — the moderators are on it")
     )
   end
 end

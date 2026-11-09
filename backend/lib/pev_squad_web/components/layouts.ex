@@ -100,7 +100,14 @@ defmodule PevSquadWeb.Layouts do
         <% end %>
         <.language_switch />
       </nav>
-      <button class="nav-toggle" type="button" aria-controls="mainnav" aria-expanded="false">
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-controls="mainnav"
+        aria-expanded="false"
+        data-label-open={gettext("Close")}
+        data-label-closed={gettext("Menu")}
+      >
         {gettext("Menu")}
       </button>
     </header>
