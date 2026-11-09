@@ -14,12 +14,32 @@ defmodule PevSquadWeb.CommunityLive.Show do
           <span class="eyebrow">
             <.link navigate={~p"/community"} style="text-decoration:none;">02 / Community</.link>
           </span>
-          <span class="badge" style="background:var(--black); color:var(--orange);">
+          <span
+            :if={@rider.status == :banned}
+            class="badge"
+            style="background:var(--black); color:var(--white);"
+          >
+            Banned
+          </span>
+          <span
+            :if={@rider.status != :banned}
+            class="badge"
+            style="background:var(--black); color:var(--orange);"
+          >
             {type_label(@rider.primary_pev_type)}
+          </span>
+          <span
+            :if={@rider.status == :inactive}
+            class="badge"
+            style="background:transparent; color:var(--black); border:1px solid var(--black);"
+            id="rider-inactive"
+          >
+            Inactive
           </span>
         </div>
         <h1 class="event-detail-title">{@rider.alias}</h1>
         <p
+          :if={@rider.status != :banned}
           class="page-intro"
           style="font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.06em;"
         >
@@ -34,7 +54,19 @@ defmodule PevSquadWeb.CommunityLive.Show do
         </div>
       </section>
 
-      <section class="band band-black">
+      <section :if={@rider.status == :banned} class="band band-black" id="rider-banned">
+        <div class="prose-body space-y-4" style="max-width:48rem;">
+          <span class="eyebrow">
+            Statement from PEV Squad · {Calendar.strftime(@rider.banned_at, "%-d %B %Y")}
+          </span>
+          <p>
+            {@rider.alias} has been banned from PEV Squad and is no longer part of the community.
+          </p>
+          <p :for={para <- paragraphs(@rider.ban_reason)}>{para}</p>
+        </div>
+      </section>
+
+      <section :if={@rider.status != :banned} class="band band-black">
         <div class="event-detail-grid">
           <div class="space-y-8">
             <div :if={@rider.bio} class="prose-body">
@@ -112,11 +144,18 @@ defmodule PevSquadWeb.CommunityLive.Show do
     {:ok,
      socket
      |> assign(:page_title, rider.alias)
-     |> assign(:page_description, rider.bio || "#{rider.alias} rides with PEV Squad.")
+     |> assign(:page_description, page_description(rider))
      |> assign(:rider, rider)
      |> assign(:own?, scope != nil and rider.user_id == scope.user.id)
      |> assign(:blocked?, rider.user_id != nil and Safety.blocked?(scope, rider.user_id))}
   end
+
+  defp page_description(%{status: :banned} = rider),
+    do: "#{rider.alias} has been banned from PEV Squad."
+
+  defp page_description(rider), do: rider.bio || "#{rider.alias} rides with PEV Squad."
+
+  defp paragraphs(text), do: String.split(text, ~r/\n\s*\n/, trim: true)
 
   @impl true
   def handle_event("block", _params, socket) do

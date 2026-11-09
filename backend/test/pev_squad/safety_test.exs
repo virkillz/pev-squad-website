@@ -116,13 +116,17 @@ defmodule PevSquad.SafetyTest do
     end
 
     test "a profile is hidden from the public site" do
-      {_, profile} = member()
+      {author, profile} = member()
 
       {:ok, _} =
         Safety.report(user_scope_fixture(), :profile, profile.id, %{"reason" => "not_theirs"})
 
       {:ok, 1} = Safety.remove_content(staff_scope_fixture(), :profile, profile.id, nil, nil)
 
+      assert_raise Ecto.NoResultsError, fn -> Riders.get_public_rider!(profile.slug) end
+
+      # The member can't bring it back by re-ticking Public.
+      {:ok, _} = Riders.save_my_profile(author, %{is_public: true})
       assert_raise Ecto.NoResultsError, fn -> Riders.get_public_rider!(profile.slug) end
     end
   end

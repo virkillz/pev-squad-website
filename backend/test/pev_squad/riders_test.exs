@@ -166,6 +166,135 @@ defmodule PevSquad.RidersTest do
     end
   end
 
+  describe "status, hiding and deleting" do
+    test "inactive riders stay listed, after active ones" do
+      staff = staff_scope_fixture()
+      zed = rider_fixture(alias: "Zed")
+      amy = rider_fixture(alias: "Amy")
+
+      {:ok, _} = Riders.update_rider(staff, amy, %{status: :inactive})
+
+      assert ["Zed", "Amy"] = Enum.map(Riders.list_public_riders(), & &1.alias)
+      assert Riders.get_public_rider!(amy.slug).status == :inactive
+      assert Riders.stats().riders == 2
+      assert zed.status == :active
+    end
+
+    test "a ban needs a public statement, is dated, and leaves the roster but not the page" do
+      staff = staff_scope_fixture()
+      rider = rider_fixture(alias: "Outlaw")
+      rejs = partner_fixture()
+      {:ok, _} = Riders.set_communities(staff, rider, [rejs.id])
+
+      assert {:error, changeset} = Riders.update_rider(staff, rider, %{status: :banned})
+      assert "write the public statement for the ban" in errors_on(changeset).ban_reason
+
+      {:ok, banned} =
+        Riders.update_rider(staff, rider, %{
+          status: :banned,
+          ban_reason: "Rode drunk at an event.",
+          is_public: false
+        })
+
+      assert banned.banned_at
+      assert Riders.list_public_riders() == []
+      assert Riders.list_community_riders(rejs) == []
+      assert Riders.stats().riders == 0
+      assert %{ban_reason: "Rode drunk at an event."} = Riders.get_public_rider!(banned.slug)
+
+      {:ok, lifted} = Riders.update_rider(staff, banned, %{status: :active, is_public: true})
+      assert is_nil(lifted.ban_reason) and is_nil(lifted.banned_at)
+      assert [_] = Riders.list_public_riders()
+    end
+
+    test "hidden by staff overrides everything, including a ban page" do
+      staff = staff_scope_fixture()
+      rider = rider_fixture()
+
+      {:ok, hidden} = Riders.update_rider(staff, rider, %{hidden_by_staff: true})
+      assert Riders.list_public_riders() == []
+      assert_raise Ecto.NoResultsError, fn -> Riders.get_public_rider!(rider.slug) end
+
+      {:ok, _} = Riders.update_rider(staff, hidden, %{status: :banned, ban_reason: "Fraud."})
+      assert_raise Ecto.NoResultsError, fn -> Riders.get_public_rider!(rider.slug) end
+    end
+
+    test "members can't change their own status or hiding, and can't edit once banned" do
+      member = user_scope_fixture()
+
+      {:ok, own} =
+        Riders.save_my_profile(member, %{
+          alias: "Selfie",
+          is_public: true,
+          status: :banned,
+          ban_reason: "x",
+          hidden_by_staff: true
+        })
+
+      assert own.status == :active
+      refute own.hidden_by_staff
+
+      {:ok, _} =
+        Riders.update_rider(staff_scope_fixture(), own, %{status: :banned, ban_reason: "Theft."})
+
+      assert {:error, :banned} = Riders.save_my_profile(member, %{bio: "I'm innocent"})
+      assert Riders.get_my_profile(member).bio == nil
+    end
+
+    test "deleting removes the profile and photo but keeps the member" do
+      staff = staff_scope_fixture()
+      member = user_scope_fixture()
+      {:ok, rider} = Riders.save_my_profile(member, %{alias: "Gone"}, image_fixture())
+      photo = PevSquad.Uploads.path(String.replace_prefix(rider.avatar_path, "/uploads/", ""))
+      assert File.exists?(photo)
+
+      assert_raise PevSquad.Riders.NotAuthorizedError, fn ->
+        Riders.delete_rider(member, rider)
+      end
+
+      {:ok, _} = Riders.delete_rider(staff, rider)
+      refute Repo.get(RiderProfile, rider.id)
+      refute File.exists?(photo)
+      assert Repo.get(PevSquad.Accounts.User, member.user.id)
+      assert Riders.get_my_profile(member) == nil
+    end
+  end
+
+  describe "staff-created riders" do
+    test "staff add an unclaimed rider, with a photo" do
+      staff = staff_scope_fixture()
+
+      assert {:ok, rider} =
+               Riders.create_rider(
+                 staff,
+                 %{alias: "Coach Inno", city: "Jakarta", is_public: true},
+                 image_fixture()
+               )
+
+      assert rider.source == :staff
+      assert rider.slug == "coach-inno"
+      assert is_nil(rider.user_id)
+      assert rider.avatar_path
+      assert Riders.get_public_rider!("coach-inno")
+    end
+
+    test "an unreadable photo saves nothing" do
+      staff = staff_scope_fixture()
+      bad = Path.join(System.tmp_dir!(), "not-an-image-#{System.unique_integer([:positive])}.jpg")
+      File.write!(bad, "nope")
+
+      assert {:error, changeset} = Riders.create_rider(staff, %{alias: "Ghost"}, bad)
+      assert {"couldn't read" <> _, _} = changeset.errors[:avatar_path]
+      refute Repo.get_by(RiderProfile, alias: "Ghost")
+    end
+
+    test "members can't" do
+      assert_raise PevSquad.Riders.NotAuthorizedError, fn ->
+        Riders.create_rider(user_scope_fixture(), %{alias: "Sneaky"})
+      end
+    end
+  end
+
   describe "partner communities" do
     test "staff set them; public pages show published communities in order" do
       staff = staff_scope_fixture()

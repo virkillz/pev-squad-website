@@ -5,8 +5,14 @@ defmodule PevSquad.Riders do
   old sign-up form start unclaimed (`user_id` nil) until staff link them to
   a member's account.
 
-  Only profiles with `is_public: true` (the rider's consent) are ever shown
-  on the public site.
+  Visibility on the public site:
+
+  * The roster lists profiles with `is_public: true` (the rider's consent)
+    that staff haven't hidden and that aren't banned. Active riders come
+    before inactive ones.
+  * A banned rider's page stays up with staff's public statement, even if
+    the rider unticks `is_public`, so the community can see action was taken.
+  * `hidden_by_staff` hides a profile everywhere, whatever the rider chose.
   """
 
   import Ecto.Query, warn: false
@@ -50,11 +56,19 @@ defmodule PevSquad.Riders do
 
   # The id tiebreak keeps pages stable when two aliases sort the same.
   defp public_riders_query(opts) do
-    RiderProfile
-    |> where(is_public: true)
+    listed_riders()
     |> filter_type(opts[:type])
     |> exclude_users(opts[:exclude_users])
-    |> order_by([r], asc: is_nil(r.avatar_path), asc: fragment("lower(?)", r.alias), asc: r.id)
+    |> order_by([r],
+      asc: r.status == :inactive,
+      asc: is_nil(r.avatar_path),
+      asc: fragment("lower(?)", r.alias),
+      asc: r.id
+    )
+  end
+
+  defp listed_riders do
+    where(RiderProfile, [r], r.is_public and not r.hidden_by_staff and r.status != :banned)
   end
 
   defp exclude_users(query, ids) when ids in [nil, []], do: query
@@ -65,9 +79,12 @@ defmodule PevSquad.Riders do
   defp filter_type(query, nil), do: query
   defp filter_type(query, type), do: where(query, primary_pev_type: ^type)
 
+  @doc "A rider's public page: listed riders, plus banned ones (see the moduledoc)."
   def get_public_rider!(slug) do
     RiderProfile
-    |> Repo.get_by!(slug: slug, is_public: true)
+    |> where([r], r.slug == ^slug and not r.hidden_by_staff)
+    |> where([r], r.is_public or r.status == :banned)
+    |> Repo.one!()
     |> List.wrap()
     |> put_communities()
     |> hd()
@@ -107,7 +124,7 @@ defmodule PevSquad.Riders do
 
   @doc "Counts for the community stat bar."
   def stats do
-    public = where(RiderProfile, is_public: true)
+    public = listed_riders()
 
     %{
       riders: Repo.aggregate(public, :count),
@@ -131,12 +148,17 @@ defmodule PevSquad.Riders do
   given, is a path to an uploaded image file.
   """
   def save_my_profile(%Scope{user: user} = scope, attrs, avatar_source \\ nil) do
-    profile = get_my_profile(scope) || %RiderProfile{user_id: user.id, source: :member}
+    case get_my_profile(scope) || %RiderProfile{user_id: user.id, source: :member} do
+      # The ban statement sits next to the profile; the member can't rewrite it.
+      %RiderProfile{status: :banned} ->
+        {:error, :banned}
 
-    profile
-    |> RiderProfile.changeset(attrs)
-    |> Repo.insert_or_update()
-    |> attach_avatar(avatar_source)
+      profile ->
+        profile
+        |> RiderProfile.changeset(attrs)
+        |> Repo.insert_or_update()
+        |> attach_avatar(avatar_source)
+    end
   end
 
   ## Staff
@@ -153,6 +175,34 @@ defmodule PevSquad.Riders do
   def get_rider!(%Scope{} = scope, id) do
     ensure_staff!(scope)
     RiderProfile |> Repo.get!(id) |> Repo.preload(:user)
+  end
+
+  def change_rider(%RiderProfile{} = profile, attrs \\ %{}),
+    do: RiderProfile.staff_changeset(profile, attrs)
+
+  @doc "Deletes a profile and its photo. A linked member account is kept."
+  def delete_rider(%Scope{} = scope, %RiderProfile{} = profile) do
+    ensure_staff!(scope)
+
+    with {:ok, deleted} <- Repo.delete(profile) do
+      if deleted.avatar_path, do: Avatar.delete(deleted.avatar_path)
+      {:ok, deleted}
+    end
+  end
+
+  @doc """
+  Creates an unclaimed profile on a rider's behalf. `avatar_source`, when
+  given, is a path to an uploaded image; if it can't be read nothing is saved.
+  """
+  def create_rider(%Scope{} = scope, attrs, avatar_source \\ nil) do
+    ensure_staff!(scope)
+
+    Repo.transact(fn ->
+      %RiderProfile{source: :staff}
+      |> RiderProfile.staff_changeset(attrs)
+      |> Repo.insert()
+      |> attach_avatar(avatar_source)
+    end)
   end
 
   def update_rider(%Scope{} = scope, %RiderProfile{} = profile, attrs, avatar_source \\ nil) do

@@ -56,7 +56,7 @@ defmodule PevSquad.Safety do
 
   def get_target(:profile, id) do
     case Repo.get(RiderProfile, id) do
-      %RiderProfile{is_public: true} = p -> {:ok, p}
+      %RiderProfile{is_public: true, hidden_by_staff: false} = p -> {:ok, p}
       _ -> {:error, :not_found}
     end
   end
@@ -237,7 +237,7 @@ defmodule PevSquad.Safety do
         {:ok, _} = Gallery.delete_photo(scope, photo)
 
       %RiderProfile{} = p ->
-        p |> Ecto.Changeset.change(is_public: false) |> Repo.update!()
+        p |> Ecto.Changeset.change(hidden_by_staff: true) |> Repo.update!()
 
       %Event{} = event ->
         event |> Ecto.Changeset.change(status: :hidden) |> Repo.update!()

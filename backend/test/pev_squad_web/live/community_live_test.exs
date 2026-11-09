@@ -67,6 +67,31 @@ defmodule PevSquadWeb.CommunityLiveTest do
   describe "my profile" do
     setup :register_and_log_in_user
 
+    test "a banned member sees a notice instead of the form", %{conn: conn, scope: scope} do
+      {:ok, profile} = PevSquad.Riders.save_my_profile(scope, %{alias: "Outlaw"})
+
+      {:ok, _} =
+        PevSquad.Riders.update_rider(staff_scope_fixture(), profile, %{
+          status: :banned,
+          ban_reason: "Theft."
+        })
+
+      {:ok, lv, _html} = live(conn, ~p"/users/profile")
+      assert has_element?(lv, "#profile-banned")
+      refute has_element?(lv, "#profile-form")
+    end
+
+    test "a member sees when staff hid their profile", %{conn: conn, scope: scope} do
+      {:ok, profile} = PevSquad.Riders.save_my_profile(scope, %{alias: "Shy", is_public: true})
+
+      {:ok, _} =
+        PevSquad.Riders.update_rider(staff_scope_fixture(), profile, %{hidden_by_staff: true})
+
+      {:ok, lv, _html} = live(conn, ~p"/users/profile")
+      assert has_element?(lv, "#profile-hidden")
+      assert has_element?(lv, "#profile-form")
+    end
+
     test "creates a profile with a photo", %{conn: conn} do
       {:ok, lv, _html} = live(conn, ~p"/users/profile")
 
@@ -141,6 +166,113 @@ defmodule PevSquadWeb.CommunityLiveTest do
 
       {:ok, lv, _html} = live(conn, ~p"/partners/#{rejs.slug}")
       assert lv |> element("#partner-riders", "Awang") |> has_element?()
+    end
+
+    test "staff add a new rider from the riders list", %{conn: conn} do
+      staff = staff_scope_fixture()
+      rejs = partner_fixture(name: "REJS")
+      conn = log_in_user(conn, staff.user)
+
+      {:ok, lv, _html} = live(conn, ~p"/admin/riders")
+
+      {:ok, lv, _html} =
+        lv |> element("a", "New Rider") |> render_click() |> follow_redirect(conn)
+
+      refute has_element?(lv, "#link-form")
+
+      assert lv
+             |> form("#rider-form", rider_profile: %{alias: "x"})
+             |> render_change() =~ "should be at least 2 character"
+
+      {:ok, _lv, html} =
+        lv
+        |> form("#rider-form",
+          rider_profile: %{alias: "Coach Inno", city: "Jakarta", is_public: "true"}
+        )
+        |> render_submit(%{"community_ids" => ["", "#{rejs.id}"]})
+        |> follow_redirect(conn)
+
+      assert html =~ "Coach Inno added."
+      assert html =~ "Added by staff."
+      assert html =~ "link-form"
+
+      rider = PevSquad.Repo.get_by!(PevSquad.Riders.RiderProfile, alias: "Coach Inno")
+      assert PevSquad.Riders.community_ids(staff, rider) == [rejs.id]
+    end
+
+    test "staff ban a rider with a public statement", %{conn: conn} do
+      staff = staff_scope_fixture()
+      rider = rider_fixture(alias: "Outlaw", bio: "Fast rider")
+      admin_conn = log_in_user(conn, staff.user)
+
+      {:ok, lv, html} = live(admin_conn, ~p"/admin/riders/#{rider}/edit")
+      refute html =~ "Public statement"
+
+      assert lv
+             |> form("#rider-form", rider_profile: %{status: "banned"})
+             |> render_change() =~ "Public statement"
+
+      html = lv |> form("#rider-form", rider_profile: %{status: "banned"}) |> render_submit()
+      assert html =~ "write the public statement for the ban"
+
+      lv
+      |> form("#rider-form",
+        rider_profile: %{
+          status: "banned",
+          ban_reason: "Rode drunk at an event.\n\nReported to police."
+        }
+      )
+      |> render_submit()
+
+      assert render(lv) =~ "Saved."
+
+      {:ok, _lv, html} = live(build_conn(), ~p"/community")
+      refute html =~ "Outlaw"
+
+      {:ok, lv, html} = live(build_conn(), ~p"/community/#{rider.slug}")
+      assert has_element?(lv, "#rider-banned", "Outlaw has been banned")
+      assert has_element?(lv, "#rider-banned p", "Reported to police.")
+      refute html =~ "Fast rider"
+
+      {:ok, _lv, html} = live(admin_conn, ~p"/admin/riders")
+      assert html =~ "Banned"
+    end
+
+    test "inactive riders show a badge on the roster and their page", %{conn: conn} do
+      staff = staff_scope_fixture()
+      rider = rider_fixture(alias: "Retired")
+      {:ok, _} = PevSquad.Riders.update_rider(staff, rider, %{status: :inactive})
+
+      {:ok, lv, _html} = live(conn, ~p"/community")
+      assert lv |> element("#roster", "Inactive") |> has_element?()
+
+      {:ok, lv, _html} = live(conn, ~p"/community/#{rider.slug}")
+      assert has_element?(lv, "#rider-inactive")
+    end
+
+    test "staff hide and delete a rider", %{conn: conn} do
+      staff = staff_scope_fixture()
+      rider = rider_fixture(alias: "Vanish")
+      admin_conn = log_in_user(conn, staff.user)
+
+      {:ok, lv, _html} = live(admin_conn, ~p"/admin/riders/#{rider}/edit")
+      lv |> form("#rider-form", rider_profile: %{hidden_by_staff: "true"}) |> render_submit()
+
+      assert_raise Ecto.NoResultsError, fn -> live(build_conn(), ~p"/community/#{rider.slug}") end
+
+      {:ok, _lv, html} =
+        lv
+        |> element("#rider-delete button", "Delete rider")
+        |> render_click()
+        |> follow_redirect(admin_conn)
+
+      assert html =~ "Vanish deleted."
+      refute PevSquad.Repo.get(PevSquad.Riders.RiderProfile, rider.id)
+    end
+
+    test "members can't add riders", %{conn: conn} do
+      conn = log_in_user(conn, user_fixture())
+      assert {:error, {:redirect, %{to: "/"}}} = live(conn, ~p"/admin/riders/new")
     end
 
     test "staff can't pick more than three communities", %{conn: conn} do

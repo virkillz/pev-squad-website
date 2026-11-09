@@ -15,7 +15,10 @@ defmodule PevSquadWeb.Admin.RiderLive.Index do
             <span class="eyebrow">Admin · {length(@riders)} profiles · {@unclaimed} unclaimed</span>
             <h1 class="section-title">Riders</h1>
           </div>
-          <.link navigate={~p"/admin/events"} class="btn btn-outline">Events admin</.link>
+          <div class="flex flex-wrap gap-3">
+            <.link navigate={~p"/admin/riders/new"} class="btn btn-primary">New Rider</.link>
+            <.link navigate={~p"/admin/events"} class="btn btn-outline">Events admin</.link>
+          </div>
         </div>
 
         <.table
@@ -29,13 +32,22 @@ defmodule PevSquadWeb.Admin.RiderLive.Index do
           <:col :let={rider} label="Member account">
             {if rider.user, do: rider.user.email, else: "— unclaimed"}
           </:col>
-          <:col :let={rider} label="Public">{if rider.is_public, do: "Yes", else: "Hidden"}</:col>
+          <:col :let={rider} label="Status">{status_label(rider.status)}</:col>
+          <:col :let={rider} label="Public">{visibility_label(rider)}</:col>
           <:col :let={rider} label="Photo">{if rider.avatar_path, do: "✓", else: ""}</:col>
         </.table>
       </section>
     </Layouts.app>
     """
   end
+
+  defp status_label(:active), do: "Active"
+  defp status_label(:inactive), do: "Inactive"
+  defp status_label(:banned), do: "Banned"
+
+  defp visibility_label(%{hidden_by_staff: true}), do: "Hidden by admin"
+  defp visibility_label(%{is_public: true}), do: "Yes"
+  defp visibility_label(_), do: "Not public"
 
   @impl true
   def mount(_params, _session, socket) do

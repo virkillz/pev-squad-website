@@ -5,6 +5,7 @@ defmodule PevSquad.Riders.RiderProfile do
   alias PevSquad.Accounts.User
 
   @pev_types [:euc, :escooter, :esk8, :ebike, :other]
+  @statuses [:active, :inactive, :banned]
 
   schema "rider_profiles" do
     field :alias, :string
@@ -18,7 +19,14 @@ defmodule PevSquad.Riders.RiderProfile do
     field :avatar_path, :string
     field :is_public, :boolean, default: false
     field :featured_since, :utc_datetime
-    field :source, Ecto.Enum, values: [:member, :import], default: :member
+    field :source, Ecto.Enum, values: [:member, :import, :staff], default: :member
+    # Staff-only. Inactive riders stay listed with a badge; banned riders
+    # leave the roster but their page shows `ban_reason` publicly.
+    field :status, Ecto.Enum, values: @statuses, default: :active
+    field :ban_reason, :string
+    field :banned_at, :utc_datetime
+    # Staff override of the member's own `is_public`.
+    field :hidden_by_staff, :boolean, default: false
     # Published partner communities the rider belongs to, in display order.
     # Filled by the Riders context; set by staff via Riders.set_communities/3.
     field :communities, {:array, :any}, virtual: true, default: []
@@ -29,6 +37,7 @@ defmodule PevSquad.Riders.RiderProfile do
   end
 
   def pev_types, do: @pev_types
+  def statuses, do: @statuses
 
   @doc "Fields a member edits on their own profile."
   def changeset(profile, attrs) do
@@ -69,7 +78,27 @@ defmodule PevSquad.Riders.RiderProfile do
   def staff_changeset(profile, attrs) do
     profile
     |> changeset(attrs)
-    |> cast(attrs, [:featured_since])
+    |> cast(attrs, [:featured_since, :status, :ban_reason, :hidden_by_staff])
+    |> validate_required([:status])
+    |> put_ban()
+  end
+
+  # A ban needs a public statement and is dated; lifting it clears both.
+  defp put_ban(changeset) do
+    case get_field(changeset, :status) do
+      :banned ->
+        changeset
+        |> validate_required([:ban_reason], message: "write the public statement for the ban")
+        |> validate_length(:ban_reason, max: 1000)
+        |> then(fn cs ->
+          if get_field(cs, :banned_at),
+            do: cs,
+            else: put_change(cs, :banned_at, DateTime.utc_now(:second))
+        end)
+
+      _ ->
+        change(changeset, ban_reason: nil, banned_at: nil)
+    end
   end
 
   defp normalize_instagram(nil), do: nil

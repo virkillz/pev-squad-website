@@ -20,7 +20,24 @@ defmodule PevSquadWeb.UserLive.Profile do
             </:subtitle>
           </.header>
 
-          <p :if={@profile.id && @profile.is_public} class="notice">
+          <p :if={@profile.status == :banned} class="notice" id="profile-banned">
+            Your profile has been banned by PEV Squad staff and can't be edited. Contact an admin if you think this is a mistake.
+          </p>
+          <p
+            :if={@profile.hidden_by_staff && @profile.status != :banned}
+            class="notice"
+            id="profile-hidden"
+          >
+            Staff have hidden your profile from the public site. Contact an admin to find out why.
+          </p>
+
+          <p
+            :if={
+              @profile.id && @profile.is_public && !@profile.hidden_by_staff &&
+                @profile.status != :banned
+            }
+            class="notice"
+          >
             Live at
             <.link navigate={~p"/community/#{@profile.slug}"} class="link-orange">
               /community/{@profile.slug}
@@ -28,6 +45,7 @@ defmodule PevSquadWeb.UserLive.Profile do
           </p>
 
           <.form
+            :if={@profile.status != :banned}
             for={@form}
             id="profile-form"
             phx-change="validate"
@@ -201,6 +219,9 @@ defmodule PevSquadWeb.UserLive.Profile do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset))}
+
+      {:error, :banned} ->
+        {:noreply, put_flash(socket, :error, "Your profile has been banned and can't be edited.")}
     end
   end
 

@@ -32,7 +32,10 @@ defmodule PevSquadWeb.RiderComponents do
     <.link navigate={~p"/community/#{@rider.slug}"} class="card" style="text-decoration:none;">
       <div class="card-head">
         <span class="card-initials">{initials(@rider.alias)}</span>
-        <span class="badge">{type_label(@rider.primary_pev_type)}</span>
+        <span class="flex gap-1">
+          <span :if={@rider.status == :inactive} class="badge badge-grey">Inactive</span>
+          <span class="badge">{type_label(@rider.primary_pev_type)}</span>
+        </span>
       </div>
       <img
         :if={@rider.avatar_path}
