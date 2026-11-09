@@ -222,3 +222,28 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "write a title and text in at least one language"
 msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:118
+#, elixir-autogen, elixir-format
+msgid "add 1 to 5 photos"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:129
+#, elixir-autogen, elixir-format
+msgid "add a WhatsApp number or an Instagram handle"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:89
+#, elixir-autogen, elixir-format
+msgid "tell buyers about it"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:97
+#, elixir-autogen, elixir-format
+msgid "use an Indonesian number, e.g. 0812 3456 7890"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:100
+#, elixir-autogen, elixir-format
+msgid "use your handle, e.g. pevsquad"
+msgstr ""

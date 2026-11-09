@@ -66,6 +66,9 @@ defmodule PevSquadWeb.GalleryComponents do
     """
   end
 
+  attr :label, :string, default: nil, doc: "top-bar label; defaults to \"The Archive\""
+  attr :report, :boolean, default: true, doc: "show the \"Report this photo\" link"
+
   def lightbox(assigns) do
     ~H"""
     <div
@@ -78,7 +81,7 @@ defmodule PevSquadWeb.GalleryComponents do
       phx-update="ignore"
     >
       <div class="lb-bar">
-        <span>{gettext("The Archive")} // PEV Squad</span>
+        <span>{@label || gettext("The Archive")} // PEV Squad</span>
         <span class="lb-count">01 / 01</span>
         <button type="button" class="lb-close">{gettext("Close")} ✕</button>
       </div>
@@ -91,7 +94,7 @@ defmodule PevSquadWeb.GalleryComponents do
         <h2 class="lb-title"></h2>
         <p class="lb-desc"></p>
         <div class="lb-meta"></div>
-        <a class="lb-report" href="#">{gettext("Report this photo")}</a>
+        <a :if={@report} class="lb-report" href="#">{gettext("Report this photo")}</a>
       </div>
     </div>
     """

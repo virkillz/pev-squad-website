@@ -5,9 +5,4 @@ defmodule PevSquadWeb.PageControllerTest do
     conn = get(conn, ~p"/")
     assert html_response(conn, 200) =~ "PERS"
   end
-
-  test "unported sections show a placeholder", %{conn: conn} do
-    conn = get(conn, ~p"/for-sale")
-    assert html_response(conn, 200) =~ "Under construction"
-  end
 end

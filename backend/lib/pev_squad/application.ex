@@ -7,21 +7,27 @@ defmodule PevSquad.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      PevSquadWeb.Telemetry,
-      PevSquad.Repo,
-      {DNSCluster, query: Application.get_env(:pev_squad, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: PevSquad.PubSub},
-      # Start a worker by calling: PevSquad.Worker.start_link(arg)
-      # {PevSquad.Worker, arg},
-      # Start to serve requests, typically the last entry
-      PevSquadWeb.Endpoint
-    ]
+    children =
+      [
+        PevSquadWeb.Telemetry,
+        PevSquad.Repo,
+        {DNSCluster, query: Application.get_env(:pev_squad, :dns_cluster_query) || :ignore},
+        {Phoenix.PubSub, name: PevSquad.PubSub},
+        # Start to serve requests, typically the last entry
+        PevSquadWeb.Endpoint
+      ] ++ reminders()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: PevSquad.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  # Hourly "is this still for sale?" emails (off in tests).
+  defp reminders do
+    if Application.get_env(:pev_squad, :listing_reminders, true),
+      do: [PevSquad.Listings.Reminder],
+      else: []
   end
 
   # Tell Phoenix to update the endpoint configuration

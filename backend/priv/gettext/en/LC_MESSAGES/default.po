@@ -184,8 +184,12 @@ msgstr ""
 
 #: lib/pev_squad_web/components/layouts.ex:20
 #: lib/pev_squad_web/components/layouts.ex:146
-#: lib/pev_squad_web/controllers/page_controller.ex:4
 #: lib/pev_squad_web/live/home_live/index.html.heex:259
+#: lib/pev_squad_web/live/listing_live/index.ex:19
+#: lib/pev_squad_web/live/listing_live/index.ex:88
+#: lib/pev_squad_web/live/listing_live/mine.ex:21
+#: lib/pev_squad_web/live/listing_live/show.ex:20
+#: lib/pev_squad_web/live/listing_live/show.ex:168
 #, elixir-autogen, elixir-format
 msgid "For Sale"
 msgstr ""
@@ -287,6 +291,7 @@ msgstr ""
 
 #: lib/pev_squad_web/components/layouts.ex:99
 #: lib/pev_squad_web/live/auth_titles.ex:13
+#: lib/pev_squad_web/live/listing_live/show.ex:161
 #: lib/pev_squad_web/live/user_live/confirmation.ex:55
 #: lib/pev_squad_web/live/user_live/login.ex:15
 #, elixir-autogen, elixir-format
@@ -533,6 +538,7 @@ msgstr ""
 
 #: lib/pev_squad_web/live/community_live/index.ex:13
 #: lib/pev_squad_web/live/event_live/index.ex:10
+#: lib/pev_squad_web/live/listing_live/index.ex:50
 #: lib/pev_squad_web/live/post_live/index.ex:42
 #: lib/pev_squad_web/live/review_live/index.ex:12
 #, elixir-autogen, elixir-format
@@ -665,7 +671,7 @@ msgstr ""
 msgid "First come, first served. You'll get a seat if someone cancels."
 msgstr ""
 
-#: lib/pev_squad_web/components/event_components.ex:205
+#: lib/pev_squad_web/components/event_components.ex:204
 #: lib/pev_squad_web/live/event_live/show.ex:176
 #, elixir-autogen, elixir-format
 msgid "Full — join the waitlist"
@@ -1074,7 +1080,7 @@ msgstr ""
 msgid "%{count} Frames"
 msgstr ""
 
-#: lib/pev_squad_web/components/gallery_components.ex:121
+#: lib/pev_squad_web/components/gallery_components.ex:124
 #, elixir-autogen, elixir-format
 msgid "%{index} of %{total}"
 msgstr ""
@@ -1329,13 +1335,9 @@ msgid "Area"
 msgstr ""
 
 #: lib/pev_squad_web/live/group_ride_live/form.ex:133
+#: lib/pev_squad_web/live/listing_live/form.ex:176
 #, elixir-autogen, elixir-format
 msgid "Back"
-msgstr ""
-
-#: lib/pev_squad_web/controllers/page_html/coming_soon.html.heex:17
-#, elixir-autogen, elixir-format
-msgid "Back Home"
 msgstr ""
 
 #: lib/pev_squad_web/live/review_live/show.ex:142
@@ -1468,7 +1470,7 @@ msgstr ""
 msgid "Class"
 msgstr ""
 
-#: lib/pev_squad_web/components/gallery_components.ex:83
+#: lib/pev_squad_web/components/gallery_components.ex:86
 #: lib/pev_squad_web/components/layouts.ex:109
 #, elixir-autogen, elixir-format
 msgid "Close"
@@ -1524,6 +1526,8 @@ msgstr ""
 msgid "EUC, scooter and esk8 reviews from PEV Squad riders who own the gear — ranked, ridden, not sponsored."
 msgstr ""
 
+#: lib/pev_squad_web/live/listing_live/mine.ex:114
+#: lib/pev_squad_web/live/listing_live/show.ex:47
 #: lib/pev_squad_web/live/review_live/show.ex:120
 #, elixir-autogen, elixir-format
 msgid "Edit"
@@ -1594,7 +1598,7 @@ msgstr ""
 msgid "Everything, ranked"
 msgstr ""
 
-#: lib/pev_squad_web/components/gallery_components.ex:114
+#: lib/pev_squad_web/components/gallery_components.ex:117
 #, elixir-autogen, elixir-format
 msgid "Featured photos"
 msgstr ""
@@ -1721,6 +1725,7 @@ msgstr ""
 msgid "Km on your unit"
 msgstr ""
 
+#: lib/pev_squad_web/components/listing_components.ex:49
 #: lib/pev_squad_web/live/user_live/profile.ex:263
 #, elixir-autogen, elixir-format
 msgid "Live"
@@ -1786,6 +1791,8 @@ msgstr ""
 msgid "Model"
 msgstr ""
 
+#: lib/pev_squad_web/live/listing_live/mine.ex:64
+#: lib/pev_squad_web/live/listing_live/show.ex:40
 #: lib/pev_squad_web/live/review_live/form.ex:29
 #, elixir-autogen, elixir-format
 msgid "Moderator's note:"
@@ -1831,8 +1838,8 @@ msgstr ""
 msgid "Next on the Sheet"
 msgstr ""
 
-#: lib/pev_squad_web/components/gallery_components.ex:88
-#: lib/pev_squad_web/components/gallery_components.ex:155
+#: lib/pev_squad_web/components/gallery_components.ex:91
+#: lib/pev_squad_web/components/gallery_components.ex:158
 #, elixir-autogen, elixir-format
 msgid "Next photo"
 msgstr ""
@@ -1922,6 +1929,7 @@ msgstr ""
 msgid "Only you and the moderators can see this until it's approved."
 msgstr ""
 
+#: lib/pev_squad/listings/listing.ex:61
 #: lib/pev_squad_web/components/rider_components.ex:11
 #, elixir-autogen, elixir-format
 msgid "Other"
@@ -1938,6 +1946,7 @@ msgid "Our community lives on chat, not inboxes. Join the WhatsApp group to get 
 msgstr ""
 
 #: lib/pev_squad_web/live/gallery_live/upload.ex:192
+#: lib/pev_squad_web/live/listing_live/form.ex:343
 #, elixir-autogen, elixir-format
 msgid "Over 20 MB."
 msgstr ""
@@ -2005,7 +2014,7 @@ msgstr ""
 msgid "Partnership"
 msgstr ""
 
-#: lib/pev_squad_web/components/gallery_components.ex:77
+#: lib/pev_squad_web/components/gallery_components.ex:80
 #, elixir-autogen, elixir-format
 msgid "Photo viewer"
 msgstr ""
@@ -2040,8 +2049,8 @@ msgstr ""
 msgid "Prev"
 msgstr ""
 
-#: lib/pev_squad_web/components/gallery_components.ex:86
-#: lib/pev_squad_web/components/gallery_components.ex:144
+#: lib/pev_squad_web/components/gallery_components.ex:89
+#: lib/pev_squad_web/components/gallery_components.ex:147
 #, elixir-autogen, elixir-format
 msgid "Previous photo"
 msgstr ""
@@ -2107,6 +2116,8 @@ msgid "Real name (private)"
 msgstr ""
 
 #: lib/pev_squad_web/live/gallery_live/upload.ex:69
+#: lib/pev_squad_web/live/listing_live/form.ex:138
+#: lib/pev_squad_web/live/listing_live/form.ex:150
 #, elixir-autogen, elixir-format
 msgid "Remove"
 msgstr ""
@@ -2118,7 +2129,7 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
-#: lib/pev_squad_web/components/gallery_components.ex:94
+#: lib/pev_squad_web/components/gallery_components.ex:97
 #, elixir-autogen, elixir-format
 msgid "Report this photo"
 msgstr ""
@@ -2256,6 +2267,7 @@ msgid "Save profile"
 msgstr ""
 
 #: lib/pev_squad_web/live/group_ride_live/form.ex:130
+#: lib/pev_squad_web/live/listing_live/form.ex:171
 #: lib/pev_squad_web/live/review_live/form.ex:118
 #: lib/pev_squad_web/live/user_live/profile.ex:136
 #: lib/pev_squad_web/live/user_live/settings.ex:75
@@ -2290,11 +2302,6 @@ msgstr ""
 msgid "Seats (max %{max})"
 msgstr ""
 
-#: lib/pev_squad_web/controllers/page_html/coming_soon.html.heex:16
-#, elixir-autogen, elixir-format
-msgid "See Events"
-msgstr ""
-
 #: lib/pev_squad_web/live/gallery_live/index.ex:44
 #, elixir-autogen, elixir-format
 msgid "See all %{count} frames"
@@ -2325,6 +2332,7 @@ msgstr ""
 msgid "Sent back — edit and resubmit"
 msgstr ""
 
+#: lib/pev_squad_web/components/listing_components.ex:143
 #: lib/pev_squad_web/live/group_ride_live/form.ex:32
 #, elixir-autogen, elixir-format
 msgid "Set up my profile"
@@ -2411,6 +2419,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
+#: lib/pev_squad_web/live/listing_live/form.ex:173
 #: lib/pev_squad_web/live/review_live/form.ex:119
 #, elixir-autogen, elixir-format
 msgid "Submit for review"
@@ -2471,7 +2480,7 @@ msgstr ""
 msgid "The %{model} review “%{headline}”"
 msgstr ""
 
-#: lib/pev_squad_web/components/gallery_components.ex:81
+#: lib/pev_squad_web/components/gallery_components.ex:84
 #: lib/pev_squad_web/live/gallery_live/album.ex:16
 #: lib/pev_squad_web/live/gallery_live/index.ex:16
 #, elixir-autogen, elixir-format
@@ -2539,11 +2548,6 @@ msgstr ""
 msgid "This album isn't taking new photos."
 msgstr ""
 
-#: lib/pev_squad_web/controllers/page_html/coming_soon.html.heex:9
-#, elixir-autogen, elixir-format
-msgid "This section is still being moved over from the prototype. Events and RSVPs are live already."
-msgstr ""
-
 #: lib/pev_squad_web/live/about_live/index.ex:35
 #, elixir-autogen, elixir-format
 msgid "Three things a personal electric vehicle does better than anything else on the road. Everything the squad does fits under one of them."
@@ -2601,11 +2605,6 @@ msgstr ""
 msgid "Unblocked."
 msgstr ""
 
-#: lib/pev_squad_web/controllers/page_html/coming_soon.html.heex:4
-#, elixir-autogen, elixir-format
-msgid "Under construction"
-msgstr ""
-
 #: lib/pev_squad_web/live/gallery_live/upload.ex:19
 #, elixir-autogen, elixir-format
 msgid "Up to %{count} at a time, 20 MB each. Location data is stripped from every photo."
@@ -2627,6 +2626,7 @@ msgid "Update email instructions"
 msgstr ""
 
 #: lib/pev_squad_web/live/gallery_live/upload.ex:198
+#: lib/pev_squad_web/live/listing_live/form.ex:349
 #: lib/pev_squad_web/live/user_live/profile.ex:278
 #, elixir-autogen, elixir-format
 msgid "Upload failed — try again."
@@ -2638,6 +2638,7 @@ msgid "Uploading..."
 msgstr ""
 
 #: lib/pev_squad_web/live/gallery_live/upload.ex:193
+#: lib/pev_squad_web/live/listing_live/form.ex:344
 #, elixir-autogen, elixir-format
 msgid "Use JPG, PNG or WebP."
 msgstr ""
@@ -2836,11 +2837,6 @@ msgstr ""
 #: lib/pev_squad_web/live/about_live/index.ex:19
 #, elixir-autogen, elixir-format
 msgid "since 2023"
-msgstr ""
-
-#: lib/pev_squad_web/controllers/page_html/coming_soon.html.heex:5
-#, elixir-autogen, elixir-format
-msgid "soon"
 msgstr ""
 
 #: lib/pev_squad_web/live/group_ride_live/form.ex:281
@@ -3047,7 +3043,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: lib/pev_squad_web/components/post_components.ex:76
+#: lib/pev_squad_web/components/post_components.ex:85
 #: lib/pev_squad_web/live/post_live/show.ex:67
 #, elixir-autogen, elixir-format
 msgid "Source"
@@ -3066,4 +3062,633 @@ msgstr ""
 #: lib/pev_squad_web/live/post_live/index.ex:19
 #, elixir-autogen, elixir-format
 msgid "off the wire"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:117
+#, elixir-autogen, elixir-format
+msgid "%{count} units"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:84
+#, elixir-autogen, elixir-format
+msgid "%{title}, photo %{n}"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:63
+#, elixir-autogen, elixir-format
+msgid "1 day ago"
+msgid_plural "%{count} days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:31
+#, elixir-autogen, elixir-format
+msgid "1 listing"
+msgid_plural "%{count} listings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/pev_squad/listings/notifier.ex:35
+#, elixir-autogen, elixir-format
+msgid "A member listing is waiting in the For Sale queue:\n\n  %{title}\n\n%{url}"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:226
+#, elixir-autogen, elixir-format
+msgid "A moderator checks every listing before it goes on the board."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:19
+#, elixir-autogen, elixir-format
+msgid "A moderator checks every listing before it goes on the board. Up to %{count} photos, 20 MB each; location data is stripped from every photo."
+msgstr ""
+
+#: lib/pev_squad/listings/notifier.ex:63
+#, elixir-autogen, elixir-format
+msgid "A moderator sent your listing \"%{title}\"\nback with this note:\n\n  %{note}\n\nEdit and resubmit it here:\n\n%{url}"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:201
+#, elixir-autogen, elixir-format
+msgid "A moderator will check it soon."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:311
+#, elixir-autogen, elixir-format
+msgid "A photo couldn't be read. Try JPG or PNG."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:91
+#, elixir-autogen, elixir-format
+msgid "About it"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:332
+#, elixir-autogen, elixir-format
+msgid "Add 1 to %{count} photos."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:246
+#, elixir-autogen, elixir-format
+msgid "Add at least one photo."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:118
+#, elixir-autogen, elixir-format
+msgid "Add at least one. Only logged-in members see them, never visitors or search engines."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:52
+#, elixir-autogen, elixir-format
+msgid "Category"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:24
+#, elixir-autogen, elixir-format
+msgid "Changing the price, quantity, location or contact keeps it live. Changing the title, category, condition, description or photos sends it back for review."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:140
+#, elixir-autogen, elixir-format
+msgid "Chat on WhatsApp"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:124
+#, elixir-autogen, elixir-format
+msgid "Checked %{when}"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:53
+#: lib/pev_squad_web/live/listing_live/form.ex:61
+#, elixir-autogen, elixir-format
+msgid "Choose one"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:60
+#: lib/pev_squad_web/live/listing_live/show.ex:101
+#, elixir-autogen, elixir-format
+msgid "Condition"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:96
+#, elixir-autogen, elixir-format
+msgid "Condition, battery health, what's included, any repairs, why you're selling, COD or shipping."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:149
+#, elixir-autogen, elixir-format
+msgid "DM @%{handle} on Instagram"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:122
+#, elixir-autogen, elixir-format
+msgid "Delete"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:119
+#, elixir-autogen, elixir-format
+msgid "Delete this listing? This can't be undone."
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:54
+#, elixir-autogen, elixir-format
+msgid "Deleted"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:94
+#, elixir-autogen, elixir-format
+msgid "Description"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:58
+#, elixir-autogen, elixir-format
+msgid "E-bike"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:56
+#, elixir-autogen, elixir-format
+msgid "E-scooter"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:57
+#, elixir-autogen, elixir-format
+msgid "E-skateboard"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:55
+#, elixir-autogen, elixir-format
+msgid "EUC"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:202
+#, elixir-autogen, elixir-format
+msgid "Edit it to send it back for review."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:220
+#, elixir-autogen, elixir-format
+msgid "Edit listing"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:229
+#, elixir-autogen, elixir-format
+msgid "Edit the listing and save it to send it back for review."
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:50
+#, elixir-autogen, elixir-format
+msgid "Expired"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:66
+#, elixir-autogen, elixir-format
+msgid "For parts"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:9
+#, elixir-autogen, elixir-format
+msgid "Free"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:217
+#, elixir-autogen, elixir-format
+msgid "Hi, is your %{title} on PEV Squad still available? %{url}"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:53
+#, elixir-autogen, elixir-format
+msgid "Hidden"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:197
+#, elixir-autogen, elixir-format
+msgid "Hidden. Only you can see it now."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:216
+#, elixir-autogen, elixir-format
+msgid "Hidden. Only you can see it."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:99
+#, elixir-autogen, elixir-format
+msgid "Hide"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:113
+#, elixir-autogen, elixir-format
+msgid "Instagram handle"
+msgstr ""
+
+#: lib/pev_squad/listings/notifier.ex:77
+#, elixir-autogen, elixir-format
+msgid "Is your %{title} still available?"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:233
+#, elixir-autogen, elixir-format
+msgid "It drops off the board %{when} unless you tap \"Still available\"."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:186
+#, elixir-autogen, elixir-format
+msgid "It had been off the board for a while, so a moderator will check it again before it goes back up."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:242
+#, elixir-autogen, elixir-format
+msgid "It stays on the board, marked sold, until %{when}."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:196
+#, elixir-autogen, elixir-format
+msgid "It's back on the board."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:72
+#, elixir-autogen, elixir-format
+msgid "Last %{count} days"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:64
+#, elixir-autogen, elixir-format
+msgid "Like new"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:199
+#, elixir-autogen, elixir-format
+msgid "Listing deleted."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:327
+#, elixir-autogen, elixir-format
+msgid "Listing saved."
+msgstr ""
+
+#: lib/pev_squad/listings/notifier.ex:34
+#, elixir-autogen, elixir-format
+msgid "Listing waiting for approval: %{title}"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:26
+#, elixir-autogen, elixir-format
+msgid "Listings stay on the board for %{days} days after you last confirmed them. Tap \"Still available\" at least once a week; we'll email you a reminder before one drops off."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:107
+#, elixir-autogen, elixir-format
+msgid "Location"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:159
+#, elixir-autogen, elixir-format
+msgid "Log in to see how to contact the seller."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:82
+#, elixir-autogen, elixir-format
+msgid "Mark sold"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:194
+#, elixir-autogen, elixir-format
+msgid "Marked sold. It stays on the board as sold for 7 days."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:152
+#, elixir-autogen, elixir-format
+msgid "Meet in a public place, check the item before you pay, and never send a deposit to someone you haven't met."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:16
+#, elixir-autogen, elixir-format
+msgid "Member marketplace"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:103
+#, elixir-autogen, elixir-format
+msgid "Mileage"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:80
+#, elixir-autogen, elixir-format
+msgid "Mileage in km (optional)"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:37
+#: lib/pev_squad_web/live/listing_live/mine.ex:24
+#: lib/pev_squad_web/live/listing_live/mine.ex:143
+#: lib/pev_squad_web/live/listing_live/show.ex:44
+#, elixir-autogen, elixir-format
+msgid "My listings"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:48
+#, elixir-autogen, elixir-format
+msgid "Needs changes"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:63
+#, elixir-autogen, elixir-format
+msgid "New"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:33
+#, elixir-autogen, elixir-format
+msgid "New listing"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:91
+#, elixir-autogen, elixir-format
+msgid "Not sold after all"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:65
+#, elixir-autogen, elixir-format
+msgid "Nothing for sale here right now. Got something to sell?"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:208
+#, elixir-autogen, elixir-format
+msgid "Off the board. Tap \"Still available\" to put it back."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:33
+#, elixir-autogen, elixir-format
+msgid "On the board"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:205
+#, elixir-autogen, elixir-format
+msgid "On the board. Drops off %{when}."
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:152
+#, elixir-autogen, elixir-format
+msgid "Only active members can sell. Ask a moderator if you think this is a mistake."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:247
+#, elixir-autogen, elixir-format
+msgid "Only you can see it until you unhide it."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:246
+#, elixir-autogen, elixir-format
+msgid "Only you can see it."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:238
+#, elixir-autogen, elixir-format
+msgid "Only you can see it. Tap \"Still available\" on My listings to put it back."
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:59
+#, elixir-autogen, elixir-format
+msgid "Parts"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:125
+#, elixir-autogen, elixir-format
+msgid "Photos (%{count} of %{max})"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:97
+#, elixir-autogen, elixir-format
+msgid "Price"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:71
+#, elixir-autogen, elixir-format
+msgid "Price (Rp)"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:83
+#, elixir-autogen, elixir-format
+msgid "Price is negotiable"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:88
+#, elixir-autogen, elixir-format
+msgid "Put it back on the board as available?"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:75
+#: lib/pev_squad_web/live/listing_live/show.ex:105
+#, elixir-autogen, elixir-format
+msgid "Quantity"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:73
+#, elixir-autogen, elixir-format
+msgid "Recently sold"
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:60
+#, elixir-autogen, elixir-format
+msgid "Safety gear"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:174
+#, elixir-autogen, elixir-format
+msgid "Save listing"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:325
+#, elixir-autogen, elixir-format
+msgid "Saved and sent to a moderator."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:322
+#, elixir-autogen, elixir-format
+msgid "Saved. Your changes go back to a moderator before they show on the board."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:209
+#: lib/pev_squad_web/live/listing_live/index.ex:40
+#, elixir-autogen, elixir-format
+msgid "Sell something"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:109
+#, elixir-autogen, elixir-format
+msgid "Seller"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:138
+#, elixir-autogen, elixir-format
+msgid "Selling is for active PEV Squad members. Set up your rider profile first so buyers know who they're dealing with."
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:51
+#: lib/pev_squad_web/components/listing_components.ex:52
+#: lib/pev_squad_web/components/listing_components.ex:91
+#, elixir-autogen, elixir-format
+msgid "Sold"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:122
+#, elixir-autogen, elixir-format
+msgid "Sold %{when}"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:214
+#, elixir-autogen, elixir-format
+msgid "Sold %{when}."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:127
+#, elixir-autogen, elixir-format
+msgid "Sold %{when}. Congrats to the new owner."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:211
+#, elixir-autogen, elixir-format
+msgid "Sold %{when}. Shown as sold for a week."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:74
+#: lib/pev_squad_web/live/listing_live/show.ex:120
+#, elixir-autogen, elixir-format
+msgid "Still available"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:319
+#, elixir-autogen, elixir-format
+msgid "Thanks! A moderator will check your listing; we'll email you when it's live."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:191
+#, elixir-autogen, elixir-format
+msgid "Thanks! It stays on the board for another %{days} days."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:178
+#, elixir-autogen, elixir-format
+msgid "That didn't work. Try again."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:198
+#, elixir-autogen, elixir-format
+msgid "Unhidden."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:107
+#, elixir-autogen, elixir-format
+msgid "Unhide"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:253
+#: lib/pev_squad_web/live/listing_live/form.ex:347
+#, elixir-autogen, elixir-format
+msgid "Up to %{count} photos."
+msgstr ""
+
+#: lib/pev_squad/listings/listing.ex:65
+#, elixir-autogen, elixir-format
+msgid "Used"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:91
+#, elixir-autogen, elixir-format
+msgid "Used and new EUCs, scooters, boards and gear from PEV Squad riders."
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:47
+#, elixir-autogen, elixir-format
+msgid "Waiting for review"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:44
+#, elixir-autogen, elixir-format
+msgid "What are you selling?"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:107
+#, elixir-autogen, elixir-format
+msgid "WhatsApp number"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:21
+#, elixir-autogen, elixir-format
+msgid "Wheels, scooters, boards, parts and gear from riders in the squad. Every listing is checked by a moderator, and sellers confirm each week that it's still available, so what you see here is really for sale. Deal directly with the seller; PEV Squad doesn't handle payments."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/form.ex:87
+#, elixir-autogen, elixir-format
+msgid "Where is it?"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/mine.ex:40
+#, elixir-autogen, elixir-format
+msgid "You haven't listed anything yet."
+msgstr ""
+
+#: lib/pev_squad/listings/notifier.ex:78
+#, elixir-autogen, elixir-format
+msgid "Your listing \"%{title}\" comes off the For Sale\nboard in 2 days unless you confirm it's still available.\n\nTap \"Still available\" on My listings, or mark it sold:\n\n%{url}"
+msgstr ""
+
+#: lib/pev_squad/listings/notifier.ex:48
+#, elixir-autogen, elixir-format
+msgid "Your listing \"%{title}\" has been approved\nand is now on the For Sale board:\n\n%{url}\n\nIt stays up for %{days} days. To keep it up, tap \"Still available\"\non My listings at least once a week. When it sells, mark it sold."
+msgstr ""
+
+#: lib/pev_squad/listings/notifier.ex:47
+#, elixir-autogen, elixir-format
+msgid "Your listing is live: %{title}"
+msgstr ""
+
+#: lib/pev_squad/listings/notifier.ex:62
+#, elixir-autogen, elixir-format
+msgid "Your listing needs changes: %{title}"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:147
+#, elixir-autogen, elixir-format
+msgid "Your rider profile is waiting for a moderator to approve it. You can sell once it's approved."
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:122
+#, elixir-autogen, elixir-format
+msgid "confirmed %{when}"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:72
+#, elixir-autogen, elixir-format
+msgid "in 1 day"
+msgid_plural "in %{count} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/pev_squad_web/components/listing_components.ex:113
+#: lib/pev_squad_web/live/listing_live/show.ex:29
+#, elixir-autogen, elixir-format
+msgid "nego"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/show.ex:99
+#, elixir-autogen, elixir-format
+msgid "negotiable"
+msgstr ""
+
+#: lib/pev_squad_web/live/listing_live/index.ex:17
+#, elixir-autogen, elixir-format
+msgid "still rolling"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:61
+#: lib/pev_squad_web/components/listing_components.ex:70
+#, elixir-autogen, elixir-format
+msgid "today"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:71
+#, elixir-autogen, elixir-format
+msgid "tomorrow"
+msgstr ""
+
+#: lib/pev_squad_web/components/listing_components.ex:62
+#, elixir-autogen, elixir-format
+msgid "yesterday"
 msgstr ""

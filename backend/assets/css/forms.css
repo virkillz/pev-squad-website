@@ -649,3 +649,111 @@
   border: 1px solid currentColor;
   font-weight: 700;
 }
+
+/* ==========================================================================
+   For Sale
+   ========================================================================== */
+
+.listing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.listing-photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--black);
+  border-bottom: var(--bw) solid var(--black);
+  overflow: hidden;
+}
+.listing-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+.listing-card.is-sold .listing-photo img { filter: grayscale(1); opacity: 0.6; }
+.listing-card.is-sold .listing-price { text-decoration: line-through; }
+
+.listing-price {
+  margin-top: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--orange);
+}
+.listing-price-big { margin-top: 1rem; font-size: clamp(1.5rem, 4vw, 2.5rem); }
+
+.listing-nego {
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid currentColor;
+  font-size: 0.65em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.listing-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* Photos: the first full width, the rest in one strip under it. */
+.listing-photos + .listing-photos { border-top: 0; }
+.listing-photos .photo-tile { aspect-ratio: 4 / 3; }
+
+.page-header .listing-price { color: var(--black); }
+
+.listing-desc { margin-top: 1rem; white-space: pre-line; line-height: 1.6; }
+
+.listing-aside { display: grid; gap: 1.5rem; position: sticky; top: 6rem; }
+
+.listing-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  border: var(--bw) solid var(--rule);
+}
+.listing-facts dt,
+.listing-facts dd { padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--rule); }
+.listing-facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.listing-facts dd { font-weight: 600; }
+.listing-facts dt:nth-last-of-type(1),
+.listing-facts dd:nth-last-of-type(1) { border-bottom: 0; }
+
+/* Seller's dashboard and admin queue. */
+.my-listings { display: grid; gap: 1rem; }
+
+.my-listing {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1.25rem;
+  padding: 1rem;
+  border: var(--bw) solid var(--rule);
+}
+.my-listing-thumb { display: block; aspect-ratio: 4 / 3; background: var(--fill-soft); }
+.my-listing-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.my-listing-body { display: grid; gap: 0.4rem; align-content: start; }
+
+.listing-uploads { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.listing-upload { position: relative; width: 120px; }
+.listing-upload img {
+  width: 120px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: var(--bw) solid var(--black);
+}
+.listing-upload .btn { position: absolute; top: 0.25rem; right: 0.25rem; }
+
+@media (max-width: 900px) {
+  .listing-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .listing-aside { position: static; }
+}
+
+@media (max-width: 560px) {
+  .my-listing { grid-template-columns: 1fr; }
+}

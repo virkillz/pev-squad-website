@@ -1,14 +1,6 @@
 defmodule PevSquadWeb.PageController do
   use PevSquadWeb, :controller
 
-  defp section("for-sale"), do: {:for_sale, "05", gettext("For Sale")}
-
-  def coming_soon(conn, _params) do
-    {active, num, title} = section(hd(conn.path_info))
-
-    render(conn, :coming_soon, active: active, num: num, title: title, page_title: title)
-  end
-
   def riders(conn, _params), do: redirect(conn, to: ~p"/community")
 
   # The language switcher. `PevSquadWeb.Locale` (in the pipeline) has

@@ -31,14 +31,20 @@ defmodule PevSquadWeb.Admin.Dashboard do
             <div class="index-desc">Approve or reject member gallery uploads.</div>
             <div class="index-meta">{@pending_photos} WAITING</div>
           </.link>
-          <.link class="index-row" navigate={~p"/admin/albums"}>
+          <.link class="index-row" navigate={~p"/admin/listings"}>
             <div class="index-num">03</div>
+            <div class="index-title">Listing Queue</div>
+            <div class="index-desc">Approve or send back For Sale listings.</div>
+            <div class="index-meta">{@pending_listings} WAITING</div>
+          </.link>
+          <.link class="index-row" navigate={~p"/admin/albums"}>
+            <div class="index-num">04</div>
             <div class="index-title">Albums</div>
             <div class="index-desc">Create albums, open them for uploads, arrange photos.</div>
             <div class="index-meta">GALLERY</div>
           </.link>
           <.link class="index-row" navigate={~p"/admin/events"}>
-            <div class="index-num">04</div>
+            <div class="index-num">05</div>
             <div class="index-title">Events</div>
             <div class="index-desc">Create rides, set seats, see who's going.</div>
             <div class="index-meta">RSVP · WAITLIST</div>
@@ -49,7 +55,7 @@ defmodule PevSquadWeb.Admin.Dashboard do
               if @pending_riders > 0, do: ~p"/admin/riders?status=pending", else: ~p"/admin/riders"
             }
           >
-            <div class="index-num">05</div>
+            <div class="index-num">06</div>
             <div class="index-title">Riders</div>
             <div class="index-desc">
               Approve new profiles, edit them, link imported ones to members.
@@ -57,7 +63,7 @@ defmodule PevSquadWeb.Admin.Dashboard do
             <div class="index-meta">{@pending_riders} PENDING</div>
           </.link>
           <.link class="index-row" navigate={~p"/admin/members"}>
-            <div class="index-num">06</div>
+            <div class="index-num">07</div>
             <div class="index-title">Members</div>
             <div class="index-desc">
               Everyone who registered and the rider profile they're linked to.
@@ -65,19 +71,19 @@ defmodule PevSquadWeb.Admin.Dashboard do
             <div class="index-meta">ACCOUNTS</div>
           </.link>
           <.link class="index-row" navigate={~p"/admin/models"}>
-            <div class="index-num">07</div>
+            <div class="index-num">08</div>
             <div class="index-title">Model Catalog</div>
             <div class="index-desc">The EUCs, scooters and boards riders can review.</div>
             <div class="index-meta">CATALOG</div>
           </.link>
           <.link class="index-row" navigate={~p"/admin/partners"}>
-            <div class="index-num">08</div>
+            <div class="index-num">09</div>
             <div class="index-title">Partners</div>
             <div class="index-desc">Partner communities and brand partners, with logos.</div>
             <div class="index-meta">NETWORK</div>
           </.link>
           <.link class="index-row" navigate={~p"/admin/posts"}>
-            <div class="index-num">09</div>
+            <div class="index-num">10</div>
             <div class="index-title">News &amp; Articles</div>
             <div class="index-desc">Write news, recaps and guides in Indonesian and English.</div>
             <div class="index-meta">CONTENT</div>
@@ -98,6 +104,7 @@ defmodule PevSquadWeb.Admin.Dashboard do
      |> assign(:open_reports, PevSquad.Safety.count_open(scope))
      |> assign(:pending, Reviews.count_pending(scope))
      |> assign(:pending_photos, PevSquad.Gallery.count_pending_photos(scope))
+     |> assign(:pending_listings, PevSquad.Listings.count_pending(scope))
      |> assign(:pending_riders, PevSquad.Riders.count_pending(scope))}
   end
 end

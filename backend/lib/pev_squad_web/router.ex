@@ -43,10 +43,8 @@ defmodule PevSquadWeb.Router do
       live "/news/:slug", PostLive.Show, :news
       live "/articles", PostLive.Index, :articles
       live "/articles/:slug", PostLive.Show, :article
+      live "/for-sale", ListingLive.Index, :index
     end
-
-    # Sections still living in the static prototype.
-    get "/for-sale", PageController, :coming_soon
 
     # The Featured Riders page is switched off for now (DESIGN.md decision 14).
     get "/riders", PageController, :riders
@@ -86,6 +84,7 @@ defmodule PevSquadWeb.Router do
       live "/posts", PostLive.Index, :index
       live "/posts/new", PostLive.Form, :new
       live "/posts/:id/edit", PostLive.Form, :edit
+      live "/listings", ListingLive.Queue, :index
     end
   end
 
@@ -130,13 +129,17 @@ defmodule PevSquadWeb.Router do
       live "/reviews/:id/edit", ReviewLive.Form, :edit
       live "/gallery/:slug/upload", GalleryLive.Upload, :new
       live "/report/:type/:id", ReportLive.New, :new
+      live "/for-sale/new", ListingLive.Form, :new
+      live "/for-sale/mine", ListingLive.Mine, :index
+      live "/for-sale/:id/edit", ListingLive.Form, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end
 
     post "/users/update-password", UserSessionController, :update_password
   end
 
-  # After the authenticated routes so that /reviews/new isn't taken as an id.
+  # After the authenticated routes so that /reviews/new (and /for-sale/new,
+  # /for-sale/mine) aren't taken as an id.
   scope "/", PevSquadWeb do
     pipe_through :browser
 
@@ -144,6 +147,7 @@ defmodule PevSquadWeb.Router do
       on_mount: [PevSquadWeb.Locale, {PevSquadWeb.UserAuth, :mount_current_scope}] do
       live "/reviews/:id", ReviewLive.Show, :show
       live "/gallery/:slug", GalleryLive.Album, :show
+      live "/for-sale/:id", ListingLive.Show, :show
     end
   end
 

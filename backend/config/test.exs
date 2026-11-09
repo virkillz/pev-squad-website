@@ -23,6 +23,9 @@ config :pev_squad, PevSquadWeb.Endpoint,
   secret_key_base: "gUc+6vWOfiSpvIYVat16S8OUFaN6Rw+H1b9xWyKhQ+GjvUvG8l9CcckMh8F0ZkEv",
   server: false
 
+# No hourly For Sale reminder emails in tests (Listings.send_reminders/2 is tested directly).
+config :pev_squad, :listing_reminders, false
+
 # In test we don't send emails
 config :pev_squad, PevSquad.Mailer, adapter: Swoosh.Adapters.Test
 
