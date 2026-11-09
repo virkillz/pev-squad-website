@@ -6,6 +6,8 @@ defmodule PevSquad.AccountsTest do
   import PevSquad.AccountsFixtures
   import PevSquad.EventsFixtures
   import PevSquad.RidersFixtures
+  import PevSquad.GalleryFixtures
+  import PevSquad.ReviewsFixtures
   alias PevSquad.Accounts.{Scope, User, UserToken}
 
   describe "get_user_by_email/1" do
@@ -442,6 +444,88 @@ defmodule PevSquad.AccountsTest do
       assert_raise PevSquad.Accounts.NotAuthorizedError, fn ->
         Accounts.change_role(Scope.for_user(member), member, :admin)
       end
+    end
+  end
+
+  describe "delete_member/4" do
+    defp event_url(event), do: "https://x/events/#{event.slug}"
+
+    test "removes the account and what they posted, freeing seats and telling riders" do
+      admin = staff_scope_fixture(:admin)
+      dupe = host_scope_fixture("Dupe")
+
+      {:ok, _} =
+        PevSquad.Riders.save_my_profile(dupe, %{bio: "dup"}, image_fixture())
+
+      profile = PevSquad.Riders.get_my_profile(dupe)
+      avatar = PevSquad.Uploads.path(String.trim_leading(profile.avatar_path, "/uploads/"))
+
+      {:ok, _review} =
+        PevSquad.Reviews.create_review(
+          dupe,
+          review_attrs(%{"pev_model_id" => model_fixture().id})
+        )
+
+      {:ok, photo} = PevSquad.Gallery.upload_photo(dupe, album_fixture(), image_fixture())
+
+      # Their hosted ride, with another rider signed up.
+      ride = group_ride_fixture(dupe, %{title: "Dupe Loop"})
+      guest = user_scope_fixture()
+      guest_email = guest.user.email
+      {:ok, _} = PevSquad.Events.rsvp(guest, ride)
+
+      # A full official event they hold a seat on, with someone waiting.
+      event = event_fixture(capacity: 1)
+      {:ok, %{status: :going}} = PevSquad.Events.rsvp(dupe, event)
+      waiting = user_scope_fixture()
+      waiting_email = waiting.user.email
+      {:ok, %{status: :waitlist}} = PevSquad.Events.rsvp(waiting, event)
+
+      footprint = Accounts.member_footprint(admin, dupe.user)
+      assert %{reviews: 1, photos: 1, hosted_rides: 1, upcoming_rsvps: 1} = footprint
+      refute footprint.keeps_profile?
+
+      assert {:ok, _} = Accounts.delete_member(admin, dupe.user, &event_url/1, "https://x/events")
+
+      refute Repo.get(User, dupe.user.id)
+      refute Repo.get(PevSquad.Riders.RiderProfile, profile.id)
+      refute File.exists?(avatar)
+      refute Repo.get(PevSquad.Gallery.Photo, photo.id)
+      refute Repo.get(PevSquad.Events.Event, ride.id)
+
+      assert Repo.all(from r in PevSquad.Reviews.Review, where: r.author_id == ^dupe.user.id) ==
+               []
+
+      assert %{status: :going} = PevSquad.Events.get_rsvp(waiting, event)
+      assert_received {:email, %{subject: "You're in: " <> _, to: [{_, ^waiting_email}]}}
+      assert_received {:email, %{subject: "Cancelled: Dupe Loop", to: [{_, ^guest_email}]}}
+    end
+
+    test "an imported profile they claimed stays on the roster, unclaimed" do
+      admin = staff_scope_fixture(:admin)
+      member = user_fixture()
+      rider = rider_fixture(alias: "Imported")
+      {:ok, _} = PevSquad.Riders.link_to_member(admin, rider, member.email)
+
+      assert Accounts.member_footprint(admin, member).keeps_profile?
+      {:ok, _} = Accounts.delete_member(admin, member, &event_url/1, "x")
+
+      assert %{user_id: nil, alias: "Imported"} = Repo.reload(rider)
+    end
+
+    test "admins only, never themselves or another admin" do
+      admin = staff_scope_fixture(:admin)
+      other_admin = staff_scope_fixture(:admin)
+      member = user_fixture()
+
+      assert {:error, :self} = Accounts.delete_member(admin, admin.user, &event_url/1, "x")
+      assert {:error, :admin} = Accounts.delete_member(admin, other_admin.user, &event_url/1, "x")
+
+      assert_raise PevSquad.Accounts.NotAuthorizedError, fn ->
+        Accounts.delete_member(staff_scope_fixture(:moderator), member, &event_url/1, "x")
+      end
+
+      assert Repo.get(User, member.id)
     end
   end
 end

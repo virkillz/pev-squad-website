@@ -145,6 +145,105 @@ defmodule PevSquad.Accounts do
     end
   end
 
+  ## Admin: deleting a member
+
+  @doc """
+  What deleting `user` would remove, for the confirmation screen:
+  `%{profile, keeps_profile?, reviews, photos, hosted_rides, upcoming_rsvps}`.
+  """
+  def member_footprint(%Scope{} = scope, %User{id: user_id} = user) do
+    ensure_staff!(scope)
+    profile = Repo.get_by(RiderProfile, user_id: user_id)
+    now = DateTime.utc_now()
+
+    %{
+      user: user,
+      profile: profile,
+      keeps_profile?: profile != nil and profile.source != :member,
+      reviews: count(PevSquad.Reviews.Review, author_id: user_id),
+      photos: count(PevSquad.Gallery.Photo, uploader_id: user_id),
+      hosted_rides: count(PevSquad.Events.Event, created_by_id: user_id, category: :group_ride),
+      upcoming_rsvps:
+        from(r in PevSquad.Events.Rsvp,
+          join: e in assoc(r, :event),
+          where: r.user_id == ^user_id and e.starts_at > ^now
+        )
+        |> Repo.aggregate(:count)
+    }
+  end
+
+  defp count(schema, clauses), do: schema |> where(^clauses) |> Repo.aggregate(:count)
+
+  @doc """
+  Deletes a member's account and what they posted. Admins only; never
+  yourself or another admin (change their role first).
+
+  * upcoming RSVPs are cancelled first, so the waitlist moves up
+    (`event_url_fun` builds the link in the "you're in" email)
+  * group rides they hosted are removed; riders signed up for an upcoming
+    one get the cancellation email, linking to `events_url`
+  * gallery photos and their files are deleted
+  * a profile they made themselves is deleted; an imported or staff-added
+    one is kept, unclaimed, so the roster keeps its history
+  * reviews, RSVPs, tokens and blocks go with the account
+
+  Returns `{:ok, user}`, `{:error, :self}` or `{:error, :admin}`.
+  """
+  def delete_member(%Scope{user: me} = scope, %User{} = user, event_url_fun, events_url) do
+    cond do
+      not Scope.admin?(scope) -> raise PevSquad.Accounts.NotAuthorizedError
+      user.id == me.id -> {:error, :self}
+      user.role == :admin -> {:error, :admin}
+      true -> do_delete_member(scope, user, event_url_fun, events_url)
+    end
+  end
+
+  defp do_delete_member(scope, user, event_url_fun, events_url) do
+    alias PevSquad.Events.{Event, Rsvp}
+    alias PevSquad.Events.Notifier, as: EventNotifier
+
+    now = DateTime.utc_now()
+    member_scope = Scope.for_user(user)
+
+    # 1. Free their seats on upcoming events through the normal path.
+    from(r in Rsvp,
+      join: e in assoc(r, :event),
+      where: r.user_id == ^user.id and e.starts_at > ^now,
+      select: e
+    )
+    |> Repo.all()
+    |> Enum.each(&PevSquad.Events.cancel_rsvp(member_scope, &1, event_url_fun))
+
+    # 2. Remove the group rides they hosted, telling anyone still signed up.
+    for ride <-
+          Repo.all(
+            from e in Event, where: e.created_by_id == ^user.id and e.category == :group_ride
+          ) do
+      if ride.status == :published and DateTime.after?(ride.starts_at, now) do
+        from(r in Rsvp, where: r.event_id == ^ride.id and r.user_id != ^user.id, preload: :user)
+        |> Repo.all()
+        |> Enum.each(&EventNotifier.deliver_event_cancelled(&1.user, ride, events_url))
+      end
+
+      Repo.delete!(ride)
+    end
+
+    # 3. Gallery photos, files included.
+    for photo <- Repo.all(from p in PevSquad.Gallery.Photo, where: p.uploader_id == ^user.id) do
+      {:ok, _} = PevSquad.Gallery.delete_photo(scope, photo)
+    end
+
+    # 4. Their own profile goes; imported or staff-added ones become unclaimed
+    #    when the account is deleted (rider_profiles.user_id is nilified).
+    case Repo.get_by(RiderProfile, user_id: user.id, source: :member) do
+      nil -> :ok
+      profile -> {:ok, _} = PevSquad.Riders.delete_rider(scope, profile)
+    end
+
+    # 5. The account; reviews, RSVPs, tokens and blocks cascade.
+    Repo.delete(user)
+  end
+
   defp ensure_staff!(scope) do
     unless Scope.staff?(scope), do: raise(PevSquad.Accounts.NotAuthorizedError)
   end

@@ -53,6 +53,32 @@ defmodule PevSquadWeb.MemberLiveTest do
     assert PevSquad.Repo.reload(rider).user_id == member.id
   end
 
+  test "admins delete a member after seeing what goes with them", %{conn: conn} do
+    admin = staff_scope_fixture(:admin)
+    dupe = user_fixture(email: "dupe@example.com")
+    {:ok, _} = approved_profile(Accounts.Scope.for_user(dupe), %{alias: "Dupe"})
+
+    {:ok, lv, _html} = live(log_in_user(conn, admin.user), ~p"/admin/members")
+    refute has_element?(lv, "#delete-#{admin.user.id}")
+
+    lv |> element("#delete-#{dupe.id}") |> render_click()
+    assert has_element?(lv, "#delete-member", "Delete dupe@example.com?")
+    assert has_element?(lv, "#delete-member", "Dupe")
+
+    html = lv |> element("#delete-member button", "Delete account permanently") |> render_click()
+    assert html =~ "dupe@example.com deleted."
+    refute has_element?(lv, "#member-#{dupe.id}")
+    refute PevSquad.Repo.get(Accounts.User, dupe.id)
+  end
+
+  test "moderators get no delete button", %{conn: conn} do
+    moderator = staff_scope_fixture(:moderator)
+    member = user_fixture()
+
+    {:ok, lv, _html} = live(log_in_user(conn, moderator.user), ~p"/admin/members")
+    refute has_element?(lv, "#delete-#{member.id}")
+  end
+
   test "members can't open it", %{conn: conn} do
     conn = log_in_user(conn, user_fixture())
     assert {:error, {:redirect, %{to: "/"}}} = live(conn, ~p"/admin/members")

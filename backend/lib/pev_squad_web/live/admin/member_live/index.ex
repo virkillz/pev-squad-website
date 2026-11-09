@@ -61,6 +61,44 @@ defmodule PevSquadWeb.Admin.MemberLive.Index do
           />
         </form>
 
+        <div
+          :if={@deleting}
+          class="notice space-y-3"
+          id="delete-member"
+          style="margin-bottom:2rem;"
+          phx-mounted={JS.focus_first()}
+        >
+          <p><strong>Delete {@deleting.user.email}?</strong> This can't be undone.</p>
+          <ul class="list-disc pl-6">
+            <li :if={@deleting.profile && !@deleting.keeps_profile?}>
+              Their rider profile <strong>{@deleting.profile.alias}</strong>
+              and its photo are deleted.
+            </li>
+            <li :if={@deleting.keeps_profile?}>
+              The rider profile <strong>{@deleting.profile.alias}</strong>
+              was imported or added by staff, so it stays on the roster, unclaimed.
+            </li>
+            <li>{plural(@deleting.reviews, "review")} deleted.</li>
+            <li>{plural(@deleting.photos, "gallery photo")} deleted.</li>
+            <li>
+              {plural(@deleting.hosted_rides, "hosted group ride")} removed; riders signed up for an upcoming one are emailed that it's cancelled.
+            </li>
+            <li>
+              {plural(@deleting.upcoming_rsvps, "upcoming RSVP")} cancelled; the waitlist moves up.
+            </li>
+          </ul>
+          <div class="flex gap-3">
+            <.button
+              phx-click="delete"
+              variant="primary"
+              data-confirm={"Permanently delete #{@deleting.user.email}?"}
+            >
+              Delete account permanently
+            </.button>
+            <.button phx-click="cancel_delete">Cancel</.button>
+          </div>
+        </div>
+
         <p :if={@members == []} class="section-lede">No members match.</p>
 
         <.table :if={@members != []} id="members" rows={@members} row_id={&"member-#{&1.user.id}"}>
@@ -129,6 +167,16 @@ defmodule PevSquadWeb.Admin.MemberLive.Index do
               No profile
             </span>
           </:col>
+          <:col :let={m} :if={@admin?} label="">
+            <.button
+              :if={m.user.id != @current_scope.user.id && m.user.role != :admin}
+              id={"delete-#{m.user.id}"}
+              phx-click="confirm_delete"
+              phx-value-id={m.user.id}
+            >
+              Delete…
+            </.button>
+          </:col>
         </.table>
       </section>
     </Layouts.app>
@@ -142,7 +190,8 @@ defmodule PevSquadWeb.Admin.MemberLive.Index do
      |> assign(:page_title, "Admin · Members")
      |> assign(:filters, @filters)
      |> assign(:roles, @roles)
-     |> assign(:admin?, Scope.admin?(socket.assigns.current_scope))}
+     |> assign(:admin?, Scope.admin?(socket.assigns.current_scope))
+     |> assign(:deleting, nil)}
   end
 
   @impl true
@@ -218,6 +267,41 @@ defmodule PevSquadWeb.Admin.MemberLive.Index do
   def handle_event("link", _params, socket),
     do: {:noreply, put_flash(socket, :error, "Pick a rider to link.")}
 
+  def handle_event("confirm_delete", %{"id" => id}, socket) do
+    %{user: user} = find_member!(socket, id)
+    footprint = Accounts.member_footprint(socket.assigns.current_scope, user)
+    {:noreply, assign(socket, :deleting, footprint)}
+  end
+
+  def handle_event("cancel_delete", _params, socket),
+    do: {:noreply, assign(socket, :deleting, nil)}
+
+  def handle_event("delete", _params, socket) do
+    user = socket.assigns.deleting.user
+
+    result =
+      Accounts.delete_member(
+        socket.assigns.current_scope,
+        user,
+        &url(~p"/events/#{&1.slug}"),
+        url(~p"/events")
+      )
+
+    socket = assign(socket, :deleting, nil)
+
+    case result do
+      {:ok, _} ->
+        {:noreply, socket |> put_flash(:info, "#{user.email} deleted.") |> load()}
+
+      {:error, :self} ->
+        {:noreply, put_flash(socket, :error, "You can't delete your own account here.")}
+
+      {:error, :admin} ->
+        {:noreply,
+         put_flash(socket, :error, "Change their role first — admins can't be deleted.")}
+    end
+  end
+
   defp find_member!(socket, id) do
     id = String.to_integer(id)
 
@@ -236,6 +320,9 @@ defmodule PevSquadWeb.Admin.MemberLive.Index do
       params -> "/admin/members?" <> URI.encode_query(params)
     end
   end
+
+  defp plural(1, noun), do: "1 #{noun}"
+  defp plural(n, noun), do: "#{n} #{noun}s"
 
   defp role_label(:member), do: "Member"
   defp role_label(:moderator), do: "Moderator"
