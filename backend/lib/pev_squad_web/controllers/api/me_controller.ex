@@ -1,12 +1,48 @@
 defmodule PevSquadWeb.API.MeController do
   use PevSquadWeb, :api_controller
 
-  alias PevSquad.Riders
+  alias PevSquad.{Accounts, Riders}
   alias PevSquadWeb.API.Schemas
   alias PevSquadWeb.API.Urls
 
   tags(["Me"])
   security([%{"bearer" => []}])
+
+  operation(:update,
+    summary: "Save the member's email language",
+    request_body:
+      {"Language", "application/json",
+       PevSquadWeb.API.AuthSchemas.input([:locale], %{
+         locale: %OpenApiSpex.Schema{type: :string, enum: ~w(id en)}
+       }), required: true},
+    responses: [ok: {"The user", "application/json", Schemas.Me}]
+  )
+
+  def update(conn, params) do
+    with locale when locale in ["id", "en"] <- params["locale"],
+         {:ok, user} <- Accounts.update_user_locale(conn.assigns.current_scope.user, locale) do
+      conn |> assign(:current_scope, Accounts.Scope.for_user(user)) |> show(%{})
+    else
+      _ -> {:error, {:validation_failed, %{locale: ["must be id or en"]}}}
+    end
+  end
+
+  operation(:profile,
+    summary: "Create or edit your rider profile; new members await staff approval",
+    request_body:
+      {"Profile", "application/json", PevSquadWeb.API.AuthSchemas.profile(), required: true},
+    responses: [ok: {"The user", "application/json", Schemas.Me}]
+  )
+
+  def profile(conn, params) do
+    review_url = fn profile -> url(~p"/admin/riders/#{profile.id}/edit") end
+
+    case Riders.save_my_profile(conn.assigns.current_scope, params, nil, review_url: review_url) do
+      {:ok, _profile} -> show(conn, %{})
+      {:error, :banned} -> {:error, :forbidden}
+      error -> error
+    end
+  end
 
   operation(:show,
     summary: "The signed-in user",
@@ -33,6 +69,12 @@ defmodule PevSquadWeb.API.MeController do
               alias: profile.alias,
               slug: profile.slug,
               status: profile.status,
+              city: profile.city,
+              main_ride: profile.main_ride,
+              primary_pev_type: profile.primary_pev_type,
+              bio: profile.bio,
+              instagram: profile.instagram,
+              is_public: profile.is_public,
               avatar_url: Urls.absolute(profile.avatar_path)
             }
       }

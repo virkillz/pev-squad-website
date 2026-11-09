@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+config :phoenix, :filter_parameters, ["password", "token", "access_token", "refresh_token"]
+
 config :pev_squad, :scopes,
   user: [
     default: true,

@@ -125,6 +125,18 @@ defmodule PevSquadWeb.Router do
     pipe_through [:api, :require_api_user]
 
     get "/me", MeController, :show
+    patch "/me", MeController, :update
+    put "/me/profile", MeController, :profile
+  end
+
+  scope "/api/v1/auth", PevSquadWeb.API, as: :api_auth do
+    pipe_through :api
+
+    post "/password", AuthController, :password
+    post "/magic-link", AuthController, :request_link
+    post "/exchange", AuthController, :exchange
+    post "/refresh", AuthController, :refresh
+    post "/logout", AuthController, :logout
   end
 
   # Staff tools (the `pev` CLI). Drafts only; publishing stays in /admin.

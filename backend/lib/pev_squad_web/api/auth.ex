@@ -21,7 +21,7 @@ defmodule PevSquadWeb.API.Auth do
     user =
       case bearer_token(conn) do
         nil -> nil
-        token -> Accounts.get_user_by_api_token(token)
+        token -> Accounts.MobileAuth.get_user(token) || Accounts.get_user_by_api_token(token)
       end
 
     assign(conn, :current_scope, Scope.for_user(user))

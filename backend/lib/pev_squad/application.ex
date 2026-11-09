@@ -11,6 +11,7 @@ defmodule PevSquad.Application do
       [
         PevSquadWeb.Telemetry,
         PevSquad.Repo,
+        PevSquadWeb.API.AuthLimiter,
         {DNSCluster, query: Application.get_env(:pev_squad, :dns_cluster_query) || :ignore},
         {Phoenix.PubSub, name: PevSquad.PubSub},
         # Start to serve requests, typically the last entry
