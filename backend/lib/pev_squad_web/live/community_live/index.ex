@@ -4,7 +4,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
   alias PevSquad.{Events, Partners, Riders}
 
   import PevSquadWeb.RiderComponents
-  import PevSquadWeb.PartnerComponents, only: [partner_card: 1]
+  import PevSquadWeb.PartnerComponents, only: [partner_card: 1, partner_positioning: 1]
 
   @per_page 9
 
@@ -174,11 +174,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
           <div>
             <span class="eyebrow">{gettext("The network")}</span>
             <h2 class="section-title">{gettext("Partner")}<br />{gettext("Communities")}</h2>
-            <p class="section-lede">
-              {gettext(
-                "Local crews and single-vehicle groups we ride with. They run their own group rides; we team up for the big ones and keep the PEV network connected across Indonesia."
-              )}
-            </p>
+            <.partner_positioning />
           </div>
         </div>
         <div class="grid grid-3">

@@ -46,6 +46,25 @@ defmodule PevSquadWeb.PartnerComponents do
     |> Enum.reject(&(&1 in [nil, false]))
   end
 
+  @doc """
+  How PEV Squad relates to partner communities: not an umbrella, a meeting
+  point. Shown on the Community and About pages.
+  """
+  def partner_positioning(assigns) do
+    ~H"""
+    <p class="section-lede">
+      {gettext(
+        "PEV Squad isn't an umbrella organization, and every local community stays independent: its own name, its own members, its own group rides."
+      )}
+    </p>
+    <p class="section-lede">
+      {gettext(
+        "What we do is connect PEV communities across Indonesia, so it's easier to coordinate bigger events like cross-city tours, races and brand collaborations. Together we also have more weight with national brands, and that benefits every community involved."
+      )}
+    </p>
+    """
+  end
+
   @doc "The logo on a white plate, or the partner's initials when there's none."
   attr :partner, Partner, required: true
   attr :class, :string, default: nil

@@ -4,6 +4,7 @@ defmodule PevSquadWeb.LocaleTest do
   import Phoenix.LiveViewTest
   import PevSquad.AccountsFixtures
   import PevSquad.EventsFixtures
+  import PevSquad.PartnersFixtures
 
   defp in_indonesian(conn), do: init_test_session(conn, %{"locale" => "id"})
 
@@ -185,6 +186,22 @@ defmodule PevSquadWeb.LocaleTest do
       html = conn |> in_indonesian() |> get(~p"/for-sale") |> html_response(200)
       assert html =~ ~s(data-label-open="Tutup")
       assert html =~ ~s(data-label-closed="Menu")
+    end
+  end
+
+  describe "partner positioning" do
+    test "the community and about pages explain it in both languages", %{conn: conn} do
+      partner_fixture(kind: :community, name: "Malang EUC")
+
+      for path <- [~p"/community", ~p"/about"] do
+        {:ok, _lv, html} = conn |> in_indonesian() |> live(path)
+        assert html =~ "PEV Squad tidak membawahi komunitas lain."
+        assert html =~ "Peran kami adalah jadi titik temu."
+
+        {:ok, _lv, html} = conn |> init_test_session(%{"locale" => "en"}) |> live(path)
+        assert html =~ "PEV Squad isn&#39;t an umbrella organization"
+        assert html =~ "What we do is connect PEV communities across Indonesia"
+      end
     end
   end
 

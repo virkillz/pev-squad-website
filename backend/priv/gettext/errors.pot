@@ -119,29 +119,29 @@ msgstr ""
 msgid "did not change"
 msgstr ""
 
-#: lib/pev_squad/accounts/user.ex:87
+#: lib/pev_squad/accounts/user.ex:88
 #, elixir-autogen, elixir-format
 msgid "does not match password"
 msgstr ""
 
-#: lib/pev_squad/reviews/pev_model.ex:30
-#: lib/pev_squad/reviews/pev_model.ex:34
+#: lib/pev_squad/reviews/pev_model.ex:32
+#: lib/pev_squad/reviews/pev_model.ex:37
 #, elixir-autogen, elixir-format
 msgid "is already in the catalog"
 msgstr ""
 
-#: lib/pev_squad/riders/rider_profile.ex:75
-#: lib/pev_squad/riders/rider_profile.ex:78
+#: lib/pev_squad/riders/rider_profile.ex:76
+#: lib/pev_squad/riders/rider_profile.ex:79
 #, elixir-autogen, elixir-format
 msgid "is already taken by another rider"
 msgstr ""
 
-#: lib/pev_squad/riders/rider_profile.ex:68
+#: lib/pev_squad/riders/rider_profile.ex:69
 #, elixir-autogen, elixir-format
 msgid "just the handle, e.g. pevsquad"
 msgstr ""
 
-#: lib/pev_squad/riders/rider_profile.ex:61
+#: lib/pev_squad/riders/rider_profile.ex:62
 #, elixir-autogen, elixir-format
 msgid "letters, numbers, spaces, dots, dashes and underscores only"
 msgstr ""
@@ -166,12 +166,12 @@ msgstr ""
 msgid "must have the @ sign and no spaces"
 msgstr ""
 
-#: lib/pev_squad/partners/partner.ex:83
+#: lib/pev_squad/partners/partner.ex:84
 #, elixir-autogen, elixir-format
 msgid "must start with http:// or https://"
 msgstr ""
 
-#: lib/pev_squad/partners/partner.ex:86
+#: lib/pev_squad/partners/partner.ex:87
 #, elixir-autogen, elixir-format
 msgid "paste the full channel link (https://youtube.com/@…)"
 msgstr ""
@@ -181,19 +181,19 @@ msgstr ""
 msgid "pick a reason"
 msgstr ""
 
-#: lib/pev_squad/reviews.ex:290
+#: lib/pev_squad/reviews.ex:291
 #, elixir-autogen, elixir-format
 msgid "tell the rider why"
 msgstr ""
 
 #: lib/pev_squad/events/event.ex:104
 #: lib/pev_squad/gallery/album.ex:44
-#: lib/pev_squad/partners/partner.ex:90
+#: lib/pev_squad/partners/partner.ex:91
 #, elixir-autogen, elixir-format
 msgid "use lowercase letters, numbers and dashes"
 msgstr ""
 
-#: lib/pev_squad/riders/rider_profile.ex:98
+#: lib/pev_squad/riders/rider_profile.ex:100
 #, elixir-autogen, elixir-format
 msgid "write the public statement for the ban"
 msgstr ""

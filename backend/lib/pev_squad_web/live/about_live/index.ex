@@ -104,11 +104,7 @@ defmodule PevSquadWeb.AboutLive.Index do
           <div>
             <span class="eyebrow">{gettext("The network")}</span>
             <h2 class="section-title">{gettext("Bigger Than")}<br />{gettext("One Squad")}</h2>
-            <p class="section-lede">
-              {gettext(
-                "Indonesia has plenty of PEV groups — local crews running their own group rides, and communities built around one kind of vehicle. We don't compete with them; we ride with them. Partner communities join our events and we join theirs, and together we bring brands to the riders."
-              )}
-            </p>
+            <PevSquadWeb.PartnerComponents.partner_positioning />
           </div>
         </div>
         <div class="grid grid-2 grid-rule">
