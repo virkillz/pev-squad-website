@@ -44,6 +44,52 @@ defmodule PevSquadWeb.API.MeController do
     end
   end
 
+  operation(:avatar,
+    summary: "Upload your rider photo",
+    description:
+      "Multipart form with a `file` field (JPEG, PNG or WebP, up to 10 MB). Cropped to 4:5 (800×1000) WebP with metadata, including GPS, stripped. Needs a rider profile first.",
+    request_body: {"Image", "multipart/form-data", Schemas.FileUpload, required: true},
+    responses: [
+      ok: {"The user", "application/json", Schemas.Me},
+      unprocessable_entity:
+        {"Not an image, too big, or no profile yet", "application/json", Schemas.Error}
+    ]
+  )
+
+  def avatar(conn, params) do
+    scope = conn.assigns.current_scope
+
+    with {:ok, upload} <- PevSquadWeb.API.Admin.UploadController.image_upload(params),
+         :ok <- small_enough(upload),
+         %{} <-
+           Riders.get_my_profile(scope) ||
+             {:error,
+              {:validation_failed, %{file: [gettext("Create your rider profile first.")]}}},
+         {:ok, _profile} <- Riders.save_my_profile(scope, %{}, upload.path) do
+      show(conn, %{})
+    else
+      {:error, :banned} ->
+        {:error, :forbidden}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error, {:validation_failed, %{file: avatar_errors(changeset)}}}
+
+      error ->
+        error
+    end
+  end
+
+  defp small_enough(%Plug.Upload{path: path}) do
+    case File.stat(path) do
+      {:ok, %{size: size}} when size <= 10_000_000 -> :ok
+      _ -> {:error, {:validation_failed, %{file: [gettext("The photo is bigger than 10 MB.")]}}}
+    end
+  end
+
+  defp avatar_errors(changeset) do
+    changeset |> PevSquadWeb.API.Errors.changeset_fields() |> Map.values() |> List.flatten()
+  end
+
   operation(:deletion,
     summary: "What deleting your account would remove, for the confirmation screen",
     responses: [ok: {"Footprint", "application/json", Schemas.Deletion}]

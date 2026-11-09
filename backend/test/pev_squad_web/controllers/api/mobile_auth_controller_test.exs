@@ -173,6 +173,36 @@ defmodule PevSquadWeb.API.MobileAuthControllerTest do
     assert body =~ "/admin/riders/"
   end
 
+  test "avatar upload needs a profile, then stores a cropped photo", %{member: member} do
+    import PevSquad.RidersFixtures
+
+    upload = %Plug.Upload{
+      path: image_fixture(1200, 900),
+      filename: "me.jpg",
+      content_type: "image/jpeg"
+    }
+
+    assert %{"error" => %{"fields" => %{"file" => [_]}}} =
+             member |> put(~p"/api/v1/me/avatar", %{file: upload}) |> json_response(422)
+
+    member
+    |> put(~p"/api/v1/me/profile", %{
+      alias: "Pic #{System.unique_integer([:positive])}",
+      primary_pev_type: "euc"
+    })
+
+    url =
+      member
+      |> put(~p"/api/v1/me/avatar", %{file: upload})
+      |> json_response(200)
+      |> get_in(["data", "rider_profile", "avatar_url"])
+
+    assert url =~ ~r{/uploads/avatars/.+\.webp$}
+
+    text = %Plug.Upload{path: upload.path, filename: "x.txt", content_type: "text/plain"}
+    assert member |> put(~p"/api/v1/me/avatar", %{file: text}) |> json_response(422)
+  end
+
   test "repeated password attempts are throttled", %{conn: conn} do
     email = unique_user_email()
 

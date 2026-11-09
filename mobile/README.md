@@ -17,7 +17,7 @@ Members can log in with an email link or their website password. Sessions are ke
 New members set up a rider profile (alias, city, PEV, public consent), which waits for staff approval.
 The avatar menu (top right) opens the profile, settings, language, and logout.
 Signed in, the language choice is also saved to the account, so emails follow it.
-Settings has account deletion and the blocked-members list. Rider profiles, group rides, and gallery photos have Report and Block buttons. RSVP, selling, avatars, and seller contacts still require the website.
+Settings has account deletion and the blocked-members list. Rider profiles, group rides, and gallery photos have Report and Block buttons. The profile screen takes a photo from the camera or library (cropped to 4:5 on the server, metadata stripped). RSVP, selling, and seller contacts still require the website.
 
 ### Testing the email link
 
@@ -113,15 +113,28 @@ API_SPEC_URL=http://192.168.1.5:4000/api/v1/openapi npm run gen:api
 
 From `backend/`, run `mix precommit` before completion.
 
+## iOS release (EAS)
+
+`eas.json` builds against production (`https://pev-squad.org`), and the build number goes up automatically. Apple Team ID: `2QW696JV44`, bundle id `org.pevsquad.app`.
+
+```sh
+npx eas-cli@latest build -p ios --profile production   # cloud build, signs with your Apple account
+npx eas-cli@latest submit -p ios --latest              # upload to App Store Connect / TestFlight
+```
+
+Raise `version` in `app.json` for each store release. JS-only fixes can go out with `eas update` once EAS Update is set up.
+
+Universal links: `/.well-known/apple-app-site-association` on the backend (`WellKnownController`) lists the website pages that open in the app, and `src/app/+native-intent.tsx` maps website paths (`/news/:slug`, `/community/:slug`, `/gallery/:slug`, `/for-sale/:id`) to app screens.
+
 ## Remaining work
 
 App authentication is in place. Next up are the remaining member features, as described in [the platform roadmap](../docs/DESIGN.md).
 
 1. ~~App login, refresh tokens, logout, onboarding, and profile editing.~~ Done.
-2. ~~Account deletion, report and block, blocked members.~~ Done. Next: avatar upload. Reviews aren't in the app yet; add Report there when they are.
-3. Add and check deep-link handling on iOS and Android.
+2. ~~Account deletion, report and block, blocked members.~~ Done. ~~Avatar upload.~~ Done. Reviews aren't in the app yet; add Report there when they are.
+3. ~~Universal links on iOS.~~ Done, check on a device. Android app links are still to do.
 4. Add RSVP and member actions, including listing and photo uploads.
 5. Add notifications and error tracking.
-6. Configure Expo builds and test with squad members before store submission.
+6. ~~Configure Expo builds.~~ Done for iOS. Test with squad members on TestFlight before store submission.
 
-The current bundle checks do not replace tests on real devices. Cloud builds, signing, and store submission are not configured yet.
+The current bundle checks do not replace tests on real devices. Android builds and Play Store submission are not configured yet.

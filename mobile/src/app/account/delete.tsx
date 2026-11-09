@@ -72,24 +72,24 @@ export default function DeleteAccountScreen() {
     : [];
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, backgroundColor: colors.black }}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, backgroundColor: colors.white }}>
       <BackBar />
       <ScrollView contentContainerStyle={{ padding: space.l, gap: space.l, paddingBottom: space.xxl }} keyboardShouldPersistTaps="handled">
-        <Stencil size={56} color={colors.white} accessibilityRole="header">{t('delete.title')}</Stencil>
-        <Body color={colors.white} size={16}>{t('delete.lede')}</Body>
+        <Stencil size={56} color={colors.black} accessibilityRole="header">{t('delete.title')}</Stencil>
+        <Body color={colors.black} size={16}>{t('delete.lede')}</Body>
 
         {!f ? (
-          <QueryState onDark loading={footprint.isLoading} error={footprint.error} onRetry={() => footprint.refetch()} />
+          <QueryState loading={footprint.isLoading} error={footprint.error} onRetry={() => footprint.refetch()} />
         ) : (
-          <View style={{ borderWidth: bw, borderColor: colors.orange, padding: space.l, gap: space.s }}>
+          <View style={{ borderWidth: bw, borderColor: colors.black, borderLeftWidth: 6, borderLeftColor: colors.orange, padding: space.l, gap: space.s }}>
             {lines.map((line) => (
-              <Body key={line} color={colors.white}>— {line}</Body>
+              <Body key={line} color={colors.black}>— {line}</Body>
             ))}
           </View>
         )}
 
         <View style={{ gap: 6 }}>
-          <Mono bold size={11} color={colors.white}>{t('delete.type', { word })}</Mono>
+          <Mono bold size={11} color={colors.black}>{t('delete.type', { word })}</Mono>
           <TextInput
             value={typed}
             onChangeText={setTyped}
@@ -98,17 +98,17 @@ export default function DeleteAccountScreen() {
             placeholder={word}
             placeholderTextColor={colors.mutedOnWhite}
             accessibilityLabel={t('delete.type', { word })}
-            style={{ height: 52, borderWidth: bw, borderColor: colors.white, backgroundColor: colors.white, paddingHorizontal: 12, fontFamily: fonts.monoBold, fontSize: 17 }}
+            style={{ height: 52, borderWidth: bw, borderColor: colors.black, backgroundColor: colors.white, paddingHorizontal: 12, fontFamily: fonts.monoBold, fontSize: 17 }}
           />
         </View>
 
         {problem === 'reauth' ? (
           <View style={{ gap: space.m }}>
-            <Body weight="semi" color={colors.orange}>{t('delete.reauth')}</Body>
+            <Body weight="semi">⚠ {t('delete.reauth')}</Body>
             <BigButton tone="white" label={t('delete.reauthButton')} onPress={reauth} />
           </View>
         ) : problem ? (
-          <Body weight="semi" color={colors.orange}>{problem === 'admin' ? t('delete.admin') : t('common.error')}</Body>
+          <Body weight="semi">⚠ {problem === 'admin' ? t('delete.admin') : t('common.error')}</Body>
         ) : null}
 
         <BigButton

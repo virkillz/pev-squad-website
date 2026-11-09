@@ -60,7 +60,7 @@ export default function RootLayout() {
         <LocaleProvider>
           <AuthProvider>
           <StatusBar style="light" />
-          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.black } }}>
+          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.white } }}>
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="login" options={{ presentation: 'modal' }} />
             <Stack.Screen name="report" options={{ presentation: 'modal' }} />

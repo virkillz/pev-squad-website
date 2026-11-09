@@ -28,18 +28,18 @@ export default function AlbumScreen() {
   const cell = (width - space.l * 2 - 8) / 2;
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.black }}>
+    <View style={{ flex: 1, backgroundColor: colors.white }}>
       <BackBar shareUrl={a?.url} shareTitle={a?.title} />
-      <QueryState loading={album.isPending} error={album.error} onRetry={album.refetch} onDark />
+      <QueryState loading={album.isPending} error={album.error} onRetry={album.refetch} />
       {a ? (
         <ScrollView contentContainerStyle={{ padding: space.l, gap: 12, paddingBottom: space.xxl }}>
-          <Mono size={11} color={colors.mutedOnBlack}>{t('album.photos', { n: a.photo_count })}</Mono>
-          <Stencil size={48} color={colors.white} accessibilityRole="header">{a.title}</Stencil>
-          {a.subtitle ? <Body color={colors.mutedOnBlack}>{a.subtitle}</Body> : null}
+          <Mono size={11} color={colors.mutedOnWhite}>{t('album.photos', { n: a.photo_count })}</Mono>
+          <Stencil size={48} accessibilityRole="header">{a.title}</Stencil>
+          {a.subtitle ? <Body color={colors.mutedOnWhite}>{a.subtitle}</Body> : null}
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 }}>
             {a.photos.map((p) => (
               <Pressable key={p.id} accessibilityRole="imagebutton" accessibilityLabel={p.alt ?? p.title ?? a.title} onPress={() => setOpen(p)}>
-                <Image source={p.thumb_url} style={{ width: cell, height: cell, borderWidth: bw, borderColor: colors.white }} contentFit="cover" />
+                <Image source={p.thumb_url} style={{ width: cell, height: cell, borderWidth: bw, borderColor: colors.black }} contentFit="cover" />
               </Pressable>
             ))}
           </View>

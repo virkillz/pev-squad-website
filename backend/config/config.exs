@@ -26,6 +26,10 @@ config :pev_squad,
   ecto_repos: [PevSquad.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+# The iOS app (Apple Team ID + bundle id), for universal links in
+# /.well-known/apple-app-site-association.
+config :pev_squad, :ios_app_ids, ["2QW696JV44.org.pevsquad.app"]
+
 # Configure the endpoint
 # UI language. Indonesian unless the browser asks for English or the rider
 # picks it in the switcher (see PevSquadWeb.Locale).

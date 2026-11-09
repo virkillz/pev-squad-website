@@ -64,6 +64,11 @@ defmodule PevSquadWeb.Router do
     get "/feed.xml", FeedController, :index
   end
 
+  # Fetched by Apple's CDN, which sends no particular Accept header.
+  scope "/.well-known", PevSquadWeb do
+    get "/apple-app-site-association", WellKnownController, :apple_app_site_association
+  end
+
   scope "/admin", PevSquadWeb.Admin, as: :admin do
     pipe_through [:browser, :require_authenticated_user]
 
@@ -135,6 +140,7 @@ defmodule PevSquadWeb.Router do
     post "/blocks", SafetyController, :block
     delete "/blocks/:user_id", SafetyController, :unblock
     put "/me/profile", MeController, :profile
+    put "/me/avatar", MeController, :avatar
   end
 
   scope "/api/v1/auth", PevSquadWeb.API, as: :api_auth do

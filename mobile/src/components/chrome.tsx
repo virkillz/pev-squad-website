@@ -191,7 +191,7 @@ export function PageHeader({
   right,
   children,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   tag?: string;
   tone?: 'black' | 'white' | 'orange';
@@ -210,8 +210,8 @@ export function PageHeader({
         <AccountCorner onDark={tone === 'black'} />
       </View>
       <View style={{ paddingHorizontal: space.l, paddingBottom: 14, paddingTop: space.s }}>
-        <Mono size={11} color={muted}>{eyebrow}</Mono>
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 6 }}>
+        {eyebrow ? <Mono size={11} color={muted}>{eyebrow}</Mono> : null}
+        <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: eyebrow ? 6 : 0 }}>
           <Stencil size={64} color={fg} accessibilityRole="header">{title}</Stencil>
           {right ?? (tag ? <Tag color={tagColor} style={{ marginBottom: 8 }}>{tag}</Tag> : null)}
         </View>
@@ -249,14 +249,14 @@ export function BackBar({ shareUrl, shareTitle }: { shareUrl?: string; shareTitl
 }
 
 /** "TERBARU ———— SEMUA BERITA →" section header used on Home. */
-export function SectionHead({ title, action, onAction, onDark = true }: { title: string; action?: string; onAction?: () => void; onDark?: boolean }) {
+export function SectionHead({ title, action, onAction, onDark = false }: { title: string; action?: string; onAction?: () => void; onDark?: boolean }) {
   const fg = onDark ? colors.white : colors.black;
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingBottom: 8, borderBottomWidth: bw, borderColor: fg }}>
       <Stencil size={28} color={fg}>{title}</Stencil>
       {action ? (
         <Pressable accessibilityRole="link" onPress={onAction} style={{ paddingVertical: 8 }} hitSlop={8}>
-          <Mono bold size={11} color={colors.orange}>{action}</Mono>
+          <Mono bold size={11} color={onDark ? colors.orange : colors.black}>{action}</Mono>
         </Pressable>
       ) : null}
     </View>

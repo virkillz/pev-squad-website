@@ -3,7 +3,7 @@ import { RefreshControl, ScrollView, View } from 'react-native';
 
 import { AlbumTile, ListingCard, NextRideCard, PostRow } from '@/components/cards';
 import { Masthead, QueryState, SectionHead } from '@/components/chrome';
-import { Body, Mono, Tag } from '@/components/text';
+import { Body, Mono } from '@/components/text';
 import { useLocale } from '@/lib/i18n';
 import { useHome } from '@/lib/queries';
 import { colors, space } from '@/theme';
@@ -16,24 +16,24 @@ export default function HomeScreen() {
   const d = home.data;
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.black }}>
+    <View style={{ flex: 1, backgroundColor: colors.white }}>
       <Masthead />
       <ScrollView
         contentContainerStyle={{ padding: space.l, paddingTop: 20, gap: 26, paddingBottom: space.xxl }}
         refreshControl={<RefreshControl refreshing={home.isRefetching} onRefresh={() => void home.refetch()} tintColor={colors.orange} />}>
-        <QueryState loading={home.isPending} error={home.error} onRetry={home.refetch} onDark />
+        <QueryState loading={home.isPending} error={home.error} onRetry={home.refetch} />
 
         {d ? (
           <>
             <View style={{ gap: 10 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Mono size={11} color={colors.mutedOnBlack}>{t('home.nextRide')}</Mono>
-                <Tag size={20}>{t('home.tag')}</Tag>
+                <Mono size={11} color={colors.mutedOnWhite}>{t('home.nextRide')}</Mono>
+                
               </View>
               {d.next_event ? (
                 <NextRideCard event={d.next_event} />
               ) : (
-                <Body color={colors.mutedOnBlack}>{t('home.noRide')}</Body>
+                <Body color={colors.mutedOnWhite}>{t('home.noRide')}</Body>
               )}
             </View>
 
@@ -59,7 +59,7 @@ export default function HomeScreen() {
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
                   {d.listings.map((l) => (
                     <View key={l.id} style={{ width: '48%' }}>
-                      <ListingCard listing={l} onDark />
+                      <ListingCard listing={l} />
                     </View>
                   ))}
                 </View>

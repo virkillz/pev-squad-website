@@ -202,7 +202,7 @@ defmodule PevSquadWeb.EventComponents do
         >
           {Enum.join(Enum.reject([@event.location_name, seats_label(@event)], &is_nil/1), " · ")}
           <span :if={Events.seats_left(@event) == 0}>
-             ·    {gettext("Full — join the waitlist")}
+            · {gettext("Full — join the waitlist")}
           </span>
         </p>
       </div>

@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Switch, TextInput, View, type TextInputProps } from 'react-native';
 
+import { AvatarPicker } from '@/components/avatar-picker';
 import { BackBar, BigButton, Chips, QueryState } from '@/components/chrome';
 import { Body, Mono, Stencil } from '@/components/text';
 import { api, ApiError, unwrap } from '@/lib/api';
@@ -29,10 +30,10 @@ export default function ProfileScreen() {
 
   if (ready && !signedIn) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.black }}>
+      <View style={{ flex: 1, backgroundColor: colors.white }}>
         <BackBar />
         <View style={{ padding: space.l, gap: space.l }}>
-          <Body color={colors.white}>{t('profile.signIn')}</Body>
+          <Body color={colors.black}>{t('profile.signIn')}</Body>
           <BigButton label={t('header.login')} onPress={() => router.replace('/login')} />
         </View>
       </View>
@@ -40,12 +41,12 @@ export default function ProfileScreen() {
   }
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, backgroundColor: colors.black }}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, backgroundColor: colors.white }}>
       <BackBar />
       {me.data ? (
         <ProfileForm me={me.data} />
       ) : (
-        <QueryState onDark loading={!me.error} error={me.error} onRetry={() => me.refetch()} />
+        <QueryState loading={!me.error} error={me.error} onRetry={() => me.refetch()} />
       )}
     </KeyboardAvoidingView>
   );
@@ -96,7 +97,7 @@ function ProfileForm({ me }: { me: Me }) {
 
   const field = (key: keyof Form & string, title: string, props: TextInputProps = {}) => (
     <View style={{ gap: 6 }}>
-      <Mono bold size={11} color={colors.white}>{title}</Mono>
+      <Mono bold size={11} color={colors.black}>{title}</Mono>
       <TextInput
         value={String(form[key])}
         onChangeText={(v) => set(key, v as never)}
@@ -106,7 +107,7 @@ function ProfileForm({ me }: { me: Me }) {
         style={{
           minHeight: 50,
           borderWidth: bw,
-          borderColor: errors[key] ? colors.orange : colors.white,
+          borderColor: errors[key] ? colors.orange : colors.black,
           backgroundColor: colors.white,
           paddingHorizontal: 12,
           paddingVertical: 12,
@@ -116,7 +117,7 @@ function ProfileForm({ me }: { me: Me }) {
         }}
       />
       {errors[key]?.map((m) => (
-        <Body key={m} size={13} weight="semi" color={colors.orange}>{m}</Body>
+        <Body key={m} size={13} weight="semi">⚠ {m}</Body>
       ))}
     </View>
   );
@@ -128,12 +129,13 @@ function ProfileForm({ me }: { me: Me }) {
   return (
     <ScrollView contentContainerStyle={{ padding: space.l, gap: space.l, paddingBottom: space.xxl }} keyboardShouldPersistTaps="handled">
       <View style={{ gap: 6 }}>
-        <Stencil size={56} color={colors.white} accessibilityRole="header">
+        <Stencil size={56} color={colors.black} accessibilityRole="header">
           {profile ? profile.alias : t('profile.setup')}
         </Stencil>
-        <Mono size={12} color={colors.mutedOnBlack}>{me.email}</Mono>
-        {!profile ? <Body color={colors.white}>{t('profile.setupNote')}</Body> : null}
+        <Mono size={12} color={colors.mutedOnWhite}>{me.email}</Mono>
+        {!profile ? <Body color={colors.black}>{t('profile.setupNote')}</Body> : null}
       </View>
+      <AvatarPicker url={profile?.avatar_url ?? null} alias={profile?.alias ?? form.alias} enabled={!!profile && profile.status !== 'banned'} />
       {banner ? (
         <View style={{ backgroundColor: colors.orange, borderWidth: bw, padding: space.m }}>
           <Body weight="semi">{banner}</Body>
@@ -143,27 +145,27 @@ function ProfileForm({ me }: { me: Me }) {
       {field('alias', t('profile.alias'), { autoCapitalize: 'none', autoCorrect: false, maxLength: 30 })}
       {field('city', t('profile.city'), { maxLength: 60, placeholder: 'Jakarta' })}
       <View style={{ gap: 6 }}>
-        <Mono bold size={11} color={colors.white}>{t('profile.type')}</Mono>
-        <Chips onDark options={PEV_TYPES.map((v) => ({ value: v, label: label('pev', v) }))} value={form.primary_pev_type} onChange={(v) => set('primary_pev_type', v)} />
+        <Mono bold size={11} color={colors.black}>{t('profile.type')}</Mono>
+        <Chips options={PEV_TYPES.map((v) => ({ value: v, label: label('pev', v) }))} value={form.primary_pev_type} onChange={(v) => set('primary_pev_type', v)} />
       </View>
       {field('main_ride', t('profile.ride'), { maxLength: 80, placeholder: 'Begode Master' })}
       {field('bio', t('profile.bio'), { multiline: true, maxLength: 500 })}
       {field('instagram', t('profile.instagram'), { autoCapitalize: 'none', autoCorrect: false, placeholder: '@username' })}
 
-      <View style={{ flexDirection: 'row', gap: space.m, alignItems: 'center', borderTopWidth: bw, borderColor: colors.white, paddingTop: space.l }}>
+      <View style={{ flexDirection: 'row', gap: space.m, alignItems: 'center', borderTopWidth: bw, borderColor: colors.black, paddingTop: space.l }}>
         <View style={{ flex: 1, gap: 4 }}>
-          <Body weight="bold" color={colors.white}>{t('profile.public')}</Body>
-          <Body size={12} color={colors.mutedOnBlack}>{t('profile.publicNote')}</Body>
+          <Body weight="bold" color={colors.black}>{t('profile.public')}</Body>
+          <Body size={12} color={colors.mutedOnWhite}>{t('profile.publicNote')}</Body>
         </View>
         <Switch
           value={form.is_public}
           onValueChange={(v) => set('is_public', v)}
-          trackColor={{ true: colors.orange, false: colors.placeholder }}
+          trackColor={{ true: colors.orange, false: colors.placeholderLight }}
           accessibilityLabel={t('profile.public')}
         />
       </View>
 
-      {message ? <Body weight="semi" color={Object.keys(errors).length ? colors.orange : colors.white}>{message}</Body> : null}
+      {message ? <Body weight="semi">{message}</Body> : null}
       <BigButton label={saving ? t('profile.saving') : t('profile.save')} disabled={saving || status === 'banned' || !form.alias.trim()} onPress={save} />
     </ScrollView>
   );

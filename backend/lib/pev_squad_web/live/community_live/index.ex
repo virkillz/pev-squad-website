@@ -32,10 +32,6 @@ defmodule PevSquadWeb.CommunityLive.Index do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope} active={:community}>
       <section class="page-header">
-        <div class="meta-row">
-          <span class="eyebrow">02 / {gettext("Who rides with us")}</span>
-          <span class="tag-scribble">{gettext("show up")}</span>
-        </div>
         <h1 class="page-title">{gettext("Community")}</h1>
         <p class="page-intro">
           {gettext(
@@ -44,14 +40,7 @@ defmodule PevSquadWeb.CommunityLive.Index do
         </p>
       </section>
 
-      <div class="bleed">
-        <img
-          src={~p"/images/community.png"}
-          alt={gettext("PEV Squad members and their EUCs and scooters gathered in a parking garage")}
-        />
-      </div>
-
-      <section class="band band-tight band-black">
+      <section class="band band-tight band-white">
         <div class="statbar">
           <div class="stat">
             <div class="stat-n">{@stats.riders}</div>
@@ -75,7 +64,6 @@ defmodule PevSquadWeb.CommunityLive.Index do
       <section class="band band-white" id="squad">
         <div class="section-head">
           <div>
-            <span class="eyebrow">{gettext("Rider roster")}</span>
             <h2 class="section-title">{gettext("The Squad")}</h2>
             <p class="section-lede">
               {gettext("From daily commuters to mountain offroaders. Riding with us?")}
@@ -169,10 +157,9 @@ defmodule PevSquadWeb.CommunityLive.Index do
         </nav>
       </section>
 
-      <section :if={@communities != []} class="band band-black" id="partner-communities">
+      <section :if={@communities != []} class="band band-white" id="partner-communities">
         <div class="section-head">
           <div>
-            <span class="eyebrow">{gettext("The network")}</span>
             <h2 class="section-title">{gettext("Partner")}<br />{gettext("Communities")}</h2>
             <.partner_positioning />
           </div>
@@ -185,7 +172,6 @@ defmodule PevSquadWeb.CommunityLive.Index do
       <section :if={@brands != []} class="band band-white" id="brand-partners">
         <div class="section-head">
           <div>
-            <span class="eyebrow">{gettext("Who backs the rides")}</span>
             <h2 class="section-title">{gettext("Brand")}<br />{gettext("Partners")}</h2>
             <p class="section-lede">
               {gettext(
@@ -196,23 +182,6 @@ defmodule PevSquadWeb.CommunityLive.Index do
         </div>
         <div class="grid grid-3">
           <.partner_card :for={partner <- @brands} partner={partner} />
-        </div>
-      </section>
-
-      <section class="band band-orange">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">{gettext("Find us")}</span>
-            <h2 class="section-title">{gettext("Where We")}<br />{gettext("Actually Talk")}</h2>
-            <p class="section-lede">
-              {gettext(
-                "Our community lives on chat, not inboxes. Join the WhatsApp group to get in the loop on rides and drops."
-              )}
-            </p>
-          </div>
-          <a href="#" class="btn btn-solid" style="background:var(--black); color:var(--orange);">
-            {gettext("Join WhatsApp Group")}
-          </a>
         </div>
       </section>
     </Layouts.app>

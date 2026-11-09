@@ -135,7 +135,7 @@ msgid "COMMUTE"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:89
-#: lib/pev_squad_web/live/community_live/index.ex:62
+#: lib/pev_squad_web/live/community_live/index.ex:51
 #: lib/pev_squad_web/live/home_live/index.html.heex:154
 #, elixir-autogen, elixir-format
 msgid "Cities"
@@ -149,8 +149,8 @@ msgstr ""
 #: lib/pev_squad_web/components/layouts.ex:17
 #: lib/pev_squad_web/components/layouts.ex:143
 #: lib/pev_squad_web/components/post_components.ex:12
-#: lib/pev_squad_web/live/community_live/index.ex:39
-#: lib/pev_squad_web/live/community_live/index.ex:226
+#: lib/pev_squad_web/live/community_live/index.ex:35
+#: lib/pev_squad_web/live/community_live/index.ex:195
 #: lib/pev_squad_web/live/community_live/show.ex:16
 #: lib/pev_squad_web/live/home_live/index.html.heex:229
 #, elixir-autogen, elixir-format
@@ -255,7 +255,6 @@ msgstr ""
 msgid "Invite Us to Your Event"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:214
 #: lib/pev_squad_web/live/home_live/index.html.heex:145
 #, elixir-autogen, elixir-format
 msgid "Join WhatsApp Group"
@@ -303,7 +302,7 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:66
+#: lib/pev_squad_web/live/community_live/index.ex:55
 #: lib/pev_squad_web/live/home_live/index.html.heex:162
 #, elixir-autogen, elixir-format
 msgid "Meetups Held"
@@ -345,7 +344,6 @@ msgstr ""
 msgid "ON CAMERA"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:50
 #: lib/pev_squad_web/live/home_live/index.html.heex:135
 #, elixir-autogen, elixir-format
 msgid "PEV Squad members and their EUCs and scooters gathered in a parking garage"
@@ -1116,7 +1114,7 @@ msgstr ""
 msgid "%{name} logo"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:141
+#: lib/pev_squad_web/live/community_live/index.ex:129
 #, elixir-autogen, elixir-format
 msgid "%{range} of %{total} riders"
 msgstr ""
@@ -1258,11 +1256,6 @@ msgstr ""
 msgid "Account Settings"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:206
-#, elixir-autogen, elixir-format
-msgid "Actually Talk"
-msgstr ""
-
 #: lib/pev_squad_web/live/gallery_live/album.ex:44
 #, elixir-autogen, elixir-format
 msgid "Add Photos"
@@ -1279,7 +1272,7 @@ msgstr ""
 msgid "Add photos"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:83
+#: lib/pev_squad_web/live/community_live/index.ex:71
 #, elixir-autogen, elixir-format
 msgid "Add your profile."
 msgstr ""
@@ -1391,7 +1384,7 @@ msgid "Blocked Riders"
 msgstr ""
 
 #: lib/pev_squad_web/components/partner_components.ex:96
-#: lib/pev_squad_web/live/community_live/index.ex:189
+#: lib/pev_squad_web/live/community_live/index.ex:175
 #: lib/pev_squad_web/live/review_live/form.ex:60
 #, elixir-autogen, elixir-format
 msgid "Brand"
@@ -1413,7 +1406,7 @@ msgstr ""
 msgid "Brands that have ridden, hosted, fed or filmed with us — and reached PEV riders doing it."
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:191
+#: lib/pev_squad_web/live/community_live/index.ex:177
 #, elixir-autogen, elixir-format
 msgid "Brands that have ridden, hosted, fed or filmed with us. Want to be on this list? Reach out on WhatsApp — if it's fun, we're in."
 msgstr ""
@@ -1486,7 +1479,7 @@ msgstr ""
 msgid "Comfort"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:176
+#: lib/pev_squad_web/live/community_live/index.ex:163
 #, elixir-autogen, elixir-format
 msgid "Communities"
 msgstr ""
@@ -1608,17 +1601,12 @@ msgstr ""
 msgid "Find a commuter in the reviews"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:205
-#, elixir-autogen, elixir-format
-msgid "Find us"
-msgstr ""
-
 #: lib/pev_squad/partners/partner.ex:13
 #, elixir-autogen, elixir-format
 msgid "Food & drink"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:81
+#: lib/pev_squad_web/live/community_live/index.ex:69
 #, elixir-autogen, elixir-format
 msgid "From daily commuters to mountain offroaders. Riding with us?"
 msgstr ""
@@ -1828,7 +1816,7 @@ msgstr ""
 msgid "Newest first"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:166
+#: lib/pev_squad_web/live/community_live/index.ex:154
 #, elixir-autogen, elixir-format
 msgid "Next"
 msgstr ""
@@ -1879,12 +1867,12 @@ msgstr ""
 msgid "No reviews yet. Own a wheel, board or scooter? Tell the squad how it rides."
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:131
+#: lib/pev_squad_web/live/community_live/index.ex:119
 #, elixir-autogen, elixir-format
 msgid "No riders here yet."
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:130
+#: lib/pev_squad_web/live/community_live/index.ex:118
 #, elixir-autogen, elixir-format
 msgid "No riders match “%{query}”."
 msgstr ""
@@ -1940,11 +1928,6 @@ msgstr ""
 msgid "Our Riders"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:208
-#, elixir-autogen, elixir-format
-msgid "Our community lives on chat, not inboxes. Join the WhatsApp group to get in the loop on rides and drops."
-msgstr ""
-
 #: lib/pev_squad_web/live/gallery_live/upload.ex:192
 #: lib/pev_squad_web/live/listing_live/form.ex:343
 #, elixir-autogen, elixir-format
@@ -1963,7 +1946,7 @@ msgstr ""
 msgid "PEV Squad is Indonesia's personal electric vehicle community — speed (racing), adventure (touring and group rides) and freedom (commuting)."
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:41
+#: lib/pev_squad_web/live/community_live/index.ex:37
 #, elixir-autogen, elixir-format
 msgid "PEV Squad is a collective of riders across Indonesia — mostly performance EUC, plus e-bikes and the occasional electric skateboard. Jakarta to Malang, Depok to Banjarnegara. No entry fee, just show up and ride."
 msgstr ""
@@ -1983,7 +1966,7 @@ msgstr ""
 msgid "PEVs as everyday transport. Ride to the station, take it with you on public transport, and ride the last mile — no traffic jams, no parking hunt, your own schedule. We want more people to know a PEV is a real way to get to work."
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:176
+#: lib/pev_squad_web/live/community_live/index.ex:163
 #, elixir-autogen, elixir-format
 msgid "Partner"
 msgstr ""
@@ -2004,7 +1987,7 @@ msgstr ""
 msgid "Partner communities & brands"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:189
+#: lib/pev_squad_web/live/community_live/index.ex:175
 #, elixir-autogen, elixir-format
 msgid "Partners"
 msgstr ""
@@ -2044,7 +2027,7 @@ msgstr ""
 msgid "Power"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:150
+#: lib/pev_squad_web/live/community_live/index.ex:138
 #, elixir-autogen, elixir-format
 msgid "Prev"
 msgstr ""
@@ -2205,18 +2188,13 @@ msgstr ""
 msgid "Rider profile"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:78
-#, elixir-autogen, elixir-format
-msgid "Rider roster"
-msgstr ""
-
 #: lib/pev_squad_web/live/group_ride_live/form.ex:152
 #, elixir-autogen, elixir-format
 msgid "Riders"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:85
-#: lib/pev_squad_web/live/community_live/index.ex:58
+#: lib/pev_squad_web/live/community_live/index.ex:47
 #, elixir-autogen, elixir-format
 msgid "Riders on the roster"
 msgstr ""
@@ -2231,7 +2209,7 @@ msgstr ""
 msgid "Rides"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:70
+#: lib/pev_squad_web/live/community_live/index.ex:59
 #, elixir-autogen, elixir-format
 msgid "Rides Coming Up"
 msgstr ""
@@ -2241,7 +2219,7 @@ msgstr ""
 msgid "Rides in"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:138
+#: lib/pev_squad_web/live/community_live/index.ex:126
 #, elixir-autogen, elixir-format
 msgid "Roster pages"
 msgstr ""
@@ -2287,12 +2265,12 @@ msgstr ""
 msgid "Scores, 0–10 (one decimal)"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:112
+#: lib/pev_squad_web/live/community_live/index.ex:100
 #, elixir-autogen, elixir-format
 msgid "Search alias, city or ride"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:106
+#: lib/pev_squad_web/live/community_live/index.ex:94
 #, elixir-autogen, elixir-format
 msgid "Search riders"
 msgstr ""
@@ -2383,7 +2361,7 @@ msgstr ""
 msgid "Something else"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:117
+#: lib/pev_squad_web/live/community_live/index.ex:105
 #, elixir-autogen, elixir-format
 msgid "Sort riders"
 msgstr ""
@@ -2522,7 +2500,7 @@ msgstr ""
 msgid "The Sheet"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:79
+#: lib/pev_squad_web/live/community_live/index.ex:67
 #, elixir-autogen, elixir-format
 msgid "The Squad"
 msgstr ""
@@ -2533,12 +2511,11 @@ msgid "The group ride “%{title}”"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:105
-#: lib/pev_squad_web/live/community_live/index.ex:175
 #, elixir-autogen, elixir-format
 msgid "The network"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:229
+#: lib/pev_squad_web/live/community_live/index.ex:198
 #, elixir-autogen, elixir-format
 msgid "The riders of PEV Squad — EUC, scooter, esk8 and e-bike riders across Indonesia — plus the communities and brands we ride with."
 msgstr ""
@@ -2683,21 +2660,6 @@ msgstr ""
 msgid "What's wrong?"
 msgstr ""
 
-#: lib/pev_squad_web/live/community_live/index.ex:206
-#, elixir-autogen, elixir-format
-msgid "Where We"
-msgstr ""
-
-#: lib/pev_squad_web/live/community_live/index.ex:188
-#, elixir-autogen, elixir-format
-msgid "Who backs the rides"
-msgstr ""
-
-#: lib/pev_squad_web/live/community_live/index.ex:36
-#, elixir-autogen, elixir-format
-msgid "Who rides with us"
-msgstr ""
-
 #: lib/pev_squad_web/live/about_live/index.ex:18
 #, elixir-autogen, elixir-format
 msgid "Who we are"
@@ -2827,11 +2789,6 @@ msgstr ""
 #: lib/pev_squad_web/components/review_components.ex:51
 #, elixir-autogen, elixir-format
 msgid "reviewed by %{rider}"
-msgstr ""
-
-#: lib/pev_squad_web/live/community_live/index.ex:37
-#, elixir-autogen, elixir-format
-msgid "show up"
 msgstr ""
 
 #: lib/pev_squad_web/live/about_live/index.ex:19
@@ -3758,17 +3715,27 @@ msgstr ""
 msgid "must be a number from 1 to %{max}"
 msgstr ""
 
-#: lib/pev_squad_web/controllers/api/safety_controller.ex:145
+#: lib/pev_squad_web/controllers/api/safety_controller.ex:160
 #, elixir-autogen, elixir-format
 msgid "That's yours."
 msgstr ""
 
-#: lib/pev_squad_web/controllers/api/safety_controller.ex:94
+#: lib/pev_squad_web/controllers/api/safety_controller.ex:104
 #, elixir-autogen, elixir-format
 msgid "This profile isn't linked to a member account, so there's nobody to block."
 msgstr ""
 
-#: lib/pev_squad_web/controllers/api/safety_controller.ex:131
+#: lib/pev_squad_web/controllers/api/safety_controller.ex:146
 #, elixir-autogen, elixir-format
 msgid "must be profile, photo, event or review"
+msgstr ""
+
+#: lib/pev_squad_web/controllers/api/me_controller.ex:67
+#, elixir-autogen, elixir-format
+msgid "Create your rider profile first."
+msgstr ""
+
+#: lib/pev_squad_web/controllers/api/me_controller.ex:85
+#, elixir-autogen, elixir-format
+msgid "The photo is bigger than 10 MB."
 msgstr ""

@@ -21,7 +21,7 @@ export default function EventsScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.white }}>
-      <PageHeader tone="orange" eyebrow={t('events.eyebrow')} title={t('events.title')} tag={t('events.tag')} />
+      <PageHeader tone="black" title={t('events.title')} />
       <Segments
         value={filter}
         onChange={setFilter}

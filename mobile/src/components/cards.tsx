@@ -35,7 +35,7 @@ export function NextRideCard({ event }: { event: Event }) {
 
   return (
     <Link href={{ pathname: '/events/[slug]', params: { slug: event.slug } }} asChild>
-      <Pressable accessibilityRole="link" style={{ backgroundColor: colors.orange, borderWidth: bw, borderColor: colors.orange }}>
+      <Pressable accessibilityRole="link" style={{ backgroundColor: colors.orange, borderWidth: bw, borderColor: colors.black }}>
         <View style={{ flexDirection: 'row', borderBottomWidth: bw }}>
           <Mono bold size={11} style={{ padding: 8, borderRightWidth: bw }}>{label('kind', event.kind)}</Mono>
           <Mono bold size={11} style={{ padding: 8, flex: 1 }}>
@@ -128,7 +128,7 @@ export function PastEventRow({ event }: { event: Event }) {
 }
 
 /** News row: thumbnail, topic, title, date. */
-export function PostRow({ post, onDark = true }: { post: Post; onDark?: boolean }) {
+export function PostRow({ post, onDark = false }: { post: Post; onDark?: boolean }) {
   const { t, label, locale } = useLocale();
   const fg = onDark ? colors.white : colors.black;
   return (
@@ -159,21 +159,21 @@ export function PostFeature({ post }: { post: Post }) {
   const { t, label, locale } = useLocale();
   return (
     <Link href={{ pathname: '/posts/[slug]', params: { slug: post.slug } }} asChild>
-      <Pressable accessibilityRole="link" style={{ borderWidth: bw, borderColor: colors.white }}>
+      <Pressable accessibilityRole="link" style={{ borderWidth: bw, borderColor: colors.black }}>
         <View>
           {post.cover_url ? (
-            <Image source={post.cover_url} style={{ height: 190, borderBottomWidth: bw, borderColor: colors.white }} contentFit="cover" />
+            <Image source={post.cover_url} style={{ height: 190, borderBottomWidth: bw, borderColor: colors.black }} contentFit="cover" />
           ) : (
-            <ImagePlaceholder style={{ height: 120, borderBottomWidth: bw, borderColor: colors.white }} />
+            <ImagePlaceholder light style={{ height: 120, borderBottomWidth: bw, borderColor: colors.black }} />
           )}
           <Mono bold size={10} style={{ position: 'absolute', left: 0, top: 0, backgroundColor: colors.orange, paddingHorizontal: 8, paddingVertical: 6 }}>
             {post.event_id ? 'RECAP' : post.topic ? label('topic', post.topic) : t('news.news')}
           </Mono>
         </View>
         <View style={{ padding: space.m, gap: 8 }}>
-          <Stencil size={30} color={colors.white}>{post.title}</Stencil>
-          {post.excerpt ? <Body size={14} color="rgba(255,255,255,0.78)" numberOfLines={3}>{post.excerpt}</Body> : null}
-          <Mono size={10} color={colors.mutedOnBlack}>
+          <Stencil size={30}>{post.title}</Stencil>
+          {post.excerpt ? <Body size={14} color={colors.mutedOnWhite} numberOfLines={3}>{post.excerpt}</Body> : null}
+          <Mono size={10} color={colors.mutedOnWhite}>
             {dateLabel(post.published_at, locale)} · {t('news.minutes', { n: post.reading_minutes })}
           </Mono>
         </View>
@@ -226,15 +226,15 @@ export function AlbumTile({ album, width = 150 }: { album: Album; width?: number
   const cover = album.preview[0];
   return (
     <Link href={{ pathname: '/albums/[slug]', params: { slug: album.slug } }} asChild>
-      <Pressable accessibilityRole="link" style={{ width, borderWidth: bw, borderColor: colors.white }}>
+      <Pressable accessibilityRole="link" style={{ width, borderWidth: bw, borderColor: colors.black }}>
         {cover ? (
-          <Image source={cover.thumb_url} style={{ width: width - bw * 2, height: width - bw * 2, borderBottomWidth: bw, borderColor: colors.white }} contentFit="cover" />
+          <Image source={cover.thumb_url} style={{ width: width - bw * 2, height: width - bw * 2, borderBottomWidth: bw, borderColor: colors.black }} contentFit="cover" />
         ) : (
-          <ImagePlaceholder style={{ width: width - bw * 2, height: width - bw * 2 }} />
+          <ImagePlaceholder light style={{ width: width - bw * 2, height: width - bw * 2 }} />
         )}
         <View style={{ padding: 8 }}>
-          <Body weight="heavy" size={14} color={colors.white} numberOfLines={1}>{album.title}</Body>
-          <Mono size={10} color={colors.mutedOnBlack} style={{ marginTop: 4 }}>
+          <Body weight="heavy" size={14} numberOfLines={1}>{album.title}</Body>
+          <Mono size={10} color={colors.mutedOnWhite} style={{ marginTop: 4 }}>
             {t('album.photos', { n: album.photo_count })}
             {album.taken_on ? ` · ${monthShort(album.taken_on, locale)} ${album.taken_on.slice(0, 4)}` : ''}
           </Mono>
@@ -274,7 +274,7 @@ export function RiderCard({ rider }: { rider: Rider }) {
 }
 
 /** Partner community row (on black) or brand tile (on white). */
-export function PartnerRow({ partner }: { partner: Partner }) {
+export function PartnerRow({ partner, onDark = false }: { partner: Partner; onDark?: boolean }) {
   const { t } = useLocale();
   const note =
     partner.event_count > 0
@@ -284,15 +284,15 @@ export function PartnerRow({ partner }: { partner: Partner }) {
         : '→';
   return (
     <Link href={{ pathname: '/partners/[slug]', params: { slug: partner.slug } }} asChild>
-      <Pressable accessibilityRole="link" style={{ flexDirection: 'row', gap: 12, alignItems: 'center', paddingVertical: 12, borderBottomWidth: bw, borderColor: colors.ruleOnBlack }}>
+      <Pressable accessibilityRole="link" style={{ flexDirection: 'row', gap: 12, alignItems: 'center', paddingVertical: 12, borderBottomWidth: bw, borderColor: onDark ? colors.ruleOnBlack : colors.ruleOnWhite }}>
         <PartnerLogo partner={partner} />
         <View style={{ flex: 1 }}>
-          <Body weight="heavy" size={16} color={colors.white}>{partner.name}</Body>
-          <Mono size={10} color={colors.mutedOnBlack} style={{ marginTop: 3 }} numberOfLines={1}>
+          <Body weight="heavy" size={16} color={onDark ? colors.white : colors.black}>{partner.name}</Body>
+          <Mono size={10} color={onDark ? colors.mutedOnBlack : colors.mutedOnWhite} style={{ marginTop: 3 }} numberOfLines={1}>
             {[partner.region, partner.vehicle_focus?.toUpperCase()].filter(Boolean).join(' · ').toUpperCase() || partner.tagline}
           </Mono>
         </View>
-        <Mono bold size={10} color={colors.orange}>{note}</Mono>
+        <Mono bold size={10} color={onDark ? colors.orange : colors.black}>{note}</Mono>
       </Pressable>
     </Link>
   );

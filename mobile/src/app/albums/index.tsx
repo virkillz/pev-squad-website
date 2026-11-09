@@ -15,11 +15,11 @@ export default function AlbumsScreen() {
   const tile = (width - space.l * 2 - 10) / 2;
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.black }}>
+    <View style={{ flex: 1, backgroundColor: colors.white }}>
       <BackBar />
       <ScrollView contentContainerStyle={{ padding: space.l, gap: 14, paddingBottom: space.xxl }}>
-        <Stencil size={56} color={colors.white} accessibilityRole="header">{t('home.gallery')}</Stencil>
-        <QueryState loading={albums.isPending} error={albums.error} empty={albums.isSuccess && list.length === 0} onRetry={albums.refetch} onDark />
+        <Stencil size={56} color={colors.black} accessibilityRole="header">{t('home.gallery')}</Stencil>
+        <QueryState loading={albums.isPending} error={albums.error} empty={albums.isSuccess && list.length === 0} onRetry={albums.refetch} />
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
           {list.map((a) => <AlbumTile key={a.slug} album={a} width={tile} />)}
         </View>

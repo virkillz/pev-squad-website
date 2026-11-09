@@ -41,8 +41,7 @@ export default function ForSaleScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.white }}>
       <PageHeader
-        tone="white"
-        eyebrow={t('forSale.eyebrow')}
+        tone="black"
         title={t('forSale.title')}
         right={
           <Pressable

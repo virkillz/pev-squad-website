@@ -18,11 +18,9 @@ export default function NewsScreen() {
   const [first, ...rest] = list;
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.black }}>
-      <PageHeader tone="black" eyebrow={t('news.eyebrow')} title={t('news.title')} tag={t('news.tag')} />
+    <View style={{ flex: 1, backgroundColor: colors.white }}>
+      <PageHeader tone="black" title={t('news.title')} />
       <Segments
-        onDark
-        activeColor={colors.orange}
         value={kind}
         onChange={(k) => {
           setKind(k);
@@ -36,15 +34,14 @@ export default function NewsScreen() {
       <ScrollView
         contentContainerStyle={{ padding: space.l, gap: 14, paddingBottom: space.xxl }}
         refreshControl={<RefreshControl refreshing={posts.isRefetching} onRefresh={() => void posts.refetch()} tintColor={colors.orange} />}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -space.l, borderBottomWidth: bw, borderColor: colors.ruleOnBlack, paddingBottom: 12 }} contentContainerStyle={{ paddingHorizontal: space.l }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -space.l, borderBottomWidth: bw, borderColor: colors.ruleOnWhite, paddingBottom: 12 }} contentContainerStyle={{ paddingHorizontal: space.l }}>
           <Chips
-            onDark
             value={topic}
             onChange={setTopic}
             options={[{ value: 'all', label: t('common.all') }, ...topics.map((tp) => ({ value: tp, label: label('topic', tp) }))]}
           />
         </ScrollView>
-        <QueryState loading={posts.isPending} error={posts.error} empty={posts.isSuccess && list.length === 0} onRetry={posts.refetch} onDark />
+        <QueryState loading={posts.isPending} error={posts.error} empty={posts.isSuccess && list.length === 0} onRetry={posts.refetch} />
         {first ? <PostFeature post={first} /> : null}
         <View>{rest.map((p) => <PostRow key={p.id} post={p} />)}</View>
         {posts.hasNextPage ? (

@@ -1,11 +1,9 @@
-import { Image } from 'expo-image';
 import { useEffect, useState } from 'react';
 import { RefreshControl, ScrollView, TextInput, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BrandTile, PartnerRow, RiderCard } from '@/components/cards';
-import { AccountCorner, BigButton, Chips, QueryState } from '@/components/chrome';
-import { Body, Mono, Stencil, Tag } from '@/components/text';
+import { BigButton, Chips, PageHeader, QueryState } from '@/components/chrome';
+import { Body, Mono, Stencil } from '@/components/text';
 import type { Partner, Rider } from '@/lib/api';
 import { useLocale } from '@/lib/i18n';
 import { flatPages, useCommunity, useRiders } from '@/lib/queries';
@@ -30,7 +28,6 @@ function useDebounced(value: string, ms = 350) {
 }
 
 export default function CommunityScreen() {
-  const insets = useSafeAreaInsets();
   const { t, label } = useLocale();
   const community = useCommunity();
   const [type, setType] = useState<string>('all');
@@ -41,9 +38,9 @@ export default function CommunityScreen() {
   const c = community.data;
 
   const stat = (n: number | undefined, l: string, last = false) => (
-    <View style={{ flex: 1, padding: 8, borderRightWidth: last ? 0 : bw }}>
-      <Stencil size={34}>{n ?? '–'}</Stencil>
-      <Mono size={9} style={{ marginTop: 3 }}>{l}</Mono>
+    <View style={{ flex: 1, paddingVertical: space.m, paddingHorizontal: space.s, borderRightWidth: last ? 0 : bw }}>
+      <Mono bold size={24} color={colors.orange}>{n ?? '–'}</Mono>
+      <Mono size={9} color={colors.mutedOnWhite} style={{ marginTop: 4 }}>{l}</Mono>
     </View>
   );
 
@@ -62,26 +59,9 @@ export default function CommunityScreen() {
           tintColor={colors.orange}
         />
       }>
-      <View style={{ backgroundColor: colors.black }}>
-        <Image
-          source={require('@/assets/images/community.jpg')}
-          style={{ height: 200 + insets.top, borderBottomWidth: bw, borderColor: colors.white }}
-          contentFit="cover"
-          accessibilityLabel="PEV Squad"
-        />
-        <View style={{ position: 'absolute', top: insets.top + space.s, right: space.l }}>
-          <AccountCorner />
-        </View>
-        <View style={{ padding: space.l, paddingTop: 14 }}>
-          <Mono size={11} color={colors.mutedOnBlack}>{t('community.eyebrow')}</Mono>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 6 }}>
-            <Stencil size={56} color={colors.white} accessibilityRole="header">{t('community.title')}</Stencil>
-            <Tag style={{ marginBottom: 8 }}>{t('community.tag')}</Tag>
-          </View>
-        </View>
-      </View>
+      <PageHeader tone="black" title={t('community.title')} />
 
-      <View style={{ flexDirection: 'row', backgroundColor: colors.orange, borderBottomWidth: bw }}>
+      <View style={{ flexDirection: 'row', backgroundColor: colors.white, borderBottomWidth: bw }}>
         {stat(c?.stats.riders, t('community.riders'))}
         {stat(c?.stats.cities, t('community.cities'))}
         {stat(c?.stats.meetups_held, t('community.meetups'))}
@@ -89,10 +69,7 @@ export default function CommunityScreen() {
       </View>
 
       <View style={{ padding: space.l, gap: 12 }}>
-        <View>
-          <Mono size={11} color={colors.mutedOnWhite}>{t('community.roster')}</Mono>
-          <Stencil size={40} style={{ marginTop: 4 }}>{t('community.squad')}</Stencil>
-        </View>
+        <Stencil size={40}>{t('community.squad')}</Stencil>
         <TextInput
           value={query}
           onChangeText={setQuery}
@@ -124,17 +101,15 @@ export default function CommunityScreen() {
       <QueryState loading={community.isPending} error={community.error} onRetry={community.refetch} />
 
       {c && c.communities.length > 0 ? (
-        <View style={{ backgroundColor: colors.black, padding: space.l }}>
-          <Mono size={11} color={colors.mutedOnBlack}>{t('community.network')}</Mono>
-          <Stencil size={40} color={colors.white} style={{ marginTop: 4, marginBottom: 6 }}>{t('community.partners')}</Stencil>
-          {c.communities.map((p) => <PartnerRow key={p.slug} partner={p} />)}
+        <View style={{ padding: space.l, borderTopWidth: bw }}>
+          <Stencil size={40} style={{ marginBottom: 6 }}>{t('community.partners')}</Stencil>
+          {c.communities.map((p) => <PartnerRow key={p.slug} partner={p} onDark={false} />)}
         </View>
       ) : null}
 
       {c && c.brands.length > 0 ? (
-        <View style={{ padding: space.l }}>
-          <Mono size={11} color={colors.mutedOnWhite}>{t('community.backers')}</Mono>
-          <Stencil size={40} style={{ marginTop: 4, marginBottom: 12 }}>{t('community.brands')}</Stencil>
+        <View style={{ padding: space.l, borderTopWidth: bw }}>
+          <Stencil size={40} style={{ marginBottom: 12 }}>{t('community.brands')}</Stencil>
           <View style={{ gap: 10 }}>
             {pairs<Partner>(c.brands).map((row) => (
               <View key={row[0].slug} style={{ flexDirection: 'row', gap: 10 }}>

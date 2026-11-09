@@ -4,27 +4,6 @@
  */
 
 export interface paths {
-    "/api/v1/admin/events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List events (all statuses and categories) */
-        get: operations["PevSquadWeb.API.Admin.EventController.index"];
-        put?: never;
-        /**
-         * Create a draft official event
-         * @description Always a draft; publish it in /admin. Times may include an offset, or be local to `timezone` (default Asia/Jakarta).
-         */
-        post: operations["PevSquadWeb.API.Admin.EventController.create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/admin/events/{id}": {
         parameters: {
             query?: never;
@@ -50,15 +29,15 @@ export interface paths {
         patch: operations["PevSquadWeb.API.Admin.EventController.update (2)"];
         trace?: never;
     };
-    "/api/v1/admin/partners": {
+    "/api/v1/listings/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Partner communities and brands, for linking events (`partner_ids`) */
-        get: operations["PevSquadWeb.API.Admin.PartnerController.index"];
+        /** One listing. Seller contacts only when signed in. */
+        get: operations["PevSquadWeb.API.ListingController.show"];
         put?: never;
         post?: never;
         delete?: never;
@@ -67,22 +46,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/admin/posts": {
+    "/api/v1/blocks/{user_id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List news and articles (all statuses) */
-        get: operations["PevSquadWeb.API.Admin.PostController.index"];
+        get?: never;
         put?: never;
-        /**
-         * Create a draft post
-         * @description Always a draft; publish it in /admin. Translations default to machine_translated: true.
-         */
-        post: operations["PevSquadWeb.API.Admin.PostController.create"];
-        delete?: never;
+        post?: never;
+        /** Unblock a member (idempotent) */
+        delete: operations["PevSquadWeb.API.SafetyController.unblock"];
         options?: never;
         head?: never;
         patch?: never;
@@ -113,7 +88,7 @@ export interface paths {
         patch: operations["PevSquadWeb.API.Admin.PostController.update (2)"];
         trace?: never;
     };
-    "/api/v1/admin/posts/{id}/cover": {
+    "/api/v1/auth/refresh": {
         parameters: {
             query?: never;
             header?: never;
@@ -122,11 +97,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Set a draft post's cover image
-         * @description Multipart form with a `file` field (JPEG, PNG or WebP, up to 15 MB).
-         */
-        post: operations["PevSquadWeb.API.Admin.PostController.cover"];
+        /** Rotate a refresh token; the previous token and access token stop working */
+        post: operations["PevSquadWeb.API.AuthController.refresh"];
         delete?: never;
         options?: never;
         head?: never;
@@ -153,309 +125,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/albums": {
+    "/api/v1/admin/posts": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Gallery albums with a few preview photos, newest first */
-        get: operations["PevSquadWeb.API.AlbumController.index"];
+        /** List news and articles (all statuses) */
+        get: operations["PevSquadWeb.API.Admin.PostController.index"];
         put?: never;
-        post?: never;
+        /**
+         * Create a draft post
+         * @description Always a draft; publish it in /admin. Translations default to machine_translated: true.
+         */
+        post: operations["PevSquadWeb.API.Admin.PostController.create"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/v1/albums/{slug}": {
+    "/api/v1/admin/events": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** One album with all its photos */
-        get: operations["PevSquadWeb.API.AlbumController.show"];
+        /** List events (all statuses and categories) */
+        get: operations["PevSquadWeb.API.Admin.EventController.index"];
         put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/exchange": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Consume a single-use app email token */
-        post: operations["PevSquadWeb.API.AuthController.exchange"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Revoke this app session (idempotent) */
-        post: operations["PevSquadWeb.API.AuthController.logout"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/magic-link": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Email an app login link, registering a new email if necessary */
-        post: operations["PevSquadWeb.API.AuthController.request_link"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sign in with an existing confirmed account's password */
-        post: operations["PevSquadWeb.API.AuthController.password"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Rotate a refresh token; the previous token and access token stop working */
-        post: operations["PevSquadWeb.API.AuthController.refresh"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/blocks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Members you blocked */
-        get: operations["PevSquadWeb.API.SafetyController.blocks"];
-        put?: never;
-        /** Block the owner of a profile, photo, group ride or review */
-        post: operations["PevSquadWeb.API.SafetyController.block"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/blocks/{user_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Unblock a member (idempotent) */
-        delete: operations["PevSquadWeb.API.SafetyController.unblock"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/community": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Community stats, partner communities and brand partners */
-        get: operations["PevSquadWeb.API.CommunityController.show"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Published events */
-        get: operations["PevSquadWeb.API.EventController.index"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/events/{slug}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** One event, with partners and recap posts */
-        get: operations["PevSquadWeb.API.EventController.show"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/home": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Everything the app's home screen shows, in one call */
-        get: operations["PevSquadWeb.API.HomeController.show"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/listings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** The For Sale board: live listings, or recently sold ones */
-        get: operations["PevSquadWeb.API.ListingController.index"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/listings/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** One listing. Seller contacts only when signed in. */
-        get: operations["PevSquadWeb.API.ListingController.show"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** The signed-in user */
-        get: operations["PevSquadWeb.API.MeController.show"];
-        put?: never;
-        post?: never;
-        /** Permanently delete your account and what you posted. Needs a login in the last 20 minutes */
-        delete: operations["PevSquadWeb.API.MeController.delete"];
-        options?: never;
-        head?: never;
-        /** Save the member's email language */
-        patch: operations["PevSquadWeb.API.MeController.update"];
-        trace?: never;
-    };
-    "/api/v1/me/deletion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** What deleting your account would remove, for the confirmation screen */
-        get: operations["PevSquadWeb.API.MeController.deletion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/profile": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Create or edit your rider profile; new members await staff approval */
-        put: operations["PevSquadWeb.API.MeController.profile"];
-        post?: never;
+        /**
+         * Create a draft official event
+         * @description Always a draft; publish it in /admin. Times may include an offset, or be local to `timezone` (default Asia/Jakarta).
+         */
+        post: operations["PevSquadWeb.API.Admin.EventController.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -496,24 +201,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/posts/{slug}": {
+    "/api/v1/me": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** One post with its Markdown body */
-        get: operations["PevSquadWeb.API.PostController.show"];
+        /** The signed-in user */
+        get: operations["PevSquadWeb.API.MeController.show"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** Permanently delete your account and what you posted. Needs a login in the last 20 minutes */
+        delete: operations["PevSquadWeb.API.MeController.delete"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** Save the member's email language */
+        patch: operations["PevSquadWeb.API.MeController.update"];
         trace?: never;
     };
-    "/api/v1/reports": {
+    "/api/v1/auth/magic-link": {
         parameters: {
             query?: never;
             header?: never;
@@ -522,23 +229,40 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Report something; optionally block its owner in the same step */
-        post: operations["PevSquadWeb.API.SafetyController.report"];
+        /** Email an app login link, registering a new email if necessary */
+        post: operations["PevSquadWeb.API.AuthController.request_link"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/v1/reports/reasons": {
+    "/api/v1/auth/password": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Report reasons, labelled in the request language */
-        get: operations["PevSquadWeb.API.SafetyController.reasons"];
+        get?: never;
+        put?: never;
+        /** Sign in with an existing confirmed account's password */
+        post: operations["PevSquadWeb.API.AuthController.password"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/albums/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One album with all its photos */
+        get: operations["PevSquadWeb.API.AlbumController.show"];
         put?: never;
         post?: never;
         delete?: never;
@@ -564,6 +288,143 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/partners": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Partner communities and brands, for linking events (`partner_ids`) */
+        get: operations["PevSquadWeb.API.Admin.PartnerController.index"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/listings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The For Sale board: live listings, or recently sold ones */
+        get: operations["PevSquadWeb.API.ListingController.index"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One event, with partners and recap posts */
+        get: operations["PevSquadWeb.API.EventController.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/blocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Members you blocked */
+        get: operations["PevSquadWeb.API.SafetyController.blocks"];
+        put?: never;
+        /** Block the owner of a profile, photo, group ride or review */
+        post: operations["PevSquadWeb.API.SafetyController.block"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Published events */
+        get: operations["PevSquadWeb.API.EventController.index"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Create or edit your rider profile; new members await staff approval */
+        put: operations["PevSquadWeb.API.MeController.profile"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke this app session (idempotent) */
+        post: operations["PevSquadWeb.API.AuthController.logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/deletion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** What deleting your account would remove, for the confirmation screen */
+        get: operations["PevSquadWeb.API.MeController.deletion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/riders/{slug}": {
         parameters: {
             query?: never;
@@ -575,6 +436,165 @@ export interface paths {
         get: operations["PevSquadWeb.API.CommunityController.rider"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/posts/{id}/cover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set a draft post's cover image
+         * @description Multipart form with a `file` field (JPEG, PNG or WebP, up to 15 MB).
+         */
+        post: operations["PevSquadWeb.API.Admin.PostController.cover"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/albums": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gallery albums with a few preview photos, newest first */
+        get: operations["PevSquadWeb.API.AlbumController.index"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/community": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Community stats, partner communities and brand partners */
+        get: operations["PevSquadWeb.API.CommunityController.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Report something; optionally block its owner in the same step */
+        post: operations["PevSquadWeb.API.SafetyController.report"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/avatar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Upload your rider photo
+         * @description Multipart form with a `file` field (JPEG, PNG or WebP, up to 10 MB). Cropped to 4:5 (800×1000) WebP with metadata, including GPS, stripped. Needs a rider profile first.
+         */
+        put: operations["PevSquadWeb.API.MeController.avatar"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One post with its Markdown body */
+        get: operations["PevSquadWeb.API.PostController.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/reasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Report reasons, labelled in the request language */
+        get: operations["PevSquadWeb.API.SafetyController.reasons"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Everything the app's home screen shows, in one call */
+        get: operations["PevSquadWeb.API.HomeController.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/exchange": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Consume a single-use app email token */
+        post: operations["PevSquadWeb.API.AuthController.exchange"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1118,67 +1138,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    "PevSquadWeb.API.Admin.EventController.index": {
-        parameters: {
-            query?: {
-                /** @description draft | published | cancelled | hidden */
-                status?: string;
-                /** @description official | group_ride */
-                category?: string;
-                /** @description Only events that haven't started */
-                upcoming?: boolean;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Events */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EventList"];
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.Admin.EventController.create": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Event */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EventInput"];
-            };
-        };
-        responses: {
-            /** @description Created */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Event"];
-                };
-            };
-            /** @description Invalid */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
     "PevSquadWeb.API.Admin.EventController.show": {
         parameters: {
             query?: never;
@@ -1303,82 +1262,47 @@ export interface operations {
             };
         };
     };
-    "PevSquadWeb.API.Admin.PartnerController.index": {
+    "PevSquadWeb.API.ListingController.show": {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Partners */
+            /** @description Listing */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PartnerList"];
+                    "application/json": {
+                        data: components["schemas"]["ListingDetail"];
+                    };
                 };
             };
         };
     };
-    "PevSquadWeb.API.Admin.PostController.index": {
+    "PevSquadWeb.API.SafetyController.unblock": {
         parameters: {
-            query?: {
-                /** @description news | article */
-                kind?: string;
-                /** @description draft | published */
-                status?: string;
-            };
+            query?: never;
             header?: never;
-            path?: never;
+            path: {
+                user_id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Posts */
-            200: {
+            /** @description Unblocked */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["PostList"];
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.Admin.PostController.create": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Post */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PostInput"];
-            };
-        };
-        responses: {
-            /** @description Created */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Post"];
-                };
-            };
-            /** @description Invalid */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
+                content?: never;
             };
         };
     };
@@ -1506,48 +1430,36 @@ export interface operations {
             };
         };
     };
-    "PevSquadWeb.API.Admin.PostController.cover": {
+    "PevSquadWeb.API.AuthController.refresh": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                /** @description Post id or slug */
-                id: string;
-            };
+            path?: never;
             cookie?: never;
         };
-        /** @description Image */
+        /** @description Refresh token */
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["FileUpload"];
+                "application/json": {
+                    refresh_token: string;
+                };
             };
         };
         responses: {
-            /** @description Post */
+            /** @description App session */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Post"];
-                };
-            };
-            /** @description Already published */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description Not an image */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
+                    "application/json": {
+                        data: {
+                            access_token: string;
+                            expires_in: number;
+                            refresh_token: string;
+                            token_type: string;
+                        };
+                    };
                 };
             };
         };
@@ -1586,11 +1498,13 @@ export interface operations {
             };
         };
     };
-    "PevSquadWeb.API.AlbumController.index": {
+    "PevSquadWeb.API.Admin.PostController.index": {
         parameters: {
             query?: {
-                limit?: number;
-                after?: string;
+                /** @description news | article */
+                kind?: string;
+                /** @description draft | published */
+                status?: string;
             };
             header?: never;
             path?: never;
@@ -1598,262 +1512,41 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Albums */
+            /** @description Posts */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        data: components["schemas"]["Album"][];
-                        /** @description Pass as ?after= for the next page */
-                        next: string | null;
-                    };
+                    "application/json": components["schemas"]["PostList"];
                 };
             };
         };
     };
-    "PevSquadWeb.API.AlbumController.show": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Album */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["AlbumDetail"];
-                    };
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.AuthController.exchange": {
+    "PevSquadWeb.API.Admin.PostController.create": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Token */
+        /** @description Post */
         requestBody: {
             content: {
-                "application/json": {
-                    token: string;
-                };
+                "application/json": components["schemas"]["PostInput"];
             };
         };
         responses: {
-            /** @description App session */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            access_token: string;
-                            expires_in: number;
-                            refresh_token: string;
-                            token_type: string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.AuthController.logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Refresh token */
-        requestBody: {
-            content: {
-                "application/json": {
-                    refresh_token: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Logged out */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    "PevSquadWeb.API.AuthController.request_link": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Email */
-        requestBody: {
-            content: {
-                "application/json": {
-                    email: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Instructions sent */
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            sent: boolean;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.AuthController.password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Credentials */
-        requestBody: {
-            content: {
-                "application/json": {
-                    email: string;
-                    password: string;
-                };
-            };
-        };
-        responses: {
-            /** @description App session */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            access_token: string;
-                            expires_in: number;
-                            refresh_token: string;
-                            token_type: string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.AuthController.refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Refresh token */
-        requestBody: {
-            content: {
-                "application/json": {
-                    refresh_token: string;
-                };
-            };
-        };
-        responses: {
-            /** @description App session */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            access_token: string;
-                            expires_in: number;
-                            refresh_token: string;
-                            token_type: string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.SafetyController.blocks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Blocked */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            alias: string | null;
-                            user_id: number;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.SafetyController.block": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Target */
-        requestBody: {
-            content: {
-                "application/json": {
-                    target_id: number;
-                    /** @enum {string} */
-                    target_type: "profile" | "photo" | "event" | "review";
-                };
-            };
-        };
-        responses: {
-            /** @description Blocked */
+            /** @description Created */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        data: {
-                            alias: string | null;
-                            user_id: number;
-                        };
-                    };
+                    "application/json": components["schemas"]["Post"];
                 };
             };
-            /** @description Your own, or nobody to block */
+            /** @description Invalid */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -1864,57 +1557,15 @@ export interface operations {
             };
         };
     };
-    "PevSquadWeb.API.SafetyController.unblock": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                user_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Unblocked */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    "PevSquadWeb.API.CommunityController.show": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Community */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Community"];
-                    };
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.EventController.index": {
+    "PevSquadWeb.API.Admin.EventController.index": {
         parameters: {
             query?: {
-                /** @description upcoming (default, soonest first) | past (latest first) */
-                when?: string;
+                /** @description draft | published | cancelled | hidden */
+                status?: string;
                 /** @description official | group_ride */
                 category?: string;
-                limit?: number;
-                after?: string;
+                /** @description Only events that haven't started */
+                upcoming?: boolean;
             };
             header?: never;
             path?: never;
@@ -1928,16 +1579,46 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        data: components["schemas"]["Event"][];
-                        /** @description Pass as ?after= for the next page */
-                        next: string | null;
-                    };
+                    "application/json": components["schemas"]["EventList"];
                 };
             };
         };
     };
-    "PevSquadWeb.API.EventController.show": {
+    "PevSquadWeb.API.Admin.EventController.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Event */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventInput"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Event"];
+                };
+            };
+            /** @description Invalid */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.CommunityController.partner": {
         parameters: {
             query?: never;
             header?: never;
@@ -1948,47 +1629,25 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Event */
+            /** @description Partner */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["EventDetail"];
+                        data: components["schemas"]["PartnerDetail"];
                     };
                 };
             };
         };
     };
-    "PevSquadWeb.API.HomeController.show": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Home */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Home"];
-                    };
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.ListingController.index": {
+    "PevSquadWeb.API.PostController.index": {
         parameters: {
             query?: {
-                category?: string;
-                /** @description true = sold in the last 7 days */
-                sold?: boolean;
+                /** @description news | article */
+                kind?: string;
+                topic?: string;
                 limit?: number;
                 after?: string;
             };
@@ -1998,40 +1657,16 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Listings */
+            /** @description Posts */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["Listing"][];
+                        data: components["schemas"]["Post"][];
                         /** @description Pass as ?after= for the next page */
                         next: string | null;
-                    };
-                };
-            };
-        };
-    };
-    "PevSquadWeb.API.ListingController.show": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Listing */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["ListingDetail"];
                     };
                 };
             };
@@ -2121,7 +1756,130 @@ export interface operations {
             };
         };
     };
-    "PevSquadWeb.API.MeController.deletion": {
+    "PevSquadWeb.API.AuthController.request_link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Email */
+        requestBody: {
+            content: {
+                "application/json": {
+                    email: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Instructions sent */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            sent: boolean;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.AuthController.password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Credentials */
+        requestBody: {
+            content: {
+                "application/json": {
+                    email: string;
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            /** @description App session */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            access_token: string;
+                            expires_in: number;
+                            refresh_token: string;
+                            token_type: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.AlbumController.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Album */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["AlbumDetail"];
+                    };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.CommunityController.riders": {
+        parameters: {
+            query?: {
+                /** @description euc | escooter | esk8 | ebike | other */
+                type?: string;
+                /** @description Alias, city or ride */
+                search?: string;
+                /** @description az (default) | za | newest | oldest */
+                sort?: string;
+                limit?: number;
+                after?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Riders */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Rider"][];
+                        /** @description Pass as ?after= for the next page */
+                        next: string | null;
+                    };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.Admin.PartnerController.index": {
         parameters: {
             query?: never;
             header?: never;
@@ -2130,13 +1888,166 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Footprint */
+            /** @description Partners */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Deletion"];
+                    "application/json": components["schemas"]["PartnerList"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.ListingController.index": {
+        parameters: {
+            query?: {
+                category?: string;
+                /** @description true = sold in the last 7 days */
+                sold?: boolean;
+                limit?: number;
+                after?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Listings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Listing"][];
+                        /** @description Pass as ?after= for the next page */
+                        next: string | null;
+                    };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.EventController.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Event */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["EventDetail"];
+                    };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.SafetyController.blocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Blocked */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            alias: string | null;
+                            user_id: number;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.SafetyController.block": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Target */
+        requestBody: {
+            content: {
+                "application/json": {
+                    target_id: number;
+                    /** @enum {string} */
+                    target_type: "profile" | "photo" | "event" | "review";
+                };
+            };
+        };
+        responses: {
+            /** @description Blocked */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            alias: string | null;
+                            user_id: number;
+                        };
+                    };
+                };
+            };
+            /** @description Your own, or nobody to block */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.EventController.index": {
+        parameters: {
+            query?: {
+                /** @description upcoming (default, soonest first) | past (latest first) */
+                when?: string;
+                /** @description official | group_ride */
+                category?: string;
+                limit?: number;
+                after?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Events */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Event"][];
+                        /** @description Pass as ?after= for the next page */
+                        next: string | null;
+                    };
                 };
             };
         };
@@ -2175,7 +2086,52 @@ export interface operations {
             };
         };
     };
-    "PevSquadWeb.API.CommunityController.partner": {
+    "PevSquadWeb.API.AuthController.logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Refresh token */
+        requestBody: {
+            content: {
+                "application/json": {
+                    refresh_token: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Logged out */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "PevSquadWeb.API.MeController.deletion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Footprint */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Deletion"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.CommunityController.rider": {
         parameters: {
             query?: never;
             header?: never;
@@ -2186,25 +2142,68 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Partner */
+            /** @description Rider */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["PartnerDetail"];
+                        data: components["schemas"]["RiderDetail"];
                     };
                 };
             };
         };
     };
-    "PevSquadWeb.API.PostController.index": {
+    "PevSquadWeb.API.Admin.PostController.cover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Post id or slug */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Image */
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["FileUpload"];
+            };
+        };
+        responses: {
+            /** @description Post */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Post"];
+                };
+            };
+            /** @description Already published */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not an image */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.AlbumController.index": {
         parameters: {
             query?: {
-                /** @description news | article */
-                kind?: string;
-                topic?: string;
                 limit?: number;
                 after?: string;
             };
@@ -2214,14 +2213,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Posts */
+            /** @description Albums */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["Post"][];
+                        data: components["schemas"]["Album"][];
                         /** @description Pass as ?after= for the next page */
                         next: string | null;
                     };
@@ -2229,25 +2228,23 @@ export interface operations {
             };
         };
     };
-    "PevSquadWeb.API.PostController.show": {
+    "PevSquadWeb.API.CommunityController.show": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                slug: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Post */
+            /** @description Community */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["PostDetail"];
+                        data: components["schemas"]["Community"];
                     };
                 };
             };
@@ -2309,6 +2306,64 @@ export interface operations {
             };
         };
     };
+    "PevSquadWeb.API.MeController.avatar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Image */
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["FileUpload"];
+            };
+        };
+        responses: {
+            /** @description The user */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Me"];
+                };
+            };
+            /** @description Not an image, too big, or no profile yet */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.PostController.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Post */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PostDetail"];
+                    };
+                };
+            };
+        };
+    };
     "PevSquadWeb.API.SafetyController.reasons": {
         parameters: {
             query?: never;
@@ -2335,58 +2390,57 @@ export interface operations {
             };
         };
     };
-    "PevSquadWeb.API.CommunityController.riders": {
+    "PevSquadWeb.API.HomeController.show": {
         parameters: {
-            query?: {
-                /** @description euc | escooter | esk8 | ebike | other */
-                type?: string;
-                /** @description Alias, city or ride */
-                search?: string;
-                /** @description az (default) | za | newest | oldest */
-                sort?: string;
-                limit?: number;
-                after?: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Riders */
+            /** @description Home */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["Rider"][];
-                        /** @description Pass as ?after= for the next page */
-                        next: string | null;
+                        data: components["schemas"]["Home"];
                     };
                 };
             };
         };
     };
-    "PevSquadWeb.API.CommunityController.rider": {
+    "PevSquadWeb.API.AuthController.exchange": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                slug: string;
-            };
+            path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        /** @description Token */
+        requestBody: {
+            content: {
+                "application/json": {
+                    token: string;
+                };
+            };
+        };
         responses: {
-            /** @description Rider */
+            /** @description App session */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["RiderDetail"];
+                        data: {
+                            access_token: string;
+                            expires_in: number;
+                            refresh_token: string;
+                            token_type: string;
+                        };
                     };
                 };
             };

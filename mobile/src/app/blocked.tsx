@@ -34,17 +34,17 @@ export default function BlockedScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.black }}>
+    <View style={{ flex: 1, backgroundColor: colors.white }}>
       <BackBar />
       <ScrollView contentContainerStyle={{ padding: space.l, gap: space.m, paddingBottom: space.xxl }}>
-        <Stencil size={48} color={colors.white} accessibilityRole="header" style={{ marginBottom: space.s }}>{t('blocked.title')}</Stencil>
+        <Stencil size={48} color={colors.black} accessibilityRole="header" style={{ marginBottom: space.s }}>{t('blocked.title')}</Stencil>
         {blocks.data ? (
           blocks.data.length === 0 ? (
-            <Body color={colors.mutedOnBlack}>{t('blocked.empty')}</Body>
+            <Body color={colors.mutedOnWhite}>{t('blocked.empty')}</Body>
           ) : (
             blocks.data.map((b) => (
-              <View key={b.user_id} style={{ flexDirection: 'row', alignItems: 'center', borderWidth: bw, borderColor: colors.white }}>
-                <Body weight="bold" color={colors.white} style={{ flex: 1, padding: space.m }}>
+              <View key={b.user_id} style={{ flexDirection: 'row', alignItems: 'center', borderWidth: bw, borderColor: colors.black }}>
+                <Body weight="bold" color={colors.black} style={{ flex: 1, padding: space.m }}>
                   {b.alias ?? t('blocked.noProfile')}
                 </Body>
                 <Pressable
@@ -52,14 +52,14 @@ export default function BlockedScreen() {
                   accessibilityLabel={`${t('blocked.unblock')} ${b.alias ?? ''}`}
                   disabled={busy === b.user_id}
                   onPress={() => unblock(b.user_id)}
-                  style={{ minHeight: touch + 4, justifyContent: 'center', paddingHorizontal: space.m, borderLeftWidth: bw, borderColor: colors.white, backgroundColor: colors.orange, opacity: busy === b.user_id ? 0.5 : 1 }}>
+                  style={{ minHeight: touch + 4, justifyContent: 'center', paddingHorizontal: space.m, borderLeftWidth: bw, borderColor: colors.black, backgroundColor: colors.orange, opacity: busy === b.user_id ? 0.5 : 1 }}>
                   <Mono bold size={11}>{t('blocked.unblock')}</Mono>
                 </Pressable>
               </View>
             ))
           )
         ) : (
-          <QueryState onDark loading={blocks.isPending} error={blocks.error} onRetry={blocks.refetch} />
+          <QueryState loading={blocks.isPending} error={blocks.error} onRetry={blocks.refetch} />
         )}
       </ScrollView>
     </View>

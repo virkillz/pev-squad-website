@@ -2,7 +2,7 @@
   "expo": {
     "name": "PEV Squad",
     "slug": "pev-squad",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "pevsquad",
@@ -10,7 +10,12 @@
     "ios": {
       "bundleIdentifier": "org.pevsquad.app",
       "supportsTablet": false,
-      "associatedDomains": ["applinks:pev-squad.org"]
+      "associatedDomains": [
+        "applinks:pev-squad.org"
+      ],
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "org.pevsquad.app",
@@ -35,7 +40,15 @@
         }
       ],
       "expo-localization",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "PEV Squad uses your photos to set your rider profile picture. / PEV Squad memakai fotomu untuk foto profil rider.",
+          "cameraPermission": "PEV Squad uses the camera to take your rider profile picture. / PEV Squad memakai kamera untuk foto profil rider.",
+          "microphonePermission": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
