@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """pev: draft PEV Squad events, news and articles from the command line.
 
-Talks to the admin API (/api/v1/admin, DESIGN.md section 7). Everything it
+Full guide: docs/CLI.md. Talks to the admin API (/api/v1/admin). Everything it
 creates or edits is a DRAFT; publish it by hand in /admin. Output is JSON on
 stdout, and errors are JSON on stderr with exit code 1.
 

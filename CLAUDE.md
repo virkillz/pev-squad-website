@@ -11,7 +11,7 @@ An earlier static HTML prototype used to sit at the repo root. It has been remov
 ## Repo layout
 
 - `backend/`: the Phoenix app (contexts in `lib/pev_squad/`, LiveViews in `lib/pev_squad_web/live/`, assets in `assets/`). Phoenix/Elixir coding rules are in `backend/AGENTS.md`.
-- `docs/DESIGN.md`: platform design doc (data model, roadmap). `docs/DEPLOYMENT.md`: production runbook. `docs/events.md`: the community's real event history, the source for the event seeds.
+- `docs/DESIGN.md`: platform design doc (data model, roadmap). `docs/DEPLOYMENT.md`: production runbook. `docs/CLI.md`: the `pev` content CLI. `docs/events.md`: the community's real event history, the source for the event seeds.
 - `scripts/pull-backups.sh`: downloads the nightly production backups.
 - `member pev squad.csv`: member sign-up export with personal data. It's gitignored; never commit it.
 
@@ -54,7 +54,7 @@ The public site and member pages are translated with Gettext; the admin area is 
 When the user asks you to write or edit an event, a news item or an article on the site, use the `pev` CLI. Don't use the admin UI, `bin/pev_squad rpc`, or the database.
 
 - It needs `PEV_API_TOKEN` (the user creates it at `/admin/api-tokens`; never print it or write it to a file in the repo). `PEV_API_URL` defaults to production; use `http://localhost:4000` to try things locally. `PEV_LOCALE=en` gives English error messages.
-- Run `scripts/pev --help` for the commands and the `.md` file format. Typical loop:
+- Full guide: `docs/CLI.md`. `scripts/pev --help` has the commands and the `.md` file format. Typical loop:
   1. Write a draft `.md` in the scratchpad: front matter, then `=== id ===` and `=== en ===` sections.
   2. `pev posts create FILE`. Local `![](./img.jpg)` images and `cover:` are uploaded for you.
   3. To edit: `pev posts pull SLUG -o FILE`, change the file, then `pev posts update SLUG FILE`.
