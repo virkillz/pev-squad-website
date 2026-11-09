@@ -5,9 +5,6 @@ defmodule PevSquad.Riders.MemberImport do
 
   * Only rows answering "Ya" to *Bersedia dicantumkan di website?* are made
     public; other rows are imported hidden.
-  * Bio and ride text come from the prototype's community.html card for the
-    same alias when available (the polished English copy); otherwise the
-    raw form answer is used.
   * Photos are matched by alias against files in the photos directory
     (`wynn.jpeg` for alias "Wynn").
   """
@@ -41,12 +38,11 @@ defmodule PevSquad.Riders.MemberImport do
   status is `:imported`, `:skipped` or `:error`.
   """
   def run(csv_path, opts \\ []) do
-    cards = if path = opts[:cards], do: parse_cards(File.read!(path)), else: %{}
     photos = if dir = opts[:photos], do: index_photos(dir), else: %{}
 
     csv_path
     |> read_rows()
-    |> Enum.map(&to_attrs(&1, cards))
+    |> Enum.map(&to_attrs/1)
     |> Enum.reject(&(&1.alias == ""))
     |> Enum.map(fn attrs ->
       photo = find_photo(photos, attrs.alias)
@@ -74,36 +70,18 @@ defmodule PevSquad.Riders.MemberImport do
     Enum.map(rows, fn row -> header |> Enum.zip(row) |> Map.new() end)
   end
 
-  defp to_attrs(row, cards) do
+  defp to_attrs(row) do
     get = fn key -> row |> Map.get(@columns[key], "") |> String.trim() end
-    alias_name = get.(:alias)
-    card = Map.get(cards, String.downcase(alias_name), %{})
 
     %{
-      alias: alias_name,
+      alias: get.(:alias),
       full_name: blank_to_nil(get.(:full_name)),
       city: blank_to_nil(get.(:city)),
       primary_pev_type: Map.get(@pev_types, String.downcase(get.(:pev_type)), :other),
-      main_ride: card[:main_ride] || blank_to_nil(get.(:main_ride)),
-      bio: card[:bio] || blank_to_nil(get.(:bio)),
+      main_ride: blank_to_nil(get.(:main_ride)),
+      bio: blank_to_nil(get.(:bio)),
       is_public: String.downcase(get.(:consent)) in ["ya", "yes", "y"]
     }
-  end
-
-  @doc false
-  # %{"wynn" => %{bio: "...", main_ride: "Sherman OG"}} from community.html cards.
-  def parse_cards(html) do
-    ~r{<h3 class="card-title">(.*?)</h3>\s*<p class="card-meta">(.*?)</p>\s*<p class="card-desc">(.*?)</p>}s
-    |> Regex.scan(html, capture: :all_but_first)
-    |> Map.new(fn [title, meta, desc] ->
-      main_ride =
-        case String.split(unescape(meta), " · ", parts: 2) do
-          [_city, ride] -> titlecase(ride)
-          _ -> nil
-        end
-
-      {String.downcase(unescape(title)), %{bio: unescape(desc), main_ride: main_ride}}
-    end)
   end
 
   defp index_photos(dir) do
@@ -120,30 +98,6 @@ defmodule PevSquad.Riders.MemberImport do
   end
 
   defp photo_key(name), do: name |> String.downcase() |> String.replace(~r/[^a-z0-9]/, "")
-
-  # Card meta is upper-cased by CSS in the prototype but stored upper-case
-  # in some cards; keep model names readable.
-  defp titlecase(text) do
-    if text == String.upcase(text) do
-      text
-      |> String.split(" ")
-      |> Enum.map_join(" ", fn word ->
-        if String.length(word) <= 3 or word =~ ~r/\d/, do: word, else: String.capitalize(word)
-      end)
-    else
-      text
-    end
-  end
-
-  defp unescape(text) do
-    text
-    |> String.replace(~r/<[^>]+>/, "")
-    |> String.replace("&amp;", "&")
-    |> String.replace("&quot;", "\"")
-    |> String.replace("&#39;", "'")
-    |> String.replace(~r/\s+/, " ")
-    |> String.trim()
-  end
 
   defp blank_to_nil(""), do: nil
   defp blank_to_nil(value), do: value

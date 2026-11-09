@@ -4,7 +4,7 @@
 # Creates:
 #   * admin@pev-squad.org (admin) and five demo riders, all with the password
 #     below, so RSVP / waitlist flows can be tried locally
-#   * the real event history from the prototype (events.md / events.html)
+#   * the real event history from the prototype (docs/events.md)
 #   * two DEMO upcoming rides with limited seats — one already full
 #   * the PEV model catalog and six DEMO reviews (prototype placeholder text)
 #   * two DEMO group rides hosted by demo reviewers

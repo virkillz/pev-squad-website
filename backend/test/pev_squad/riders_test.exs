@@ -136,23 +136,12 @@ defmodule PevSquad.RidersTest do
       2026/01/03,Andi,Ben Esk8,Eboard,Acedeck Ares X1,Jakarta,Duplicate row,,Ya
       """)
 
-      File.write!(Path.join(dir, "community.html"), """
-      <h3 class="card-title">Si Ganteng</h3>
-      <p class="card-meta">KOTA BOGOR · VETERAN LYNX</p>
-      <p class="card-desc">Bogor&#39;s self-declared best-looking EUC rider.</p>
-      """)
-
       %{dir: dir}
     end
 
-    test "imports consenting riders publicly, others hidden, with photos and card bios", %{
-      dir: dir
-    } do
+    test "imports consenting riders publicly, others hidden, with photos", %{dir: dir} do
       results =
-        MemberImport.run(Path.join(dir, "members.csv"),
-          photos: Path.join(dir, "photos"),
-          cards: Path.join(dir, "community.html")
-        )
+        MemberImport.run(Path.join(dir, "members.csv"), photos: Path.join(dir, "photos"))
 
       assert [
                {:imported, "Si Ganteng", "with photo"},
@@ -163,7 +152,7 @@ defmodule PevSquad.RidersTest do
       ganteng = Repo.get_by!(RiderProfile, alias: "Si Ganteng")
       assert ganteng.is_public
       assert ganteng.full_name == "Budi Santoso"
-      assert ganteng.bio == "Bogor's self-declared best-looking EUC rider."
+      assert ganteng.bio == "Rider paling ganteng, katanya"
       assert ganteng.main_ride == "Veteran Lynx"
       assert ganteng.source == :import
       assert ganteng.avatar_path

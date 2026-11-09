@@ -4,11 +4,9 @@ defmodule Mix.Tasks.PevSquad.ImportMembers do
   @moduledoc """
   Imports rider profiles from the Google Form export.
 
-      mix pev_squad.import_members "../member pev squad.csv" \\
-        --photos ../images/community --cards ../community.html
+      mix pev_squad.import_members "../member pev squad.csv" --photos PHOTO_DIR
 
   * `--photos DIR` — photos named after each alias (`wynn.jpeg`)
-  * `--cards FILE` — the prototype community.html, for polished bios
 
   Re-running is safe: aliases that already exist are skipped. Imported
   profiles are unclaimed; link them to members at /admin/riders.
@@ -17,12 +15,12 @@ defmodule Mix.Tasks.PevSquad.ImportMembers do
 
   @impl Mix.Task
   def run(args) do
-    {opts, paths, _} = OptionParser.parse(args, strict: [photos: :string, cards: :string])
+    {opts, paths, _} = OptionParser.parse(args, strict: [photos: :string])
 
     csv =
       case paths do
         [csv] -> csv
-        _ -> Mix.raise("Usage: mix pev_squad.import_members CSV [--photos DIR] [--cards FILE]")
+        _ -> Mix.raise("Usage: mix pev_squad.import_members CSV [--photos DIR]")
       end
 
     Mix.Task.run("app.start")

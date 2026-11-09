@@ -11,7 +11,7 @@ This doc covers turning the static PEV Squad prototype into a real platform: a b
 | Decision | Choice |
 |---|---|
 | Backend | Elixir + Phoenix 1.8, PostgreSQL, Oban for background jobs |
-| Web frontend | Phoenix LiveView, porting the prototype's "Kinetic" design system (`css/kinetic.css`) |
+| Web frontend | Phoenix LiveView, porting the prototype's "Kinetic" design system (`backend/assets/css/kinetic.css`) |
 | Mobile | React Native via Expo (iOS + Android), talking to a versioned JSON API |
 | Auth | Email + password, email magic link, Google and Apple sign-in |
 | Content model | Members create content, moderators approve it |
@@ -110,7 +110,7 @@ users ─1:1─ rider_profiles ─1:N─ garage_vehicles ─N:1─ pev_models
 
 **garage_vehicles** — `rider_profile_id`, `pev_model_id`, `nickname`, `km`, `acquired_on`, `is_current`. This is what "PEV Utama / Model PEV yang dipakai" from the form turns into.
 
-**events** — `title`, `slug`, `kind` (`ride | tour | meetup | clinic | collab`), `role` (`organizer | collaborator`, from `events.md`), `starts_at`, `ends_at`, `timezone` (default `Asia/Jakarta`), `location_name`, `lat`/`lng` (optional), `meeting_point`, `route_url`, `description`, `cover_photo_id`, `capacity` (nullable), `rsvp_deadline`, `allowed_pev_types` (array), `status` (`draft | published | cancelled | completed`), `created_by_id`
+**events** — `title`, `slug`, `kind` (`ride | tour | meetup | clinic | collab`), `role` (`organizer | collaborator`, from `docs/events.md`), `starts_at`, `ends_at`, `timezone` (default `Asia/Jakarta`), `location_name`, `lat`/`lng` (optional), `meeting_point`, `route_url`, `description`, `cover_photo_id`, `capacity` (nullable), `rsvp_deadline`, `allowed_pev_types` (array), `status` (`draft | published | cancelled | completed`), `created_by_id`
 
 **event_partners** — `event_id`, `partner_id`, `relation` (`co_organizer | sponsor | supporter`). **partners** — `name`, `logo_photo_id`, `url`, `instagram`. These records also back the Sponsors page.
 
@@ -211,7 +211,7 @@ Limits: 15 MB per upload, JPEG/PNG/HEIC/WebP only, and a per-user daily upload c
 
 - Each prototype page becomes a LiveView or controller page: `/`, `/community`, `/riders/:slug`, `/featured-riders`, `/reviews`, `/reviews/:id`, `/models/:slug`, `/events`, `/events/:slug`, `/gallery`, `/gallery/:slug`, `/sponsors`, and later `/for-sale`.
 - The nav and footer that are copy-pasted across every prototype page become **layout components** (`<.site_header>`, `<.site_footer>`), which ends the "update all seven files" rule.
-- `css/kinetic.css` is ported unchanged into `assets/css/` and imported into Tailwind's `components` layer, so Tailwind spacing utilities still work alongside it. `forms.css` adds Kinetic-style inputs, flashes, tables and panels for screens the prototype didn't have. daisyUI has been removed because its `.btn`, `.card`, `.hero` and `.badge` clashed with Kinetic. The heroicons plugin's `hero-*` classes are reserved, which is why the prototype's `.hero-tag` became `.hero-scribble`.
+- The prototype's `kinetic.css` was ported unchanged into `assets/css/` and imported into Tailwind's `components` layer, so Tailwind spacing utilities still work alongside it. `forms.css` adds Kinetic-style inputs, flashes, tables and panels for screens the prototype didn't have. daisyUI has been removed because its `.btn`, `.card`, `.hero` and `.badge` clashed with Kinetic. The heroicons plugin's `hero-*` classes are reserved, which is why the prototype's `.hero-tag` became `.hero-scribble`.
 - The Kinetic design has no light/dark toggle, so there's no theme script.
 - Public pages render on the server and can be cached. Each has `<meta>`/OpenGraph tags (event pages share well on WhatsApp). Pages are reachable without logging in; RSVP, posting and profile editing need a login.
 - **Admin** at `/admin`: moderation queue, events CRUD, partners, PEV model catalog, Featured Rider grants, user management. Hand-written LiveViews, or **Backpex** to save time.
@@ -265,10 +265,10 @@ Push goes through the **Expo Push API**, sent from an Oban `PushWorker`. Tokens 
 ## 13. Migrating existing data
 
 A one-off `mix pev_squad.import` task:
-1. **Members** from `member pev squad.csv`: create a `rider_profile` with alias, city, PEV type/model and bio. **Only rows where *"Bersedia dicantumkan di website?"* = yes** get `is_public = true`. Photos are copied from `images/community/`. Profiles start **unclaimed**, with no login attached.
+1. **Members** from `member pev squad.csv`: create a `rider_profile` with alias, city, PEV type/model and bio. **Only rows where *"Bersedia dicantumkan di website?"* = yes** get `is_public = true`. Photos were copied from the prototype's `images/community/` (since removed from the repo). Profiles start **unclaimed**, with no login attached.
 2. **Claiming a profile:** a member signs up with the email from the form and gets offered "Is this you?" for the matching profile. A moderator can also link profiles by hand.
-3. **Events** from `events.md` (role, partners, sponsors, location, notes) → `events` + `partners` + `event_partners`.
-4. **Reviews, featured riders, gallery albums:** the prototype content is placeholder data (per `SUMMARY.md`), so import only the real items. The PEV model catalog gets seeded by hand.
+3. **Events** from `docs/events.md` (role, partners, sponsors, location, notes) → `events` + `partners` + `event_partners`.
+4. **Reviews, featured riders, gallery albums:** the prototype content is placeholder data (per the prototype's `SUMMARY.md`, now removed), so import only the real items. The PEV model catalog gets seeded by hand.
 
 The CSV has personal data in it and should not be committed to git. Add it to `.gitignore` and keep it outside the repo.
 
