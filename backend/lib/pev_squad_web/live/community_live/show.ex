@@ -165,6 +165,8 @@ defmodule PevSquadWeb.CommunityLive.Show do
      socket
      |> assign(:page_title, rider.alias)
      |> assign(:page_description, page_description(rider))
+     |> assign(:og_type, "profile")
+     |> assign(:og_image, og_image(rider))
      |> assign(:rider, rider)
      |> assign(:own?, scope != nil and rider.user_id == scope.user.id)
      |> assign(:blocked?, rider.user_id != nil and Safety.blocked?(scope, rider.user_id))}
@@ -175,6 +177,10 @@ defmodule PevSquadWeb.CommunityLive.Show do
 
   defp page_description(rider),
     do: rider.bio || gettext("%{rider} rides with PEV Squad.", rider: rider.alias)
+
+  # The rider's photo for link previews; none for a banned rider.
+  defp og_image(%{status: :banned}), do: nil
+  defp og_image(rider), do: PevSquadWeb.API.Urls.absolute(rider.avatar_path)
 
   defp paragraphs(text), do: String.split(text, ~r/\n\s*\n/, trim: true)
 

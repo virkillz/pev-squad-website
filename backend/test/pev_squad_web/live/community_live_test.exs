@@ -92,6 +92,34 @@ defmodule PevSquadWeb.CommunityLiveTest do
     assert html =~ "instagram.com/siganteng"
   end
 
+  test "a rider's photo is the link-preview image", %{conn: conn} do
+    rider =
+      rider_fixture(alias: "Popo")
+      |> Ecto.Changeset.change(avatar_path: "/uploads/avatars/popo.webp")
+      |> PevSquad.Repo.update!()
+
+    html = conn |> get(~p"/community/#{rider.slug}") |> html_response(200)
+    assert html =~ ~r{<meta property="og:image" content="http[^"]*/uploads/avatars/popo\.webp"}
+    assert html =~ ~s(<meta property="og:type" content="profile")
+    assert html =~ ~s(<meta name="twitter:card" content="summary_large_image")
+
+    no_photo = rider_fixture()
+    html = build_conn() |> get(~p"/community/#{no_photo.slug}") |> html_response(200)
+    assert html =~ ~r{<meta property="og:image" content="http[^"]*/images/logo\.jpg"}
+
+    banned =
+      rider
+      |> Ecto.Changeset.change(
+        status: :banned,
+        banned_at: DateTime.utc_now(:second),
+        ban_reason: "Banned."
+      )
+      |> PevSquad.Repo.update!()
+
+    html = build_conn() |> get(~p"/community/#{banned.slug}") |> html_response(200)
+    refute html =~ "popo.webp"
+  end
+
   test "the old Featured Riders link goes to the community page", %{conn: conn} do
     assert redirected_to(get(conn, ~p"/riders")) == ~p"/community"
   end
