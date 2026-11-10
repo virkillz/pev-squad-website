@@ -23,6 +23,12 @@ defmodule PevSquadWeb.API.Schemas.PostInput do
         nullable: true,
         description: "Makes it a recap of that event"
       },
+      album_id: %Schema{
+        type: :integer,
+        nullable: true,
+        description:
+          "Gallery album shown with the post (GET /admin/albums). Left out, a recap shows its event's album"
+      },
       translations: %Schema{
         type: :object,
         description: "Keyed by language (id, en). null deletes a language.",

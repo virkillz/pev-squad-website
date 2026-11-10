@@ -18,6 +18,7 @@ defmodule PevSquad.Events do
 
   alias PevSquad.Accounts.Scope
   alias PevSquad.Events.{Event, Notifier, Rsvp}
+  alias PevSquad.Posts.Images
   alias PevSquad.Repo
   alias PevSquad.Riders.RiderProfile
 
@@ -284,7 +285,37 @@ defmodule PevSquad.Events do
 
   def delete_event(%Scope{} = scope, %Event{} = event) do
     ensure_staff!(scope)
-    Repo.delete(event)
+
+    with {:ok, deleted} <- Repo.delete(event) do
+      Images.delete(deleted.cover_path)
+      {:ok, deleted}
+    end
+  end
+
+  @doc """
+  Sets an official event's image from an uploaded file (1600px WebP,
+  location data removed), replacing the old one. Staff only.
+  Returns `{:ok, event}` or `{:error, :bad_image}`.
+  """
+  def set_cover(%Scope{} = scope, %Event{} = event, source) do
+    ensure_staff!(scope)
+
+    case Images.store(source, event.slug, "events") do
+      {:ok, path} ->
+        with {:ok, updated} <- event |> Ecto.Changeset.change(cover_path: path) |> Repo.update() do
+          Images.delete(event.cover_path)
+          {:ok, updated}
+        end
+
+      {:error, _reason} ->
+        {:error, :bad_image}
+    end
+  end
+
+  def remove_cover(%Scope{} = scope, %Event{} = event) do
+    ensure_staff!(scope)
+    Images.delete(event.cover_path)
+    event |> Ecto.Changeset.change(cover_path: nil) |> Repo.update()
   end
 
   def change_event(event, attrs \\ %{})

@@ -139,6 +139,38 @@ defmodule PevSquadWeb.PostLiveTest do
       assert has_element?(lv, ~s|#event-recaps a[href="/news/#{post.slug}"]|, "Bromo Recap")
     end
 
+    test "shows its own album, else its event's", %{conn: conn} do
+      event = event_fixture()
+
+      event_album =
+        PevSquad.GalleryFixtures.album_fixture(%{
+          "title" => "Event Photos",
+          "event_id" => event.id
+        })
+
+      PevSquad.GalleryFixtures.photo_fixture(event_album)
+      own = PevSquad.GalleryFixtures.album_fixture(%{"title" => "Own Photos"})
+      PevSquad.GalleryFixtures.photo_fixture(own)
+
+      recap = post_fixture(event_id: event.id, translations: [t("en", "Recap")])
+      {:ok, lv, _html} = live(conn, ~p"/news/#{recap.slug}")
+
+      assert has_element?(
+               lv,
+               ~s|#post-album a[href="/gallery/#{event_album.slug}"]|,
+               "Event Photos"
+             )
+
+      linked =
+        post_fixture(event_id: event.id, album_id: own.id, translations: [t("en", "Linked")])
+
+      {:ok, lv, _html} = live(conn, ~p"/news/#{linked.slug}")
+      assert has_element?(lv, "#post-album", "Own Photos")
+
+      {:ok, lv, _html} = live(conn, ~p"/news/#{post_fixture().slug}")
+      refute has_element?(lv, "#post-album")
+    end
+
     test "the wrong section redirects to the right one", %{conn: conn} do
       post = post_fixture(kind: :article)
 
@@ -181,6 +213,21 @@ defmodule PevSquadWeb.PostLiveTest do
     setup %{conn: conn} do
       staff = staff_scope_fixture()
       %{conn: log_in_user(conn, staff.user), staff: staff}
+    end
+
+    test "picks a photo album", %{conn: conn} do
+      album = PevSquad.GalleryFixtures.album_fixture(%{"title" => "Picked Album"})
+      post = post_fixture(status: :draft)
+
+      {:ok, lv, _html} = live(conn, ~p"/admin/posts/#{post.id}/edit")
+
+      {:ok, _show, _html} =
+        lv
+        |> form("#post-form", post: %{album_id: album.id})
+        |> render_submit()
+        |> follow_redirect(conn)
+
+      assert Posts.get_post!(staff_scope_fixture(), post.id).album_id == album.id
     end
 
     test "writes a post in both languages", %{conn: conn} do

@@ -35,6 +35,12 @@ defmodule PevSquadWeb.API.Schemas.EventInput do
         type: :array,
         items: %Schema{type: :integer},
         description: "Replaces linked partners"
+      },
+      album_ids: %Schema{
+        type: :array,
+        items: %Schema{type: :integer},
+        description:
+          "Replaces linked gallery albums (GET /admin/albums). An album belongs to one event, so this moves it"
       }
     },
     example: %{

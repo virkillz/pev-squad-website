@@ -30,6 +30,7 @@ defmodule PevSquadWeb.API.PublicJSON do
         ends_at: local(event.ends_at, event.timezone)
       },
       location_name: event.location_name,
+      cover_url: Urls.absolute(event.cover_path),
       capacity: event.capacity,
       going_count: event.going_count,
       waitlist_count: event.waitlist_count,
@@ -39,7 +40,7 @@ defmodule PevSquadWeb.API.PublicJSON do
     }
   end
 
-  def event_detail(event, partners, recaps) do
+  def event_detail(event, partners, recaps, albums \\ []) do
     event
     |> event()
     |> Map.merge(%{
@@ -57,7 +58,8 @@ defmodule PevSquadWeb.API.PublicJSON do
         ),
       partners_text: event.partners,
       partners: Enum.map(partners, &partner/1),
-      recaps: Enum.map(recaps, &post(&1, Gettext.get_locale(PevSquadWeb.Gettext)))
+      recaps: Enum.map(recaps, &post(&1, Gettext.get_locale(PevSquadWeb.Gettext))),
+      albums: Enum.map(albums, &album/1)
     })
   end
 
@@ -85,6 +87,7 @@ defmodule PevSquadWeb.API.PublicJSON do
       source_name: post.source_name,
       source_url: post.source_url,
       event_id: post.event_id,
+      album_id: post.album_id,
       locale: t && t.locale,
       available_locales: Posts.locales(post),
       machine_translated: (t && t.machine_translated) || false,
@@ -95,7 +98,8 @@ defmodule PevSquadWeb.API.PublicJSON do
     }
   end
 
-  def post_detail(post, locale) do
+  @doc "`album` is what `Gallery.album_for_post/2` picked (its own, else the event's), or nil."
+  def post_detail(post, locale, album \\ nil) do
     t = Posts.translation_for(post, locale)
 
     post
@@ -106,7 +110,8 @@ defmodule PevSquadWeb.API.PublicJSON do
         case post.event do
           %Events.Event{} = e -> %{id: e.id, slug: e.slug, title: e.title}
           _ -> nil
-        end
+        end,
+      album: album && album(album)
     })
   end
 

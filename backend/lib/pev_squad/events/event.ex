@@ -50,6 +50,8 @@ defmodule PevSquad.Events.Event do
     field :capacity, :integer
     field :rsvp_deadline, :utc_datetime
     field :status, Ecto.Enum, values: @statuses, default: :draft
+    # Set through Events.set_cover/3, not the changeset.
+    field :cover_path, :string
 
     # Filled by Events queries, not stored.
     field :going_count, :integer, virtual: true, default: 0
@@ -60,6 +62,8 @@ defmodule PevSquad.Events.Event do
 
     belongs_to :created_by, User
     has_many :rsvps, Rsvp
+    # Photo albums point at their event (albums.event_id).
+    has_many :albums, PevSquad.Gallery.Album
 
     timestamps(type: :utc_datetime)
   end

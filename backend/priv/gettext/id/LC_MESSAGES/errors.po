@@ -131,7 +131,7 @@ msgstr "cukup username-nya, mis. pevsquad"
 msgid "letters, numbers, spaces, dots, dashes and underscores only"
 msgstr "hanya huruf, angka, spasi, titik, tanda hubung, dan garis bawah"
 
-#: lib/pev_squad/events/event.ex:197
+#: lib/pev_squad/events/event.ex:201
 #, elixir-autogen, elixir-format
 msgid "must be after the start"
 msgstr "harus setelah waktu mulai"
@@ -141,7 +141,7 @@ msgstr "harus setelah waktu mulai"
 msgid "must be between 0 and 10"
 msgstr "harus antara 0 dan 10"
 
-#: lib/pev_squad/events/event.ex:138
+#: lib/pev_squad/events/event.ex:142
 #, elixir-autogen, elixir-format
 msgid "must be between 1 and 30"
 msgstr "harus antara 1 dan 30"
@@ -171,10 +171,10 @@ msgstr "pilih alasan"
 msgid "tell the rider why"
 msgstr "beri tahu rider alasannya"
 
-#: lib/pev_squad/events/event.ex:104
+#: lib/pev_squad/events/event.ex:108
 #: lib/pev_squad/gallery/album.ex:44
 #: lib/pev_squad/partners/partner.ex:91
-#: lib/pev_squad/posts/post.ex:62
+#: lib/pev_squad/posts/post.ex:64
 #, elixir-autogen, elixir-format
 msgid "use lowercase letters, numbers and dashes"
 msgstr "gunakan huruf kecil, angka, dan tanda hubung"
@@ -194,12 +194,12 @@ msgstr "kamu sudah melaporkan ini — moderator sedang menanganinya"
 msgid "you've already reviewed this model — edit that review instead"
 msgstr "kamu sudah mereview model ini — edit review itu saja"
 
-#: lib/pev_squad/posts/post.ex:93
+#: lib/pev_squad/posts/post.ex:96
 #, elixir-autogen, elixir-format
 msgid "must be a link starting with https://"
 msgstr "harus berupa link yang diawali https://"
 
-#: lib/pev_squad/posts/post.ex:79
+#: lib/pev_squad/posts/post.ex:82
 #, elixir-autogen, elixir-format
 msgid "write a title and text in at least one language"
 msgstr "isi judul dan teks minimal dalam satu bahasa"

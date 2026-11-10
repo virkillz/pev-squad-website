@@ -38,6 +38,7 @@ Tokens expire after a year. They stop working if you change your password or sto
 ```
 pev whoami                                  who the token belongs to
 pev partners                                partner ids, for an event's partner_ids
+pev albums                                  gallery album ids, for album_id / album_ids
 pev upload IMAGE                            upload an image for a post body
 pev spec                                    the OpenAPI document
 
@@ -52,6 +53,7 @@ pev events list [--status S] [--category official|group_ride] [--upcoming]
 pev events get ID_OR_SLUG
 pev events create FILE                      .md or .json
 pev events update ID_OR_SLUG FILE
+pev events cover ID_OR_SLUG IMAGE           set the event image
 ```
 
 Every response for a post or event includes `admin_url` (where you review and publish it) and `url` (the public page, which shows 404 until it's published).
@@ -67,6 +69,7 @@ A post file has front matter, then one section per language:
 kind: news                 # news | article
 topic: community           # optional: community industry regulation safety maintenance guide gear story
 event_id: 12               # optional: makes it a recap of that event (pev events list)
+album_id: 4                # optional: photo album shown with the post (pev albums)
 source_name: Kompas        # optional: outside news
 source_url: https://...
 cover: ./cover.jpg         # optional: uploaded after saving
@@ -92,6 +95,7 @@ Rules:
 - **`machine_translated`** shows a "machine translated" note on the page. It defaults to `true` for text sent through the CLI. Set it to `false` for text a person wrote or checked.
 - Quote titles that contain `:` or `#`, e.g. `title: "Tips: Ban Tubeless"`.
 - Images: JPEG, PNG or WebP, up to 15 MB. They're stored as 1600px WebP with location data (GPS/EXIF) removed.
+- **`album_id`** shows a photo album card with the post. A recap (`event_id`) without one shows its event's newest album. Only published albums with photos appear. `album_id: null` removes it.
 - Leave out a language section to leave that language as it is. An **empty** section (`=== en ===` with nothing under it) deletes that language.
 
 Create it:
@@ -130,6 +134,8 @@ capacity: 40               # leave out for unlimited
 rsvp_deadline: 2026-12-05T18:00
 partner_ids: [3, 7]        # from `pev partners`; replaces the linked partners
 partners: Komunitas X      # free text for names without a partner page
+album_ids: [4]             # from `pev albums`; replaces the linked photo albums
+cover: ./poster.jpg        # optional: the event image, uploaded after saving
 ---
 Kumpul jam **19.30**, briefing 19.45.
 ```
@@ -141,6 +147,7 @@ scripts/pev events update night-ride-sudirman-2026 night-ride.md
 
 - **Times** without an offset are local to `timezone`, so `20:00` with `Asia/Jakarta` means 20:00 WIB. You can also give an exact time with an offset (`2026-12-05T20:00:00+07:00`).
 - Responses show `starts_at` in UTC, plus a `local` block in the event's zone. Check `local.starts_at` to confirm.
+- **Image and album**: `cover:` uploads one image (a poster or photo; JPEG, PNG or WebP up to 15 MB) shown at the top of the event page. `album_ids` links gallery albums; an album belongs to one event, so linking it here moves it from any other event. Only published albums with photos appear on the page.
 - The CLI only creates **official** events. Member group rides can't be edited through it.
 
 ---

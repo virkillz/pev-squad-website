@@ -262,6 +262,31 @@ defmodule PevSquadWeb.API.PublicControllerTest do
     assert [%{"url" => "http" <> _, "tile" => "normal"}] = d["photos"]
   end
 
+  test "events and posts carry their image and photo album", %{conn: conn} do
+    event = event_fixture()
+
+    {:ok, _} =
+      PevSquad.Events.set_cover(
+        staff_scope_fixture(),
+        event,
+        PevSquad.RidersFixtures.image_fixture(600, 750)
+      )
+
+    album = album_fixture(%{"title" => "Fun Ride", "event_id" => event.id})
+    photo_fixture(album)
+    recap = post_fixture(%{event_id: event.id})
+
+    d = data(conn, ~p"/api/v1/events/#{event.slug}")
+    assert d["cover_url"] =~ ~r{^http.*/uploads/events/.+\.webp$}
+    assert [%{"title" => "Fun Ride", "photo_count" => 1}] = d["albums"]
+
+    d = data(conn, ~p"/api/v1/posts/#{recap.slug}")
+    assert d["album_id"] == nil
+    assert %{"title" => "Fun Ride", "url" => "http" <> _} = d["album"]
+
+    assert data(conn, ~p"/api/v1/posts/#{post_fixture().slug}")["album"] == nil
+  end
+
   test "home bundles the first screen", %{conn: conn} do
     event = event_fixture(%{starts_at: DateTime.add(DateTime.utc_now(:second), 1, :day)})
     post_fixture()

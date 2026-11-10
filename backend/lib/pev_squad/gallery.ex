@@ -22,6 +22,9 @@ defmodule PevSquad.Gallery do
   @doc """
   Published albums with at least one live photo, newest first, each with
   `photo_count` and up to `preview` photos preloaded.
+
+  Options: `:preview` (default 8), `:exclude_users`, `:event_id` (albums of
+  that event), `:id` (just that album).
   """
   def list_published_albums(opts \\ []) do
     preview = Keyword.get(opts, :preview, 8)
@@ -30,6 +33,8 @@ defmodule PevSquad.Gallery do
     albums =
       Album
       |> where(published: true)
+      |> then(fn q -> if id = opts[:event_id], do: where(q, event_id: ^id), else: q end)
+      |> then(fn q -> if id = opts[:id], do: where(q, id: ^id), else: q end)
       |> join(:inner, [a], p in Photo,
         on:
           p.album_id == a.id and p.status == :published and
@@ -59,6 +64,38 @@ defmodule PevSquad.Gallery do
     Enum.map(albums, &%{&1 | photos: Map.get(previews, &1.id, [])})
   end
 
+  @doc """
+  The albums to show on an event page: published, with at least one live
+  photo, each with `photo_count` and a few preview photos. Takes the same
+  options as `list_published_albums/1`.
+  """
+  def list_event_albums(%{id: event_id}, opts \\ []) do
+    opts
+    |> Keyword.put(:event_id, event_id)
+    |> Keyword.put_new(:preview, 4)
+    |> list_published_albums()
+  end
+
+  @doc """
+  The album to show with a news item or article: its own album if it has
+  one, otherwise (for a recap) its event's newest album. Nil when there is
+  none, or it isn't published or has no live photos yet.
+  """
+  def album_for_post(post, opts \\ [])
+
+  def album_for_post(%{album_id: id}, opts) when is_integer(id) do
+    opts
+    |> Keyword.merge(id: id)
+    |> Keyword.put_new(:preview, 4)
+    |> list_published_albums()
+    |> List.first()
+  end
+
+  def album_for_post(%{event_id: id}, opts) when is_integer(id),
+    do: %{id: id} |> list_event_albums(opts) |> List.first()
+
+  def album_for_post(_post, _opts), do: nil
+
   def get_published_album!(slug, opts \\ []) do
     hidden = opts[:exclude_users] || []
 
@@ -66,6 +103,7 @@ defmodule PevSquad.Gallery do
     |> where(slug: ^slug, published: true)
     |> Repo.one!()
     |> Repo.preload(
+      event: where(PevSquad.Events.Event, status: :published),
       photos:
         where(published_photos(), [p], is_nil(p.uploader_id) or p.uploader_id not in ^hidden)
     )
@@ -223,6 +261,40 @@ defmodule PevSquad.Gallery do
   end
 
   def change_album(%Album{} = album, attrs \\ %{}), do: Album.changeset(album, attrs)
+
+  @doc """
+  Makes `album_ids` the event's albums: those albums now point at this event
+  (moving them from any other event) and its other albums are unlinked.
+  """
+  def set_event_albums(%Scope{} = scope, %{id: event_id}, album_ids) when is_list(album_ids) do
+    ensure_staff!(scope)
+
+    Repo.transact(fn ->
+      Album
+      |> where([a], a.event_id == ^event_id and a.id not in ^album_ids)
+      |> Repo.update_all(set: [event_id: nil, updated_at: now()])
+
+      Album
+      |> where([a], a.id in ^album_ids)
+      |> Repo.update_all(set: [event_id: event_id, updated_at: now()])
+
+      {:ok, list_event_album_ids(event_id)}
+    end)
+  end
+
+  @doc "Ids of every album linked to the event, drafts included (for staff tools)."
+  def list_event_album_ids(%{id: event_id}), do: list_event_album_ids(event_id)
+
+  def list_event_album_ids(event_id) when is_integer(event_id) do
+    Album |> where(event_id: ^event_id) |> order_by(:id) |> select([a], a.id) |> Repo.all()
+  end
+
+  @doc "Which of these album ids exist."
+  def existing_album_ids(ids) when is_list(ids) do
+    Album |> where([a], a.id in ^ids) |> select([a], a.id) |> Repo.all()
+  end
+
+  defp now, do: DateTime.utc_now(:second)
 
   def delete_album(%Scope{} = scope, %Album{} = album) do
     ensure_staff!(scope)

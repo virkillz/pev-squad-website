@@ -161,7 +161,7 @@ msgstr "Komunitas"
 #: lib/pev_squad_web/components/layouts.ex:147
 #: lib/pev_squad_web/live/event_live/index.ex:24
 #: lib/pev_squad_web/live/event_live/index.ex:83
-#: lib/pev_squad_web/live/event_live/show.ex:17
+#: lib/pev_squad_web/live/event_live/show.ex:18
 #: lib/pev_squad_web/live/home_live/index.html.heex:269
 #, elixir-autogen, elixir-format
 msgid "Events"
@@ -497,7 +497,7 @@ msgstr "Mau ke mana"
 msgid "close"
 msgstr "tutup"
 
-#: lib/pev_squad_web/live/event_live/show.ex:129
+#: lib/pev_squad_web/live/event_live/show.ex:142
 #, elixir-autogen, elixir-format
 msgid "%{count} on the waitlist"
 msgstr "%{count} di waitlist"
@@ -517,18 +517,18 @@ msgstr "%{going} / %{cap} ikut"
 msgid "%{going} going"
 msgstr "%{going} ikut"
 
-#: lib/pev_squad_web/live/event_live/show.ex:287
+#: lib/pev_squad_web/live/event_live/show.ex:307
 #, elixir-autogen, elixir-format
 msgid "1 seat left."
 msgid_plural "%{count} seats left."
 msgstr[0] "Sisa %{count} kursi."
 
-#: lib/pev_squad_web/live/event_live/show.ex:91
+#: lib/pev_squad_web/live/event_live/show.ex:104
 #, elixir-autogen, elixir-format
 msgid "A PEV Squad member"
 msgstr "Anggota PEV Squad"
 
-#: lib/pev_squad_web/live/event_live/show.ex:49
+#: lib/pev_squad_web/live/event_live/show.ex:58
 #, elixir-autogen, elixir-format
 msgid "A group ride hosted by a member, not organized by PEV Squad. Ride within your limits and wear your gear."
 msgstr "Group ride ini diadakan oleh anggota, bukan oleh PEV Squad. Riding sesuai kemampuan dan pakai gear kamu."
@@ -562,7 +562,7 @@ msgstr "Aktivasi Brand"
 msgid "Brand Invite"
 msgstr "Undangan Brand"
 
-#: lib/pev_squad_web/live/event_live/show.ex:150
+#: lib/pev_squad_web/live/event_live/show.ex:163
 #, elixir-autogen, elixir-format
 msgid "Cancel my RSVP"
 msgstr "Batalkan RSVP saya"
@@ -608,7 +608,7 @@ msgstr "Konfirmasi dan tetap masuk"
 msgid "Confirming..."
 msgstr "Mengonfirmasi..."
 
-#: lib/pev_squad_web/live/event_live/show.ex:171
+#: lib/pev_squad_web/live/event_live/show.ex:184
 #: lib/pev_squad_web/live/user_live/registration.ex:41
 #, elixir-autogen, elixir-format
 msgid "Create an account"
@@ -624,18 +624,18 @@ msgstr "Membuat akun..."
 msgid "Don't have an account?"
 msgstr "Belum punya akun?"
 
-#: lib/pev_squad_web/live/event_live/show.ex:41
-#: lib/pev_squad_web/live/post_live/show.ex:45
+#: lib/pev_squad_web/live/event_live/show.ex:50
+#: lib/pev_squad_web/live/post_live/show.ex:46
 #, elixir-autogen, elixir-format
 msgid "Draft — only staff can see this page until it's published."
 msgstr "Draf — hanya staf yang bisa melihat halaman ini sampai dipublikasikan."
 
-#: lib/pev_squad_web/live/event_live/show.ex:202
+#: lib/pev_squad_web/live/event_live/show.ex:215
 #, elixir-autogen, elixir-format
 msgid "Edit event · see riders"
 msgstr "Edit event · lihat rider"
 
-#: lib/pev_squad_web/live/event_live/show.ex:195
+#: lib/pev_squad_web/live/event_live/show.ex:208
 #, elixir-autogen, elixir-format
 msgid "Edit ride · see riders"
 msgstr "Edit ride · lihat rider"
@@ -658,23 +658,23 @@ msgstr "Pameran"
 msgid "Expedition"
 msgstr "Ekspedisi"
 
-#: lib/pev_squad_web/live/event_live/show.ex:186
+#: lib/pev_squad_web/live/event_live/show.ex:199
 #, elixir-autogen, elixir-format
 msgid "First come, first served."
 msgstr "Siapa cepat dia dapat."
 
-#: lib/pev_squad_web/live/event_live/show.ex:179
+#: lib/pev_squad_web/live/event_live/show.ex:192
 #, elixir-autogen, elixir-format
 msgid "First come, first served. You'll get a seat if someone cancels."
 msgstr "Siapa cepat dia dapat. Kamu akan dapat kursi kalau ada yang batal."
 
 #: lib/pev_squad_web/components/event_components.ex:205
-#: lib/pev_squad_web/live/event_live/show.ex:176
+#: lib/pev_squad_web/live/event_live/show.ex:189
 #, elixir-autogen, elixir-format
 msgid "Full — join the waitlist"
 msgstr "Penuh — masuk waitlist"
 
-#: lib/pev_squad_web/live/event_live/show.ex:144
+#: lib/pev_squad_web/live/event_live/show.ex:157
 #, elixir-autogen, elixir-format
 msgid "Give up your seat? If the ride is full, the next rider on the waitlist takes it."
 msgstr "Lepas kursimu? Kalau ride-nya penuh, rider berikutnya di waitlist akan mengambilnya."
@@ -709,7 +709,7 @@ msgstr "Group ride & meetup"
 msgid "Group rides, meet-ups and trips from PEV Squad — see what's coming up and RSVP."
 msgstr "Group ride, meetup, dan trip dari PEV Squad — lihat jadwal berikutnya dan RSVP."
 
-#: lib/pev_squad_web/live/event_live/show.ex:44
+#: lib/pev_squad_web/live/event_live/show.ex:53
 #, elixir-autogen, elixir-format
 msgid "Hidden after reports from members — only you and the moderators can see it until they've looked."
 msgstr "Disembunyikan karena laporan anggota — hanya kamu dan moderator yang bisa melihatnya sampai diperiksa."
@@ -720,12 +720,12 @@ msgstr "Disembunyikan karena laporan anggota — hanya kamu dan moderator yang b
 msgid "Host a Group Ride"
 msgstr "Adakan Group Ride"
 
-#: lib/pev_squad_web/live/event_live/show.ex:82
+#: lib/pev_squad_web/live/event_live/show.ex:95
 #, elixir-autogen, elixir-format
 msgid "Hosted by"
 msgstr "Host"
 
-#: lib/pev_squad_web/live/event_live/show.ex:157
+#: lib/pev_squad_web/live/event_live/show.ex:170
 #, elixir-autogen, elixir-format
 msgid "If a seat opens up you'll be moved in automatically and we'll email you."
 msgstr "Kalau ada kursi kosong, kamu otomatis dipindahkan dan kami kabari lewat email."
@@ -745,7 +745,7 @@ msgstr "Email atau password salah"
 msgid "Keep me logged in on this device"
 msgstr "Biarkan saya tetap masuk di perangkat ini"
 
-#: lib/pev_squad_web/live/event_live/show.ex:160
+#: lib/pev_squad_web/live/event_live/show.ex:173
 #, elixir-autogen, elixir-format
 msgid "Leave the waitlist"
 msgstr "Keluar dari waitlist"
@@ -765,7 +765,7 @@ msgstr "Masuk sekarang."
 msgid "Log in only this time"
 msgstr "Masuk kali ini saja"
 
-#: lib/pev_squad_web/live/event_live/show.ex:166
+#: lib/pev_squad_web/live/event_live/show.ex:179
 #, elixir-autogen, elixir-format
 msgid "Log in to RSVP"
 msgstr "Masuk untuk RSVP"
@@ -813,7 +813,7 @@ msgstr "Tugas Marshal"
 msgid "Media"
 msgstr "Media"
 
-#: lib/pev_squad_web/live/event_live/show.ex:79
+#: lib/pev_squad_web/live/event_live/show.ex:92
 #, elixir-autogen, elixir-format
 msgid "Meet at"
 msgstr "Kumpul di"
@@ -828,7 +828,7 @@ msgstr "Meetup"
 msgid "New Event"
 msgstr "Event Baru"
 
-#: lib/pev_squad_web/live/event_live/show.ex:169
+#: lib/pev_squad_web/live/event_live/show.ex:182
 #, elixir-autogen, elixir-format
 msgid "New here?"
 msgstr "Baru di sini?"
@@ -858,7 +858,7 @@ msgstr "Resmi"
 msgid "Only moderators and admins can open that page."
 msgstr "Hanya moderator dan admin yang bisa membuka halaman itu."
 
-#: lib/pev_squad_web/live/event_live/show.ex:99
+#: lib/pev_squad_web/live/event_live/show.ex:112
 #, elixir-autogen, elixir-format
 msgid "PEV Squad as collaborator"
 msgstr "PEV Squad sebagai kolaborator"
@@ -878,27 +878,27 @@ msgstr "Password berhasil diperbarui!"
 msgid "Past Events"
 msgstr "Event Sebelumnya"
 
-#: lib/pev_squad_web/live/event_live/show.ex:118
+#: lib/pev_squad_web/live/event_live/show.ex:131
 #, elixir-autogen, elixir-format
 msgid "RSVP by"
 msgstr "RSVP sebelum"
 
-#: lib/pev_squad_web/live/event_live/show.ex:267
+#: lib/pev_squad_web/live/event_live/show.ex:287
 #, elixir-autogen, elixir-format
 msgid "RSVP cancelled."
 msgstr "RSVP dibatalkan."
 
-#: lib/pev_squad_web/live/event_live/show.ex:183
+#: lib/pev_squad_web/live/event_live/show.ex:196
 #, elixir-autogen, elixir-format
 msgid "RSVP — I'm going"
 msgstr "RSVP — Saya ikut"
 
-#: lib/pev_squad_web/live/event_live/show.ex:163
+#: lib/pev_squad_web/live/event_live/show.ex:176
 #, elixir-autogen, elixir-format
 msgid "RSVPs closed"
 msgstr "RSVP ditutup"
 
-#: lib/pev_squad_web/live/event_live/show.ex:258
+#: lib/pev_squad_web/live/event_live/show.ex:278
 #, elixir-autogen, elixir-format
 msgid "RSVPs for this event are closed."
 msgstr "RSVP untuk event ini sudah ditutup."
@@ -909,7 +909,7 @@ msgid "Race"
 msgstr "Balapan"
 
 #: lib/pev_squad_web/live/event_live/index.ex:67
-#: lib/pev_squad_web/live/event_live/show.ex:59
+#: lib/pev_squad_web/live/event_live/show.ex:68
 #, elixir-autogen, elixir-format
 msgid "Recap"
 msgstr "Rekap"
@@ -919,22 +919,22 @@ msgstr "Rekap"
 msgid "Register for an account"
 msgstr "Daftar akun"
 
-#: lib/pev_squad_web/live/event_live/show.ex:210
+#: lib/pev_squad_web/live/event_live/show.ex:223
 #, elixir-autogen, elixir-format
 msgid "Report this ride"
 msgstr "Laporkan ride ini"
 
-#: lib/pev_squad_web/live/event_live/show.ex:253
+#: lib/pev_squad_web/live/event_live/show.ex:273
 #, elixir-autogen, elixir-format
 msgid "Ride's full — you're on the waitlist."
 msgstr "Ride penuh — kamu masuk waitlist."
 
-#: lib/pev_squad_web/live/event_live/show.ex:95
+#: lib/pev_squad_web/live/event_live/show.ex:108
 #, elixir-autogen, elixir-format
 msgid "Run by"
 msgstr "Penyelenggara"
 
-#: lib/pev_squad_web/live/event_live/show.ex:124
+#: lib/pev_squad_web/live/event_live/show.ex:137
 #, elixir-autogen, elixir-format
 msgid "Seats"
 msgstr "Kursi"
@@ -949,7 +949,7 @@ msgstr "Daftar sekarang."
 msgid "The link is invalid or it has expired."
 msgstr "Link tidak valid atau sudah kedaluwarsa."
 
-#: lib/pev_squad_web/live/event_live/show.ex:38
+#: lib/pev_squad_web/live/event_live/show.ex:47
 #, elixir-autogen, elixir-format
 msgid "This event has been cancelled."
 msgstr "Event ini dibatalkan."
@@ -969,7 +969,7 @@ msgstr "Touring"
 msgid "Trail Ride"
 msgstr "Trail Ride"
 
-#: lib/pev_squad_web/live/event_live/show.ex:73
+#: lib/pev_squad_web/live/event_live/show.ex:86
 #, elixir-autogen, elixir-format
 msgid "Until"
 msgstr "Sampai"
@@ -999,12 +999,12 @@ msgstr "Selamat datang, %{email}"
 msgid "Welcome back!"
 msgstr "Selamat datang kembali!"
 
-#: lib/pev_squad_web/live/event_live/show.ex:71
+#: lib/pev_squad_web/live/event_live/show.ex:84
 #, elixir-autogen, elixir-format
 msgid "When"
 msgstr "Kapan"
 
-#: lib/pev_squad_web/live/event_live/show.ex:76
+#: lib/pev_squad_web/live/event_live/show.ex:89
 #, elixir-autogen, elixir-format
 msgid "Where"
 msgstr "Di mana"
@@ -1014,7 +1014,7 @@ msgstr "Di mana"
 msgid "Where the squad shows up in person — trail expeditions, overnight getaways, brand collabs and community meetups. Some we organize, some we're invited to, and group rides are hosted by members. RSVP to grab a seat: limited rides are first come, first served."
 msgstr "Tempat squad kumpul langsung — ekspedisi trail, getaway menginap, kolaborasi brand, dan meetup komunitas. Sebagian kami yang adakan, sebagian kami diundang, dan group ride diadakan oleh anggota. RSVP untuk amankan kursi: ride dengan kuota terbatas berlaku siapa cepat dia dapat."
 
-#: lib/pev_squad_web/live/event_live/show.ex:103
+#: lib/pev_squad_web/live/event_live/show.ex:116
 #, elixir-autogen, elixir-format
 msgid "With"
 msgstr "Bersama"
@@ -1035,22 +1035,22 @@ msgstr "Kamu harus masuk ulang untuk membuka halaman ini."
 msgid "You need to reauthenticate to perform sensitive actions on your account."
 msgstr "Kamu perlu masuk ulang untuk melakukan tindakan sensitif pada akunmu."
 
-#: lib/pev_squad_web/live/event_live/show.ex:154
+#: lib/pev_squad_web/live/event_live/show.ex:167
 #, elixir-autogen, elixir-format
 msgid "You're #%{position} on the waitlist"
 msgstr "Kamu urutan #%{position} di waitlist"
 
-#: lib/pev_squad_web/live/event_live/show.ex:138
+#: lib/pev_squad_web/live/event_live/show.ex:151
 #, elixir-autogen, elixir-format
 msgid "You're going"
 msgstr "Kamu ikut"
 
-#: lib/pev_squad_web/live/event_live/show.ex:248
+#: lib/pev_squad_web/live/event_live/show.ex:268
 #, elixir-autogen, elixir-format
 msgid "You're in. See you there."
 msgstr "Kamu ikut. Sampai ketemu di sana."
 
-#: lib/pev_squad_web/live/event_live/show.ex:129
+#: lib/pev_squad_web/live/event_live/show.ex:142
 #: lib/pev_squad_web/live/group_ride_live/form.ex:280
 #, elixir-autogen, elixir-format
 msgid "going"
@@ -1066,7 +1066,7 @@ msgstr "atau"
 msgid "roll out"
 msgstr "gas jalan"
 
-#: lib/pev_squad_web/live/gallery_live/album.ex:82
+#: lib/pev_squad_web/live/gallery_live/album.ex:87
 #, elixir-autogen, elixir-format
 msgid "%{album} — PEV Squad gallery"
 msgstr "%{album} — galeri PEV Squad"
@@ -1077,7 +1077,7 @@ msgstr "%{album} — galeri PEV Squad"
 msgid "%{count} Frames"
 msgstr "%{count} Frame"
 
-#: lib/pev_squad_web/components/gallery_components.ex:124
+#: lib/pev_squad_web/components/gallery_components.ex:155
 #, elixir-autogen, elixir-format
 msgid "%{index} of %{total}"
 msgstr "%{index} dari %{total}"
@@ -1249,7 +1249,7 @@ msgstr "A ke Z"
 msgid "Account Settings"
 msgstr "Pengaturan Akun"
 
-#: lib/pev_squad_web/live/gallery_live/album.ex:44
+#: lib/pev_squad_web/live/gallery_live/album.ex:49
 #, elixir-autogen, elixir-format
 msgid "Add Photos"
 msgstr "Tambah Foto"
@@ -1456,7 +1456,7 @@ msgstr "Kota"
 msgid "Class"
 msgstr "Kelas"
 
-#: lib/pev_squad_web/components/gallery_components.ex:86
+#: lib/pev_squad_web/components/gallery_components.ex:117
 #: lib/pev_squad_web/components/layouts.ex:109
 #, elixir-autogen, elixir-format
 msgid "Close"
@@ -1584,7 +1584,7 @@ msgstr "Setiap model yang sudah dinilai squad, diurutkan berdasarkan rata-rata s
 msgid "Everything, ranked"
 msgstr "Semuanya, diperingkat"
 
-#: lib/pev_squad_web/components/gallery_components.ex:117
+#: lib/pev_squad_web/components/gallery_components.ex:148
 #, elixir-autogen, elixir-format
 msgid "Featured photos"
 msgstr "Foto pilihan"
@@ -1690,7 +1690,7 @@ msgstr "Tidak aktif"
 msgid "JPG, PNG or WebP, up to 10 MB. We crop it to a portrait and strip location data."
 msgstr "JPG, PNG, atau WebP, maks. 10 MB. Kami potong jadi potret dan hapus data lokasinya."
 
-#: lib/pev_squad_web/live/post_live/show.ex:118
+#: lib/pev_squad_web/live/post_live/show.ex:122
 #: lib/pev_squad_web/live/review_live/show.ex:139
 #, elixir-autogen, elixir-format
 msgid "Keep reading"
@@ -1727,7 +1727,7 @@ msgstr "Grup lokal dan grup khusus kendaraan di seluruh Indonesia yang riding ba
 msgid "Log in instructions"
 msgstr "Petunjuk masuk"
 
-#: lib/pev_squad_web/live/gallery_live/album.ex:51
+#: lib/pev_squad_web/live/gallery_live/album.ex:56
 #, elixir-autogen, elixir-format
 msgid "Log in to add photos"
 msgstr "Masuk untuk menambah foto"
@@ -1819,8 +1819,8 @@ msgstr "Berikutnya"
 msgid "Next on the Sheet"
 msgstr "Berikutnya di Sheet"
 
-#: lib/pev_squad_web/components/gallery_components.ex:91
-#: lib/pev_squad_web/components/gallery_components.ex:158
+#: lib/pev_squad_web/components/gallery_components.ex:122
+#: lib/pev_squad_web/components/gallery_components.ex:189
 #, elixir-autogen, elixir-format
 msgid "Next photo"
 msgstr "Foto berikutnya"
@@ -1840,7 +1840,7 @@ msgstr "Belum ada album."
 msgid "No entry fee, no minimum speed. Make a profile, RSVP to a ride, or bring us something fun to do — if it's fun, we're in."
 msgstr "Tanpa biaya masuk, tanpa kecepatan minimum. Buat profil, RSVP ke sebuah ride, atau ajak kami melakukan sesuatu yang seru — kalau seru, kami ikut."
 
-#: lib/pev_squad_web/live/gallery_live/album.ex:62
+#: lib/pev_squad_web/live/gallery_live/album.ex:67
 #, elixir-autogen, elixir-format
 msgid "No photos yet."
 msgstr "Belum ada foto."
@@ -1990,7 +1990,7 @@ msgstr "Partner"
 msgid "Partnership"
 msgstr "Kemitraan"
 
-#: lib/pev_squad_web/components/gallery_components.ex:80
+#: lib/pev_squad_web/components/gallery_components.ex:111
 #, elixir-autogen, elixir-format
 msgid "Photo viewer"
 msgstr "Penampil foto"
@@ -2025,8 +2025,8 @@ msgstr "Tenaga"
 msgid "Prev"
 msgstr "Sebelumnya"
 
-#: lib/pev_squad_web/components/gallery_components.ex:89
-#: lib/pev_squad_web/components/gallery_components.ex:147
+#: lib/pev_squad_web/components/gallery_components.ex:120
+#: lib/pev_squad_web/components/gallery_components.ex:178
 #, elixir-autogen, elixir-format
 msgid "Previous photo"
 msgstr "Foto sebelumnya"
@@ -2105,7 +2105,7 @@ msgstr "Hapus"
 msgid "Report"
 msgstr "Laporkan"
 
-#: lib/pev_squad_web/components/gallery_components.ex:97
+#: lib/pev_squad_web/components/gallery_components.ex:128
 #, elixir-autogen, elixir-format
 msgid "Report this photo"
 msgstr "Laporkan foto ini"
@@ -2406,7 +2406,7 @@ msgstr "Kirim foto"
 msgid "Summary (max 280 characters, shown on the card)"
 msgstr "Ringkasan (maks. 280 karakter, tampil di kartu)"
 
-#: lib/pev_squad_web/live/gallery_live/album.ex:37
+#: lib/pev_squad_web/live/gallery_live/album.ex:42
 #, elixir-autogen, elixir-format
 msgid "Tap a frame to open it"
 msgstr "Ketuk frame untuk membukanya"
@@ -2451,7 +2451,7 @@ msgstr "Itu milikmu sendiri — edit atau hapus saja."
 msgid "The %{model} review “%{headline}”"
 msgstr "Review %{model} “%{headline}”"
 
-#: lib/pev_squad_web/components/gallery_components.ex:84
+#: lib/pev_squad_web/components/gallery_components.ex:115
 #: lib/pev_squad_web/live/gallery_live/album.ex:16
 #: lib/pev_squad_web/live/gallery_live/index.ex:16
 #, elixir-autogen, elixir-format
@@ -2819,7 +2819,7 @@ msgstr "%{count} menit baca"
 msgid "All news"
 msgstr "Semua berita"
 
-#: lib/pev_squad_web/live/post_live/show.ex:79
+#: lib/pev_squad_web/live/post_live/show.ex:83
 #, elixir-autogen, elixir-format
 msgid "Also in"
 msgstr "Tersedia juga dalam"
@@ -2832,17 +2832,17 @@ msgstr "Artikel"
 #: lib/pev_squad_web/components/layouts.ex:149
 #: lib/pev_squad_web/live/post_live/index.ex:32
 #: lib/pev_squad_web/live/post_live/index.ex:95
-#: lib/pev_squad_web/live/post_live/show.ex:23
+#: lib/pev_squad_web/live/post_live/show.ex:24
 #, elixir-autogen, elixir-format
 msgid "Articles"
 msgstr "Artikel"
 
-#: lib/pev_squad_web/live/post_live/show.ex:108
+#: lib/pev_squad_web/live/post_live/show.ex:112
 #, elixir-autogen, elixir-format
 msgid "Edit post"
 msgstr "Edit tulisan"
 
-#: lib/pev_squad_web/live/post_live/show.ex:73
+#: lib/pev_squad_web/live/post_live/show.ex:74
 #, elixir-autogen, elixir-format
 msgid "Event"
 msgstr "Event"
@@ -2877,12 +2877,12 @@ msgstr "Terbaru // Berita & Artikel"
 msgid "Maintenance"
 msgstr "Perawatan"
 
-#: lib/pev_squad_web/live/post_live/show.ex:120
+#: lib/pev_squad_web/live/post_live/show.ex:124
 #, elixir-autogen, elixir-format
 msgid "More Articles"
 msgstr "Artikel Lainnya"
 
-#: lib/pev_squad_web/live/post_live/show.ex:120
+#: lib/pev_squad_web/live/post_live/show.ex:124
 #, elixir-autogen, elixir-format
 msgid "More News"
 msgstr "Berita Lainnya"
@@ -2913,7 +2913,7 @@ msgstr "Lebih baru"
 #: lib/pev_squad_web/live/home_live/index.html.heex:279
 #: lib/pev_squad_web/live/post_live/index.ex:29
 #: lib/pev_squad_web/live/post_live/index.ex:101
-#: lib/pev_squad_web/live/post_live/show.ex:23
+#: lib/pev_squad_web/live/post_live/show.ex:24
 #, elixir-autogen, elixir-format
 msgid "News"
 msgstr "Berita"
@@ -2933,7 +2933,7 @@ msgstr "Belum ada artikel. Panduan pertama sedang disiapkan."
 msgid "No news yet. Check back soon."
 msgstr "Belum ada berita. Cek lagi nanti."
 
-#: lib/pev_squad_web/live/post_live/show.ex:52
+#: lib/pev_squad_web/live/post_live/show.ex:53
 #, elixir-autogen, elixir-format
 msgid "Not available in %{current} yet — showing the %{language} version."
 msgstr "Belum tersedia dalam %{current}, jadi yang ditampilkan versi %{language}."
@@ -2978,28 +2978,28 @@ msgstr "Cerita Rider"
 msgid "Safety"
 msgstr "Keselamatan"
 
-#: lib/pev_squad_web/live/post_live/show.ex:47
+#: lib/pev_squad_web/live/post_live/show.ex:48
 #, elixir-autogen, elixir-format
 msgid "Scheduled for %{date} — only staff can see it until then."
 msgstr "Dijadwalkan terbit %{date}. Sampai saat itu hanya staf yang bisa melihatnya."
 
-#: lib/pev_squad_web/live/post_live/show.ex:123
+#: lib/pev_squad_web/live/post_live/show.ex:127
 #, elixir-autogen, elixir-format
 msgid "See all"
 msgstr "Lihat semua"
 
-#: lib/pev_squad_web/live/post_live/show.ex:91
+#: lib/pev_squad_web/live/post_live/show.ex:95
 #, elixir-autogen, elixir-format
 msgid "Share"
 msgstr "Bagikan"
 
 #: lib/pev_squad_web/components/post_components.ex:85
-#: lib/pev_squad_web/live/post_live/show.ex:67
+#: lib/pev_squad_web/live/post_live/show.ex:68
 #, elixir-autogen, elixir-format
 msgid "Source"
 msgstr "Sumber"
 
-#: lib/pev_squad_web/live/post_live/show.ex:58
+#: lib/pev_squad_web/live/post_live/show.ex:59
 #, elixir-autogen, elixir-format
 msgid "Translated automatically and not checked by a person yet."
 msgstr "Diterjemahkan otomatis dan belum dicek oleh orang."
@@ -3673,7 +3673,7 @@ msgstr "Kamu tidak punya izin untuk melakukan itu."
 msgid "Only drafts can be changed through the API. Edit published items in /admin."
 msgstr "Lewat API hanya draf yang bisa diubah. Ubah yang sudah terbit di /admin."
 
-#: lib/pev_squad_web/api/admin_params.ex:153
+#: lib/pev_squad_web/api/admin_params.ex:136
 #, elixir-autogen, elixir-format
 msgid "must be a list of partner ids"
 msgstr "harus berupa daftar id partner"
@@ -3732,3 +3732,29 @@ msgstr "Buat profil rider-mu dulu."
 #, elixir-autogen, elixir-format, fuzzy
 msgid "The photo is bigger than 10 MB."
 msgstr "Foto itu lebih dari 10 MB."
+
+#: lib/pev_squad_web/components/gallery_components.ex:62
+#, elixir-autogen, elixir-format
+msgid "1 photo"
+msgid_plural "%{count} photos"
+msgstr[0] "%{count} foto"
+
+#: lib/pev_squad_web/live/gallery_live/album.ex:34
+#, elixir-autogen, elixir-format
+msgid "Event: %{title}"
+msgstr "Event: %{title}"
+
+#: lib/pev_squad_web/components/gallery_components.ex:59
+#, elixir-autogen, elixir-format
+msgid "Photo album"
+msgstr "Album foto"
+
+#: lib/pev_squad_web/api/admin_params.ex:141
+#, elixir-autogen, elixir-format
+msgid "must be a list of album ids"
+msgstr "harus berupa daftar id album"
+
+#: lib/pev_squad_web/controllers/api/admin/event_controller.ex:151
+#, elixir-autogen, elixir-format
+msgid "no album with id %{ids}"
+msgstr "tidak ada album dengan id %{ids}"

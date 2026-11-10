@@ -22,6 +22,7 @@ defmodule PevSquadWeb.API.Schemas.Post do
           source_name: %Schema{type: :string, nullable: true},
           source_url: %Schema{type: :string, nullable: true},
           event_id: %Schema{type: :integer, nullable: true},
+          album_id: %Schema{type: :integer, nullable: true},
           translations: %Schema{
             type: :object,
             description: "Keyed by language (id, en)",

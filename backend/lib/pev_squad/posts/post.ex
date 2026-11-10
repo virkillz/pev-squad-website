@@ -29,6 +29,7 @@ defmodule PevSquad.Posts.Post do
     field :source_url, :string
 
     belongs_to :event, Event
+    belongs_to :album, PevSquad.Gallery.Album
     belongs_to :author, User
     has_many :translations, Translation, on_replace: :delete
 
@@ -50,7 +51,8 @@ defmodule PevSquad.Posts.Post do
       :topic,
       :source_name,
       :source_url,
-      :event_id
+      :event_id,
+      :album_id
     ])
     |> validate_required([:kind, :status])
     |> cast_assoc(:translations, with: &Translation.changeset/2)
@@ -64,6 +66,7 @@ defmodule PevSquad.Posts.Post do
     |> put_published_at()
     |> unique_constraint(:slug)
     |> foreign_key_constraint(:event_id)
+    |> foreign_key_constraint(:album_id)
   end
 
   defp validate_has_translation(changeset) do

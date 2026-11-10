@@ -81,6 +81,7 @@ defmodule PevSquadWeb.API.PublicSchemas do
         ends_at: time_n(),
         local: obj(%{starts_at: str(), ends_at: str_n()}),
         location_name: str_n(),
+        cover_url: url_n(),
         capacity: int_n(),
         going_count: int(),
         waitlist_count: int(),
@@ -100,6 +101,7 @@ defmodule PevSquadWeb.API.PublicSchemas do
         source_name: str_n(),
         source_url: str_n(),
         event_id: int_n(),
+        album_id: int_n(),
         locale: %Schema{
           type: :string,
           description: "Language of title/body: the requested one, else id, else any"
@@ -194,13 +196,19 @@ defmodule PevSquadWeb.API.PublicSchemas do
           rsvp_deadline: time_n(),
           partners_text: str_n(),
           partners: list(ref("Partner")),
-          recaps: list(ref("Post"))
+          recaps: list(ref("Post")),
+          albums: list(ref("Album"))
         }),
       "Post" => post,
       "PostDetail" =>
         merge(post, %{
           body: %Schema{type: :string, description: "Markdown; links and images are absolute"},
-          event: obj(%{id: int(), slug: str(), title: str()}, nullable: true)
+          event: obj(%{id: int(), slug: str(), title: str()}, nullable: true),
+          album: %Schema{
+            allOf: [ref("Album")],
+            nullable: true,
+            description: "The post's own album, else (for a recap) its event's newest album"
+          }
         }),
       "Photo" => photo,
       "GalleryPhoto" => gallery_photo,

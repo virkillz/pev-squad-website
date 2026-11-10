@@ -44,7 +44,8 @@ defmodule PevSquadWeb.API.PostController do
 
   def show(conn, %{"slug" => slug}) do
     with {:ok, post} <- Helpers.fetch(fn -> Posts.get_public_post!(Helpers.scope(conn), slug) end) do
-      json(conn, %{data: PublicJSON.post_detail(post, Helpers.locale())})
+      album = PevSquad.Gallery.album_for_post(post, exclude_users: Helpers.hidden_ids(conn))
+      json(conn, %{data: PublicJSON.post_detail(post, Helpers.locale(), album)})
     end
   end
 end

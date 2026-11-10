@@ -634,6 +634,44 @@
   text-underline-offset: 4px;
 }
 
+/* Event image, under the page header. */
+.event-cover {
+  display: block;
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  background: var(--black);
+  border-bottom: var(--bw) solid var(--black);
+}
+
+/* Link to a gallery album from an event or a post. */
+.album-card {
+  display: grid;
+  width: 100%;
+  max-width: 28rem;
+  border: var(--bw) solid var(--rule);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.album-card:hover { transform: translate(-3px, -3px); box-shadow: 3px 3px 0 var(--orange); }
+.album-card-thumbs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--rule);
+}
+.album-card-thumbs img { width: 100%; height: 100%; object-fit: cover; }
+.album-card-thumbs.n-1 { grid-template-columns: 1fr; }
+.album-card-thumbs.n-3 img:first-child { grid-row: span 2; }
+.album-card-body { display: grid; gap: 0.25rem; padding: 0.9rem 1rem 1rem; }
+.album-card-title { font-weight: 900; font-size: 1.15rem; line-height: 1.15; text-transform: uppercase; }
+.album-card-meta { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.album-card:hover .album-card-meta { color: var(--orange); }
+.event-albums { display: grid; gap: 1rem; }
+
 /* Home "Latest" row for a post without a cover. */
 .latest-row.no-image { grid-template-columns: 1fr; }
 

@@ -13,6 +13,7 @@ Setup:
 Commands:
   pev whoami
   pev partners
+  pev albums                               gallery albums, for album_id / album_ids
   pev upload IMAGE                         upload an image for a post body
   pev spec                                 print the OpenAPI document
 
@@ -27,6 +28,7 @@ Commands:
   pev events get ID_OR_SLUG
   pev events create FILE                   .md (front matter + description) or .json
   pev events update ID_OR_SLUG FILE
+  pev events cover ID_OR_SLUG IMAGE        set the event image (poster or photo)
 
 Post .md format:
 
@@ -34,6 +36,7 @@ Post .md format:
   kind: article            # news | article
   topic: safety            # optional
   event_id: 12             # optional, makes it a recap
+  album_id: 4              # optional, from `pev albums`; a recap shows its event's album anyway
   source_name: Kompas      # optional, outside news
   source_url: https://...
   cover: ./cover.jpg       # optional, uploaded after saving
@@ -52,8 +55,9 @@ Post .md format:
 
 Event .md format: front matter with the event fields (title, kind,
 starts_at, timezone, location_name, meeting_point, capacity, partner_ids:
-[1, 2], ...), and the text after it is the description. Times without an
-offset are local to `timezone` (default Asia/Jakarta): starts_at: 2026-12-05T20:00
+[1, 2], album_ids: [4], cover: ./poster.jpg, ...), and the text after it is
+the description. Times without an offset are local to `timezone` (default
+Asia/Jakarta): starts_at: 2026-12-05T20:00
 """
 
 import json
@@ -264,7 +268,7 @@ def resolve(base_dir, path):
 
 def post_to_md(post):
     meta = ["---", "id: %s" % post["id"], "kind: %s" % post["kind"], "slug: %s" % post["slug"]]
-    for key in ("topic", "event_id", "source_name", "source_url"):
+    for key in ("topic", "event_id", "album_id", "source_name", "source_url"):
         if post.get(key) is not None:
             meta.append("%s: %s" % (key, post[key]))
     meta.append("# status: %s (publish in %s)" % (post["status"], post["admin_url"]))
@@ -292,6 +296,19 @@ def save_post(method, path, file):
     if cover:
         result = request(
             "POST", "/admin/posts/%s/cover" % result["data"]["id"], files={"file": resolve(base_dir, cover)}
+        )
+    return result
+
+
+def save_event(method, path, file):
+    payload = load(file, "event")
+    base_dir = os.path.dirname(os.path.abspath(file))
+    cover = payload.pop("cover", None)
+    payload.pop("id", None)
+    result = request(method, path, body=payload)
+    if cover:
+        result = request(
+            "POST", "/admin/events/%s/cover" % result["data"]["id"], files={"file": resolve(base_dir, cover)}
         )
     return result
 
@@ -360,14 +377,13 @@ def events(args):
         show(request("GET", "/admin/events/" + quote(args[0])))
     elif cmd == "create":
         need(args, 1, "events create FILE")
-        payload = load(args[0], "event")
-        payload.pop("id", None)
-        show(request("POST", "/admin/events", body=payload))
+        show(save_event("POST", "/admin/events", args[0]))
     elif cmd == "update":
         need(args, 2, "events update ID_OR_SLUG FILE")
-        payload = load(args[1], "event")
-        payload.pop("id", None)
-        show(request("PATCH", "/admin/events/" + quote(args[0]), body=payload))
+        show(save_event("PATCH", "/admin/events/" + quote(args[0]), args[1]))
+    elif cmd == "cover":
+        need(args, 2, "events cover ID_OR_SLUG IMAGE")
+        show(request("POST", "/admin/events/%s/cover" % quote(args[0]), files={"file": args[1]}))
     else:
         fail({"error": {"code": "usage", "message": "unknown command: events " + cmd}})
 
@@ -381,6 +397,8 @@ def main(argv):
         show(request("GET", "/me"))
     elif cmd == "partners":
         show(request("GET", "/admin/partners"))
+    elif cmd == "albums":
+        show(request("GET", "/admin/albums"))
     elif cmd == "upload":
         need(args, 1, "upload IMAGE")
         show(request("POST", "/admin/uploads", files={"file": args[0]}))

@@ -4,6 +4,8 @@ defmodule PevSquadWeb.API.Admin.EventControllerTest do
   import PevSquadWeb.APIHelpers
   import PevSquad.EventsFixtures
   import PevSquad.PartnersFixtures
+  import PevSquad.GalleryFixtures
+  import PevSquad.RidersFixtures, only: [image_fixture: 2]
 
   setup %{conn: conn} do
     scope = staff_scope_fixture()
@@ -155,11 +157,91 @@ defmodule PevSquadWeb.API.Admin.EventControllerTest do
              Enum.find(data, &(&1["id"] == partner.id))
   end
 
+  describe "images and albums" do
+    test "album_ids links albums, and an unknown id saves nothing", %{conn: conn} do
+      album = album_fixture()
+
+      data =
+        conn
+        |> post(~p"/api/v1/admin/events", Map.put(@create, "album_ids", [album.id]))
+        |> json_response(201)
+        |> Map.fetch!("data")
+
+      assert data["album_ids"] == [album.id]
+      assert data["cover_url"] == nil
+
+      body =
+        conn
+        |> post(~p"/api/v1/admin/events", Map.put(@create, "album_ids", [album.id, -1]))
+        |> json_response(422)
+
+      assert body["error"]["fields"]["album_ids"] == ["no album with id -1"]
+
+      data =
+        conn
+        |> patch(~p"/api/v1/admin/events/#{data["id"]}", %{"album_ids" => []})
+        |> json_response(200)
+        |> Map.fetch!("data")
+
+      assert data["album_ids"] == []
+    end
+
+    test "album_ids must be a list of ids", %{conn: conn} do
+      body =
+        conn
+        |> post(~p"/api/v1/admin/events", Map.put(@create, "album_ids", "4"))
+        |> json_response(422)
+
+      assert body["error"]["fields"]["album_ids"]
+    end
+
+    test "cover sets the image of a draft, not of a published event", %{conn: conn} do
+      %{"id" => id} =
+        conn
+        |> post(~p"/api/v1/admin/events", @create)
+        |> json_response(201)
+        |> Map.fetch!("data")
+
+      file = %Plug.Upload{
+        path: image_fixture(600, 750),
+        filename: "p.png",
+        content_type: "image/png"
+      }
+
+      data =
+        conn
+        |> post(~p"/api/v1/admin/events/#{id}/cover", %{"file" => file})
+        |> json_response(200)
+        |> Map.fetch!("data")
+
+      assert data["cover_url"] =~ ~r{^http.*/uploads/events/night-ride-sudirman-.+\.webp$}
+
+      published = event_fixture()
+
+      assert json_response(
+               post(conn, ~p"/api/v1/admin/events/#{published.id}/cover", %{"file" => file}),
+               409
+             )
+    end
+
+    test "albums lists every album for linking", %{conn: conn} do
+      event = event_fixture()
+      album = album_fixture(%{"published" => "false", "event_id" => event.id})
+
+      data = conn |> get(~p"/api/v1/admin/albums") |> json_response(200) |> Map.fetch!("data")
+
+      assert %{"slug" => _, "published" => false, "event_id" => event_id, "photo_count" => 0} =
+               Enum.find(data, &(&1["id"] == album.id))
+
+      assert event_id == event.id
+    end
+  end
+
   test "the spec documents the admin endpoints", %{conn: conn} do
     paths = conn |> get(~p"/api/v1/openapi") |> json_response(200) |> Map.fetch!("paths")
 
     for path <-
-          ~w(/api/v1/admin/posts /api/v1/admin/posts/{id} /api/v1/admin/posts/{id}/cover /api/v1/admin/events /api/v1/admin/events/{id} /api/v1/admin/partners /api/v1/admin/uploads) do
+          ~w(/api/v1/admin/posts /api/v1/admin/posts/{id} /api/v1/admin/posts/{id}/cover /api/v1/admin/events /api/v1/admin/events/{id} /api/v1/admin/events/{id}/cover /api/v1/admin/partners /api/v1/admin/albums /api/v1/admin/uploads) do
       assert Map.has_key?(paths, path), path
     end
   end

@@ -194,13 +194,22 @@ defmodule PevSquadWeb.Admin.PostLive.Form do
                 placeholder="https://"
               />
             </div>
-            <.input
-              field={@form[:event_id]}
-              type="select"
-              label="Recap of event"
-              prompt="—"
-              options={@event_options}
-            />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <.input
+                field={@form[:event_id]}
+                type="select"
+                label="Recap of event"
+                prompt="—"
+                options={@event_options}
+              />
+              <.input
+                field={@form[:album_id]}
+                type="select"
+                label="Photo album (blank = the event's album, if any)"
+                prompt="—"
+                options={@album_options}
+              />
+            </div>
 
             <div class="flex flex-wrap gap-3 pt-4">
               <.button phx-disable-with="Saving..." variant="primary">Save</.button>
@@ -234,6 +243,7 @@ defmodule PevSquadWeb.Admin.PostLive.Form do
      |> assign(:tab, "id")
      |> assign(:preview?, false)
      |> assign(:event_options, event_options(scope))
+     |> assign(:album_options, album_options(scope))
      |> allow_upload(:cover,
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,
@@ -381,6 +391,12 @@ defmodule PevSquadWeb.Admin.PostLive.Form do
     |> PevSquad.Events.list_events_for_staff()
     |> Enum.filter(&(&1.category == :official))
     |> Enum.map(fn e -> {"#{Calendar.strftime(e.starts_at, "%Y-%m-%d")} · #{e.title}", e.id} end)
+  end
+
+  defp album_options(scope) do
+    scope
+    |> PevSquad.Gallery.list_albums_for_staff()
+    |> Enum.map(&{if(&1.published, do: &1.title, else: "#{&1.title} (draft)"), &1.id})
   end
 
   # datetime-local values are Jakarta time; the schema stores UTC.

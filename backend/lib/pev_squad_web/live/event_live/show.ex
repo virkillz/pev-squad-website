@@ -4,6 +4,7 @@ defmodule PevSquadWeb.EventLive.Show do
   alias PevSquad.Events
 
   import PevSquadWeb.EventComponents
+  import PevSquadWeb.GalleryComponents, only: [album_card: 1]
   import PevSquadWeb.PartnerComponents, only: [initials: 1]
 
   @impl true
@@ -30,6 +31,14 @@ defmodule PevSquadWeb.EventLive.Show do
           {when_label(@event)}<span :if={@event.location_name}> · {@event.location_name}</span>
         </p>
       </section>
+
+      <img
+        :if={@event.cover_path}
+        src={@event.cover_path}
+        alt={@event.title}
+        class="event-cover"
+        id="event-cover"
+      />
 
       <section class="band band-black">
         <div class="event-detail-grid">
@@ -65,6 +74,10 @@ defmodule PevSquadWeb.EventLive.Show do
               >
                 {recap_title(post).title} →
               </.link>
+            </div>
+
+            <div :if={@albums != []} class="event-albums" id="event-albums">
+              <.album_card :for={album <- @albums} album={album} id={"album-#{album.id}"} />
             </div>
 
             <ul class="event-facts">
@@ -229,6 +242,13 @@ defmodule PevSquadWeb.EventLive.Show do
      |> assign(:page_description, description(event))
      |> assign(:linked_partners, PevSquad.Partners.list_event_partners(event))
      |> assign(:recaps, PevSquad.Posts.list_event_posts(event))
+     |> assign(
+       :albums,
+       PevSquad.Gallery.list_event_albums(event,
+         exclude_users: PevSquad.Safety.hidden_user_ids(scope)
+       )
+     )
+     |> assign(:og_image, event.cover_path && absolute(event.cover_path))
      |> assign(:group?, event.category == :group_ride)
      |> assign(:host?, Events.host?(scope, event))
      |> assign(:can_manage?, Events.can_manage?(scope, event))
@@ -288,6 +308,8 @@ defmodule PevSquadWeb.EventLive.Show do
   end
 
   defp event_url(event), do: url(~p"/events/#{event.slug}")
+
+  defp absolute(path), do: String.trim_trailing(url(~p"/"), "/") <> path
 
   defp recap_title(post),
     do: PevSquad.Posts.translation_for(post, PevSquadWeb.Locale.current())

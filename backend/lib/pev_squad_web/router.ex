@@ -160,7 +160,9 @@ defmodule PevSquadWeb.Router do
     resources "/posts", PostController, only: [:index, :show, :create, :update]
     post "/posts/:id/cover", PostController, :cover
     resources "/events", EventController, only: [:index, :show, :create, :update]
+    post "/events/:id/cover", EventController, :cover
     get "/partners", PartnerController, :index
+    get "/albums", AlbumController, :index
     post "/uploads", UploadController, :create
   end
 

@@ -29,6 +29,11 @@ defmodule PevSquadWeb.GalleryLive.Album do
           {@album.subtitle}
         </p>
         <p :if={@album.description} class="page-intro">{@album.description}</p>
+        <p :if={@album.event} class="page-intro" id="album-event">
+          <.link navigate={~p"/events/#{@album.event.slug}"} class="link-orange">
+            {gettext("Event: %{title}", title: @album.event.title)} →
+          </.link>
+        </p>
       </section>
 
       <section class="band band-black">

@@ -1,7 +1,7 @@
 defmodule PevSquadWeb.API.EventController do
   use PevSquadWeb, :api_controller
 
-  alias PevSquad.{Events, Partners, Posts}
+  alias PevSquad.{Events, Gallery, Partners, Posts}
   alias PevSquadWeb.API.{Page, PublicJSON, PublicSchemas}
   alias PevSquadWeb.API.Public.Helpers
 
@@ -39,7 +39,7 @@ defmodule PevSquadWeb.API.EventController do
   end
 
   operation(:show,
-    summary: "One event, with partners and recap posts",
+    summary: "One event, with partners, recap posts and photo albums",
     parameters: [slug: [in: :path, type: :string, required: true]],
     responses: [ok: {"Event", "application/json", PublicSchemas.one("EventDetail")}]
   )
@@ -49,7 +49,8 @@ defmodule PevSquadWeb.API.EventController do
            Helpers.fetch(fn -> Events.get_public_event!(Helpers.scope(conn), slug) end) do
       partners = Partners.list_event_partners(event)
       recaps = Posts.list_event_posts(event)
-      json(conn, %{data: PublicJSON.event_detail(event, partners, recaps)})
+      albums = Gallery.list_event_albums(event, exclude_users: Helpers.hidden_ids(conn))
+      json(conn, %{data: PublicJSON.event_detail(event, partners, recaps, albums)})
     end
   end
 end

@@ -113,6 +113,30 @@ defmodule PevSquadWeb.API.Admin.PostControllerTest do
       assert t["id"]["machine_translated"] == false
     end
 
+    test "album_id links an album; an unknown one is a validation error", %{
+      conn: conn,
+      post_id: id
+    } do
+      album = PevSquad.GalleryFixtures.album_fixture()
+
+      body =
+        conn
+        |> patch(~p"/api/v1/admin/posts/#{id}", %{"album_id" => album.id})
+        |> json_response(200)
+
+      assert body["data"]["album_id"] == album.id
+
+      body =
+        conn |> patch(~p"/api/v1/admin/posts/#{id}", %{"album_id" => -1}) |> json_response(422)
+
+      assert body["error"]["fields"]["album_id"]
+
+      body =
+        conn |> patch(~p"/api/v1/admin/posts/#{id}", %{"album_id" => nil}) |> json_response(200)
+
+      assert body["data"]["album_id"] == nil
+    end
+
     test "null removes a language and the slug stays", %{conn: conn, post_id: id, slug: slug} do
       body =
         conn

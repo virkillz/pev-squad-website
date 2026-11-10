@@ -1,9 +1,12 @@
 defmodule PevSquadWeb.API.Admin.EventJSON do
   use PevSquadWeb, :verified_routes
 
+  alias PevSquadWeb.API.Urls
+
   def index(%{events: events}), do: %{data: Enum.map(events, &data(&1, nil))}
 
-  def show(%{event: event, partner_ids: partner_ids}), do: %{data: data(event, partner_ids)}
+  def show(%{event: event, partner_ids: partner_ids, album_ids: album_ids}),
+    do: %{data: event |> data(partner_ids) |> Map.put(:album_ids, album_ids)}
 
   defp data(event, partner_ids) do
     base = %{
@@ -28,6 +31,7 @@ defmodule PevSquadWeb.API.Admin.EventJSON do
       description: event.description,
       capacity: event.capacity,
       partners: event.partners,
+      cover_url: Urls.absolute(event.cover_path),
       going_count: event.going_count,
       waitlist_count: event.waitlist_count,
       host_alias: event.host_alias,

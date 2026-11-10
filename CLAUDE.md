@@ -59,6 +59,7 @@ When the user asks you to write or edit an event, a news item or an article on t
   2. `pev posts create FILE`. Local `![](./img.jpg)` images and `cover:` are uploaded for you.
   3. To edit: `pev posts pull SLUG -o FILE`, change the file, then `pev posts update SLUG FILE`.
 - Events: `pev events create FILE`, with times local to `timezone` (e.g. `starts_at: 2026-12-05T20:00`). Run `pev partners` to find `partner_ids`, and `pev events list` to find an `event_id` for a recap post.
+- Images and albums: an event takes one image (`cover: ./poster.jpg`, or `pev events cover`), and posts take `cover:` too. Run `pev albums` to find ids for an event's `album_ids` or a post's `album_id`. A recap post shows its event's album without `album_id`.
 - Write Indonesian first, since it's the default language. Set `machine_translated: false` on text the user wrote or checked. Anything you translated keeps the default `true`.
 - Everything lands as a draft. Give the user the `admin_url` from the response so they can review and publish it. You can't publish.
 

@@ -10,6 +10,7 @@ defmodule PevSquadWeb.PostLive.Show do
   alias PevSquadWeb.Locale
 
   import PevSquadWeb.PostComponents
+  import PevSquadWeb.GalleryComponents, only: [album_card: 1]
 
   @impl true
   def render(assigns) do
@@ -74,6 +75,9 @@ defmodule PevSquadWeb.PostLive.Show do
                 <.link navigate={~p"/events/#{@post.event.slug}"} class="link-orange">
                   {@post.event.title} →
                 </.link>
+              </div>
+              <div :if={@album} class="post-aside-block" id="post-album">
+                <.album_card album={@album} />
               </div>
               <div :if={@other_locales != []} class="post-aside-block" id="post-languages">
                 <span class="eyebrow">{gettext("Also in")}</span>
@@ -166,6 +170,12 @@ defmodule PevSquadWeb.PostLive.Show do
     |> assign(:other_locales, others)
     |> assign(:staff?, PevSquad.Accounts.Scope.staff?(socket.assigns.current_scope))
     |> assign(:more, more)
+    |> assign(
+      :album,
+      PevSquad.Gallery.album_for_post(post,
+        exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
+      )
+    )
     |> assign(:page_title, t.title)
     |> assign(:page_description, Posts.excerpt(t))
     |> assign(:og_type, "article")

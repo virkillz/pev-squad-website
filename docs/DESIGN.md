@@ -114,7 +114,7 @@ users ─1:1─ rider_profiles ─1:N─ garage_vehicles ─N:1─ pev_models
 
 **garage_vehicles** — `rider_profile_id`, `pev_model_id`, `nickname`, `km`, `acquired_on`, `is_current`. This is what "PEV Utama / Model PEV yang dipakai" from the form turns into.
 
-**events** — `title`, `slug`, `kind` (`ride | tour | meetup | clinic | collab`), `role` (`organizer | collaborator`, from `docs/events.md`), `starts_at`, `ends_at`, `timezone` (default `Asia/Jakarta`), `location_name`, `lat`/`lng` (optional), `meeting_point`, `route_url`, `description`, `cover_photo_id`, `capacity` (nullable), `rsvp_deadline`, `allowed_pev_types` (array), `status` (`draft | published | cancelled | completed`), `created_by_id`
+**events** — `title`, `slug`, `kind` (`ride | tour | meetup | clinic | collab`), `role` (`organizer | collaborator`, from `docs/events.md`), `starts_at`, `ends_at`, `timezone` (default `Asia/Jakarta`), `location_name`, `lat`/`lng` (optional), `meeting_point`, `route_url`, `description`, `cover_path` (one image, decision 18), `capacity` (nullable), `rsvp_deadline`, `allowed_pev_types` (array), `status` (`draft | published | cancelled | completed`), `created_by_id`
 
 **event_partners** — `event_id`, `partner_id`, `relation` (`co_organizer | sponsor | supporter`). **partners** — `name`, `logo_photo_id`, `url`, `instagram`. These records also back the Sponsors page.
 
@@ -124,11 +124,11 @@ users ─1:1─ rider_profiles ─1:N─ garage_vehicles ─N:1─ pev_models
 
 **review_scores** — `review_id`, `criterion` (`power | range | comfort | build | value | portability`), `score` (0.0–10.0, one decimal, matches the prototype's `9.4`).
 
-**albums** — `title`, `slug`, `event_id` (optional), `cover_photo_id`, `created_by_id`. These are the gallery sections (*Bromo 2026*, *Morning Ride*, …).
+**albums** — `title`, `slug`, `event_id` (optional; an album belongs to at most one event), `cover_photo_id`, `created_by_id`. These are the gallery sections (*Bromo 2026*, *Morning Ride*, …).
 
 **photos** — `uploader_id`, `album_id` (nullable), `storage_key`, `width`, `height`, `blurhash`, `caption`, `variants` (JSONB: `thumb`, `medium`, `large` keys), `moderation_status`.
 
-**posts** — `kind` (`news | article`), `slug` (generated once from the first title, Indonesian first; `-2`, `-3`… when taken), `status` (`draft | published`), `published_at` (a future date schedules it), `topic` (optional: `community | industry | regulation | safety | maintenance | guide | gear | story`), `cover_path`, `source_name` / `source_url` (outside news), `event_id` (a recap), `author_id`.
+**posts** — `kind` (`news | article`), `slug` (generated once from the first title, Indonesian first; `-2`, `-3`… when taken), `status` (`draft | published`), `published_at` (a future date schedules it), `topic` (optional: `community | industry | regulation | safety | maintenance | guide | gear | story`), `cover_path`, `source_name` / `source_url` (outside news), `event_id` (a recap), `album_id` (optional photo album, decision 18), `author_id`.
 
 **post_translations** — `post_id`, `locale` (`id | en`), `title`, `excerpt`, `body` (Markdown), `machine_translated`. Unique on `(post_id, locale)`. See decision 15.
 
@@ -215,7 +215,7 @@ One JSON API serves two clients: the **mobile app**, and **staff tools** (the `p
 |---|---|---|
 | Spec | `GET openapi` | Built (step 1) |
 | Me | `GET me` | Built (step 1) |
-| Admin content | `GET/POST admin/posts`, `GET/PATCH admin/posts/:id` (id or slug), `POST admin/posts/:id/cover`, `GET/POST admin/events`, `GET/PATCH admin/events/:id`, `GET admin/partners`, `POST admin/uploads` (multipart image) | Built (step 2) |
+| Admin content | `GET/POST admin/posts`, `GET/PATCH admin/posts/:id` (id or slug), `POST admin/posts/:id/cover`, `GET/POST admin/events`, `GET/PATCH admin/events/:id`, `POST admin/events/:id/cover`, `GET admin/partners`, `GET admin/albums`, `POST admin/uploads` (multipart image) | Built (step 2) |
 | Public read | `GET events?when=upcoming\|past&category=`, `GET events/:slug`, `GET posts?kind=news\|article`, `GET posts/:slug`, `GET listings`, `GET listings/:id`, `GET partners`, `GET partners/:slug`, `GET pev_models`, `GET pev_models/:slug`, `GET reviews`, `GET reviews/:id`, `GET albums`, `GET albums/:slug` | Step 3 |
 | Auth | `POST auth/password`, `auth/magic_link`, `auth/magic_link/exchange`, `auth/google`, `auth/apple`, `auth/refresh`, `DELETE auth/session` | Step 4 |
 | Me (more) | `PATCH me` (incl. `locale`), `GET/PATCH me/profile`, `POST me/push_devices`, `DELETE me` | Step 4 |
@@ -377,6 +377,7 @@ The web launched first, as planned for a single developer. The API and the app c
 | 16 | For Sale, member listings (2026-11-09) | Only members with an **active** rider profile (and staff) can sell. **Every listing waits for a moderator** at `/admin/listings`; rejections need a reason, emailed to the seller. On an approved listing, price, quantity, city and contact can change freely; changing title, category, condition, description or photos sends it back to the queue. **Decay**: a listing stays on the board for **7 days after the seller last tapped "Still available"** (the clock starts at approval); one reminder email goes out 2 days before it lapses (hourly `Listings.Reminder` worker). An expired listing comes back with one tap, unless it has been off for over 30 days, which sends it back to review. **Sold** listings stay on the board, marked sold, for 7 days. Sellers can hide/unhide and delete (soft delete, kept for disputes). Visibility is computed from timestamps, so nothing has to flip statuses on a timer. Buyers contact the seller over **WhatsApp or Instagram DM**, shown only to logged-in members; no payments in the app. No per-member listing limit. Photos: 1600px + 800px WebP, metadata (GPS) stripped, in `uploads/listings`. Listings from banned or inactive sellers and from blocked members are left out. PEV Squad's own "official" listings come later (`kind` column is ready). |
 | 17 | One API for the app and admin tools (2026-11-09) | The mobile app and staff tooling share **one `/api/v1`** (§7) rather than a separate admin API. Staff tooling means the `pev` CLI, which an AI assistant like Claude Code drives through the shell; that was preferred over an MCP server, which can be added later on top of the same endpoints if we want to post from the Claude desktop or web app. Staff authenticate with **personal API tokens** (hashed in `users_tokens`, context `api`, 1-year expiry, created at `/admin/api-tokens` after re-authenticating). The admin content API writes **drafts only**; publishing stays manual in `/admin`. Running code in prod over `bin/pev_squad rpc` is kept for emergencies, not routine content. |
 
+| 18 | One image and a photo album per event and post (2026-11-10) | Events get one image (`cover_path`, a poster or photo), stored like post covers: 1600px WebP, metadata stripped, in `uploads/events`. It shows under the event's page header and is its link-preview image. **Albums** link to events through the existing `albums.event_id` (an album belongs to at most one event; an event can have several), set from either the album or the event form. Posts get `album_id`; a post without one that is a recap shows its event's newest album. Only **published albums with at least one live photo** are shown, as a card linking to `/gallery/:slug`, and the album page links back to a published event. The admin API takes `album_ids` on events (replaces, like `partner_ids`) and `album_id` on posts; the public API adds `cover_url` to events, `albums` to event detail and `album` to post detail. |
 
 ## 17. Open questions
 

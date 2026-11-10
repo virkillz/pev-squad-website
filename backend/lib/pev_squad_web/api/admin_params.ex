@@ -15,7 +15,7 @@ defmodule PevSquadWeb.API.AdminParams do
   alias PevSquad.Posts.{Post, Translation}
   alias PevSquad.Events.Event
 
-  @post_fields ~w(kind slug topic source_name source_url event_id)
+  @post_fields ~w(kind slug topic source_name source_url event_id album_id)
   @event_fields ~w(title slug kind role partners starts_at ends_at timezone location_name
                    meeting_point description capacity rsvp_deadline)
   @event_times ~w(starts_at ends_at rsvp_deadline)
@@ -133,24 +133,28 @@ defmodule PevSquadWeb.API.AdminParams do
 
   @doc "`{:ok, nil}` (not given), `{:ok, [id]}` or a validation error."
   def partner_ids(params) do
-    case Map.fetch(params, "partner_ids") do
+    id_list(params, "partner_ids", gettext("must be a list of partner ids"))
+  end
+
+  @doc "`{:ok, nil}` (not given), `{:ok, [id]}` or a validation error."
+  def album_ids(params) do
+    id_list(params, "album_ids", gettext("must be a list of album ids"))
+  end
+
+  defp id_list(params, key, message) do
+    case Map.fetch(params, key) do
       :error ->
         {:ok, nil}
 
       {:ok, ids} when is_list(ids) ->
         if Enum.all?(ids, &is_integer/1),
-          do: {:ok, ids},
-          else: partner_ids_error()
+          do: {:ok, Enum.uniq(ids)},
+          else: {:error, {:validation_failed, %{key => [message]}}}
 
       {:ok, _} ->
-        partner_ids_error()
+        {:error, {:validation_failed, %{key => [message]}}}
     end
   end
-
-  defp partner_ids_error,
-    do:
-      {:error,
-       {:validation_failed, %{"partner_ids" => [gettext("must be a list of partner ids")]}}}
 
   @doc "The API may only change drafts (and only official events)."
   def editable?(%Post{status: :draft}), do: :ok

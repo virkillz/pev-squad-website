@@ -38,6 +38,8 @@ defmodule PevSquadWeb.API.Schemas.Event do
           waitlist_count: %Schema{type: :integer},
           host_alias: %Schema{type: :string, nullable: true},
           partner_ids: %Schema{type: :array, items: %Schema{type: :integer}},
+          album_ids: %Schema{type: :array, items: %Schema{type: :integer}},
+          cover_url: %Schema{type: :string, format: :uri, nullable: true},
           url: %Schema{type: :string, format: :uri},
           admin_url: %Schema{type: :string, format: :uri}
         }

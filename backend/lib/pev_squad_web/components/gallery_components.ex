@@ -35,6 +35,37 @@ defmodule PevSquadWeb.GalleryComponents do
     """
   end
 
+  @doc """
+  A link card to an album, for event pages and posts: up to four preview
+  photos, the title and the photo count. Expects `photo_count` and the
+  preview `photos` from `Gallery.list_published_albums/1`.
+  """
+  attr :album, Album, required: true
+  attr :id, :string, default: nil
+
+  def album_card(assigns) do
+    ~H"""
+    <.link navigate={~p"/gallery/#{@album.slug}"} class="album-card" id={@id}>
+      <span class={["album-card-thumbs", "n-#{min(length(@album.photos), 4)}"]}>
+        <img
+          :for={photo <- Enum.take(@album.photos, 4)}
+          src={photo.thumb_path}
+          alt={photo.alt || ""}
+          loading="lazy"
+          decoding="async"
+        />
+      </span>
+      <span class="album-card-body">
+        <span class="eyebrow">{gettext("Photo album")}</span>
+        <span class="album-card-title">{@album.title}</span>
+        <span class="album-card-meta">
+          {ngettext("1 photo", "%{count} photos", @album.photo_count)} →
+        </span>
+      </span>
+    </.link>
+    """
+  end
+
   attr :photo, Photo, required: true
   attr :number, :integer, required: true
   attr :album, Album, required: true

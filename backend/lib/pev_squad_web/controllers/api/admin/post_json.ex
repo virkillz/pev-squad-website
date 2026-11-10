@@ -29,6 +29,7 @@ defmodule PevSquadWeb.API.Admin.PostJSON do
       source_name: post.source_name,
       source_url: post.source_url,
       event_id: post.event_id,
+      album_id: post.album_id,
       translations:
         Map.new(post.translations, fn t ->
           {t.locale,

@@ -4,6 +4,7 @@ defmodule PevSquadWeb.EventLiveTest do
   import Phoenix.LiveViewTest
   import PevSquad.AccountsFixtures
   import PevSquad.EventsFixtures
+  import PevSquad.GalleryFixtures
 
   alias PevSquad.Events
 
@@ -85,6 +86,69 @@ defmodule PevSquadWeb.EventLiveTest do
 
       event = Events.get_public_event!(nil, "bandung-loop-2030")
       assert event.starts_at == ~U[2030-03-01 13:00:00Z]
+    end
+
+    test "staff add an image and link a photo album", %{conn: conn} do
+      conn = log_in_user(conn, staff_scope_fixture().user)
+      event = event_fixture(title: "Fun Ride JIExpo")
+      album = album_fixture(%{"title" => "Fun Ride Album"})
+      photo_fixture(album)
+
+      {:ok, lv, html} = live(conn, ~p"/admin/events/#{event.id}/edit")
+      assert html =~ "Fun Ride Album"
+
+      cover =
+        file_input(lv, "#event-form", :cover, [
+          %{
+            name: "poster.png",
+            content: File.read!(PevSquad.RidersFixtures.image_fixture(600, 750)),
+            type: "image/jpeg"
+          }
+        ])
+
+      render_upload(cover, "poster.png")
+
+      {:ok, _show, html} =
+        lv
+        |> form("#event-form")
+        |> render_submit(%{"album_ids" => ["", "#{album.id}"]})
+        |> follow_redirect(conn)
+
+      assert html =~ ~r{id="event-cover"[^>]*src="/uploads/events/fun-ride-jiexpo-}s or
+               html =~ ~r{src="/uploads/events/fun-ride-jiexpo-[^"]+"[^>]*id="event-cover"}s
+
+      assert html =~ "Fun Ride Album"
+      assert html =~ ~p"/gallery/#{album.slug}"
+
+      # Unticking unlinks it.
+      {:ok, lv, _html} = live(conn, ~p"/admin/events/#{event.id}/edit")
+      lv |> form("#event-form") |> render_submit(%{"album_ids" => [""]})
+      assert PevSquad.Gallery.list_event_album_ids(event) == []
+    end
+  end
+
+  describe "event page" do
+    test "shows linked albums, and the album links back", %{conn: conn} do
+      event = event_fixture(title: "Perklindo Ride")
+      album = album_fixture(%{"title" => "Perklindo Photos", "event_id" => event.id})
+      photo_fixture(album)
+
+      {:ok, lv, _html} = live(conn, ~p"/events/#{event.slug}")
+      assert has_element?(lv, "#album-#{album.id}", "Perklindo Photos")
+      assert has_element?(lv, "#album-#{album.id}", "1 photo")
+      refute has_element?(lv, "#event-cover")
+
+      {:ok, lv, _html} = live(conn, ~p"/gallery/#{album.slug}")
+      assert has_element?(lv, "#album-event a[href='/events/#{event.slug}']", "Perklindo Ride")
+    end
+
+    test "an album of a draft event doesn't link to it", %{conn: conn} do
+      event = event_fixture(status: :draft)
+      album = album_fixture(%{"event_id" => event.id})
+      photo_fixture(album)
+
+      {:ok, lv, _html} = live(conn, ~p"/gallery/#{album.slug}")
+      refute has_element?(lv, "#album-event")
     end
   end
 end
