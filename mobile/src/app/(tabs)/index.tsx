@@ -1,14 +1,14 @@
 import { useRouter } from 'expo-router';
 import { RefreshControl, ScrollView, View } from 'react-native';
 
-import { AlbumTile, ListingCard, NextRideCard, PostRow } from '@/components/cards';
+import { AlbumTile, ListingCard, NextRideCard, PostRow, RiderOfTheDayCard } from '@/components/cards';
 import { Masthead, QueryState, SectionHead } from '@/components/chrome';
 import { Body, Mono } from '@/components/text';
 import { useLocale } from '@/lib/i18n';
 import { useHome } from '@/lib/queries';
 import { colors, space } from '@/theme';
 
-/** Beranda: next ride, latest posts, gallery strip, For Sale. One API call. */
+/** Beranda: next ride, latest posts, rider of the day, gallery strip, For Sale. One API call. */
 export default function HomeScreen() {
   const router = useRouter();
   const { t } = useLocale();
@@ -41,6 +41,13 @@ export default function HomeScreen() {
               <View>
                 <SectionHead title={t('home.latest')} action={t('home.allNews')} onAction={() => router.navigate('/news')} />
                 {d.posts.map((p) => <PostRow key={p.id} post={p} />)}
+              </View>
+            ) : null}
+
+            {d.rider_of_the_day ? (
+              <View style={{ gap: 10 }}>
+                <Mono size={11} color={colors.mutedOnWhite}>{t('home.riderOfTheDay')}</Mono>
+                <RiderOfTheDayCard rider={d.rider_of_the_day} />
               </View>
             ) : null}
 

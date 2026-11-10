@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { Pressable, View } from 'react-native';
 
-import type { Album, Event, Listing, Partner, Post, Rider } from '@/lib/api';
+import type { Album, Event, Listing, Partner, Post, Rider, RiderOfTheDay } from '@/lib/api';
 import { dateLabel, dayLabel, dayOfMonth, daysUntil, monthShort, rupiah, rupiahShort, thousands, timeLabel, weekday } from '@/lib/format';
 import { useLocale } from '@/lib/i18n';
 import { bw, colors, space } from '@/theme';
@@ -266,6 +266,45 @@ export function RiderCard({ rider }: { rider: Rider }) {
           </View>
           <Mono size={10} color={colors.mutedOnWhite} style={{ marginTop: 4 }} numberOfLines={1}>
             {[rider.city, rider.main_ride].filter(Boolean).join(' · ').toUpperCase()}
+          </Mono>
+        </View>
+      </Pressable>
+    </Link>
+  );
+}
+
+/** Home's rider of the day: big photo, alias, ride, a bit of bio. Same rider as the website. */
+export function RiderOfTheDayCard({ rider }: { rider: RiderOfTheDay }) {
+  const { t, label } = useLocale();
+  const meta = [rider.city, rider.main_ride].filter(Boolean).join(' · ').toUpperCase();
+  return (
+    <Link href={{ pathname: '/riders/[slug]', params: { slug: rider.slug } }} asChild>
+      <Pressable accessibilityRole="link" style={{ backgroundColor: colors.orange, borderWidth: bw, borderColor: colors.black }}>
+        {rider.avatar_url ? (
+          <Image
+            source={rider.avatar_url}
+            style={{ aspectRatio: 4 / 5, borderBottomWidth: bw, borderColor: colors.black }}
+            contentFit="cover"
+            accessibilityLabel={rider.alias}
+          />
+        ) : (
+          <View style={{ aspectRatio: 4 / 5, borderBottomWidth: bw, backgroundColor: colors.black, alignItems: 'center', justifyContent: 'center' }}>
+            <Stencil size={96} color={colors.orange}>{initials(rider.alias)}</Stencil>
+          </View>
+        )}
+        <View style={{ padding: space.m, gap: 10 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Mono bold size={10} color={colors.white} style={{ backgroundColor: colors.black, paddingHorizontal: 6, paddingVertical: 3 }}>
+              {label('pev', rider.primary_pev_type)}
+            </Mono>
+            {meta ? <Mono size={10} color={colors.mutedOnOrange} numberOfLines={1} style={{ flex: 1 }}>{meta}</Mono> : null}
+          </View>
+          <Stencil size={48}>{rider.alias}</Stencil>
+          {rider.bio ? (
+            <Body size={15} numberOfLines={4}>{rider.bio}</Body>
+          ) : null}
+          <Mono bold size={12} color={colors.white} style={{ alignSelf: 'flex-start', backgroundColor: colors.black, paddingHorizontal: 16, paddingVertical: 12 }}>
+            {t('home.meetRider')}
           </Mono>
         </View>
       </Pressable>

@@ -235,6 +235,9 @@ defmodule PevSquadWeb.API.PublicJSON do
     })
   end
 
+  @doc "The home screen's rider of the day: a rider plus their bio and the date."
+  def rider_of_the_day(r, date), do: r |> rider() |> Map.merge(%{bio: r.bio, date: date})
+
   ## Partners
 
   def partner(p) do

@@ -238,6 +238,8 @@ defmodule PevSquadWeb.API.PublicSchemas do
           events: list(ref("Event"))
         }),
       "Rider" => rider,
+      "RiderOfTheDay" =>
+        merge(rider, %{bio: str_n(), date: %Schema{type: :string, format: :date}}),
       "RiderDetail" =>
         merge(rider, %{
           id: int(),
@@ -279,7 +281,13 @@ defmodule PevSquadWeb.API.PublicSchemas do
           upcoming: list(ref("Event")),
           posts: list(ref("Post")),
           albums: list(ref("Album")),
-          listings: list(ref("Listing"))
+          listings: list(ref("Listing")),
+          rider_of_the_day: %Schema{
+            allOf: [ref("RiderOfTheDay")],
+            nullable: true,
+            description:
+              "Picked automatically each day (Jakarta date), the same for every client; null when nobody qualifies or the viewer blocked them"
+          }
         })
     }
   end

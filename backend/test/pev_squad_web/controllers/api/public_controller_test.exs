@@ -298,6 +298,25 @@ defmodule PevSquadWeb.API.PublicControllerTest do
     assert length(d["posts"]) == 1
     assert length(d["albums"]) == 1
     assert d["listings"] == []
+    assert d["rider_of_the_day"] == nil
+
+    rider =
+      rider_fixture(%{alias: "Spotlit", bio: "Night owl."})
+      |> Ecto.Changeset.change(avatar_path: "/uploads/avatars/spotlit.webp")
+      |> PevSquad.Repo.update!()
+
+    d = data(conn, ~p"/api/v1/home")
+    date = Date.to_iso8601(PevSquad.Riders.today())
+
+    assert %{
+             "alias" => "Spotlit",
+             "bio" => "Night owl.",
+             "date" => ^date,
+             "avatar_url" => "http" <> _,
+             "url" => "http" <> _
+           } = d["rider_of_the_day"]
+
+    assert rider.slug == d["rider_of_the_day"]["slug"]
   end
 
   test "the spec names the public schemas", %{conn: conn} do

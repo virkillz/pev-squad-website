@@ -27,6 +27,78 @@ defmodule PevSquadWeb.RiderComponents do
     |> String.upcase()
   end
 
+  @doc """
+  The home page's rider of the day: a big photo, the alias, what they ride,
+  a bit of their bio and a link to the profile, plus a WhatsApp share.
+  """
+  attr :rider, RiderProfile, required: true
+  attr :date, Date, required: true
+  attr :share_url, :string, required: true
+
+  def rider_spotlight(assigns) do
+    ~H"""
+    <section class="band band-orange spotlight" id="rider-of-the-day">
+      <div class="spotlight-grid">
+        <.link navigate={~p"/community/#{@rider.slug}"} class="spotlight-photo">
+          <img
+            :if={@rider.avatar_path}
+            src={@rider.avatar_path}
+            alt={
+              gettext("%{rider} with their %{ride}",
+                rider: @rider.alias,
+                ride: @rider.main_ride || type_label(@rider.primary_pev_type)
+              )
+            }
+            loading="lazy"
+          />
+          <span :if={!@rider.avatar_path} class="spotlight-initials">{initials(@rider.alias)}</span>
+        </.link>
+        <div class="spotlight-copy">
+          <div class="meta-row">
+            <span class="eyebrow">{gettext("Rider of the day")}</span>
+            <span class="meta-text">
+              {@date |> PevSquadWeb.Locale.strftime("%d %b %Y") |> String.upcase()}
+            </span>
+          </div>
+          <h2 class="spotlight-name">{@rider.alias}</h2>
+          <p class="spotlight-meta">
+            <span class="badge">{type_label(@rider.primary_pev_type)}</span>
+            <span :if={card_meta(@rider) != ""}>{card_meta(@rider)}</span>
+          </p>
+          <p :if={@rider.bio} class="spotlight-bio">{excerpt(@rider.bio, 320)}</p>
+          <div class="hero-actions">
+            <.link navigate={~p"/community/#{@rider.slug}"} class="btn btn-solid">
+              {gettext("Meet %{rider}", rider: @rider.alias)}
+            </.link>
+            <a
+              href={
+                "https://wa.me/?text=" <>
+                  URI.encode_www_form(
+                    gettext("Rider of the day: %{rider}", rider: @rider.alias) <> " " <> @share_url
+                  )
+              }
+              target="_blank"
+              rel="noopener"
+              class="btn btn-outline"
+              id="share-rider-of-the-day"
+            >
+              {gettext("Share")}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    """
+  end
+
+  defp excerpt(text, max) do
+    text = text |> String.replace(~r/\s+/, " ") |> String.trim()
+
+    if String.length(text) <= max,
+      do: text,
+      else: (text |> String.slice(0, max) |> String.replace(~r/\s+\S*$/, "")) <> "…"
+  end
+
   attr :rider, RiderProfile, required: true
 
   def rider_card(assigns) do

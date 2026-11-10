@@ -33,6 +33,7 @@ export type Listing = Schemas['Listing'];
 export type ListingDetail = Schemas['ListingDetail'];
 export type Rider = Schemas['Rider'];
 export type RiderDetail = Schemas['RiderDetail'];
+export type RiderOfTheDay = Schemas['RiderOfTheDay'];
 export type Partner = Schemas['Partner'];
 export type PartnerDetail = Schemas['PartnerDetail'];
 export type Album = Schemas['Album'];

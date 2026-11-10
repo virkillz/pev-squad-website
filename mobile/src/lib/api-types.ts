@@ -15,7 +15,7 @@ export interface paths {
         get: operations["PevSquadWeb.API.Admin.EventController.show"];
         /**
          * Change a draft official event
-         * @description Only the fields you send change. `partner_ids` replaces the linked partners.
+         * @description Only the fields you send change. `partner_ids` replaces the linked partners, `album_ids` the linked albums.
          */
         put: operations["PevSquadWeb.API.Admin.EventController.update"];
         post?: never;
@@ -24,7 +24,7 @@ export interface paths {
         head?: never;
         /**
          * Change a draft official event
-         * @description Only the fields you send change. `partner_ids` replaces the linked partners.
+         * @description Only the fields you send change. `partner_ids` replaces the linked partners, `album_ids` the linked albums.
          */
         patch: operations["PevSquadWeb.API.Admin.EventController.update (2)"];
         trace?: never;
@@ -99,6 +99,23 @@ export interface paths {
         put?: never;
         /** Rotate a refresh token; the previous token and access token stop working */
         post: operations["PevSquadWeb.API.AuthController.refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/albums": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gallery albums, drafts included, for linking (`album_id`, `album_ids`) */
+        get: operations["PevSquadWeb.API.Admin.AlbumController.index"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -329,7 +346,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** One event, with partners and recap posts */
+        /** One event, with partners, recap posts and photo albums */
         get: operations["PevSquadWeb.API.EventController.show"];
         put?: never;
         post?: never;
@@ -456,6 +473,26 @@ export interface paths {
          * @description Multipart form with a `file` field (JPEG, PNG or WebP, up to 15 MB).
          */
         post: operations["PevSquadWeb.API.Admin.PostController.cover"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{id}/cover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set a draft event's image
+         * @description Multipart form with a `file` field (JPEG, PNG or WebP, up to 15 MB). Shown at the top of the event page.
+         */
+        post: operations["PevSquadWeb.API.Admin.EventController.cover"];
         delete?: never;
         options?: never;
         head?: never;
@@ -628,6 +665,25 @@ export interface components {
             title: string;
             url: string;
         };
+        /** AlbumList */
+        AlbumList: {
+            data?: {
+                event_id?: number | null;
+                id?: number;
+                /** @description Every photo, pending ones included */
+                photo_count?: number;
+                published?: boolean;
+                slug?: string;
+                /** Format: date */
+                taken_on?: string | null;
+                title?: string;
+                /**
+                 * Format: uri
+                 * @description Public page; 404 until published
+                 */
+                url?: string;
+            }[];
+        };
         Community: {
             brands: components["schemas"]["Partner"][];
             communities: components["schemas"]["Partner"][];
@@ -679,6 +735,8 @@ export interface components {
             capacity: number | null;
             /** @enum {string} */
             category: "official" | "group_ride";
+            /** Format: uri */
+            cover_url: string | null;
             /** Format: date-time */
             ends_at: string | null;
             going_count: number;
@@ -709,9 +767,12 @@ export interface components {
             waitlist_count: number;
         };
         EventDetail: {
+            albums: components["schemas"]["Album"][];
             capacity: number | null;
             /** @enum {string} */
             category: "official" | "group_ride";
+            /** Format: uri */
+            cover_url: string | null;
             description: string | null;
             /** Format: date-time */
             ends_at: string | null;
@@ -761,6 +822,8 @@ export interface components {
          *     }
          */
         EventInput: {
+            /** @description Replaces linked gallery albums (GET /admin/albums). An album belongs to one event, so this moves it */
+            album_ids?: number[];
             /** @description null = unlimited */
             capacity?: number | null;
             description?: string | null;
@@ -815,6 +878,8 @@ export interface components {
             listings: components["schemas"]["Listing"][];
             next_event: components["schemas"]["Event"] | null;
             posts: components["schemas"]["Post"][];
+            /** @description Picked automatically each day (Jakarta date), the same for every client; null when nobody qualifies or the viewer blocked them */
+            rider_of_the_day: components["schemas"]["RiderOfTheDay"] | null;
             upcoming: components["schemas"]["Event"][];
         };
         Listing: {
@@ -971,6 +1036,7 @@ export interface components {
             width: number | null;
         };
         Post: {
+            album_id: number | null;
             available_locales: string[];
             /** Format: uri */
             cover_url: string | null;
@@ -994,6 +1060,9 @@ export interface components {
             url: string;
         };
         PostDetail: {
+            /** @description The post's own album, else (for a recap) its event's newest album */
+            album: components["schemas"]["Album"] | null;
+            album_id: number | null;
             available_locales: string[];
             /** @description Markdown; links and images are absolute */
             body: string;
@@ -1042,6 +1111,8 @@ export interface components {
          *     }
          */
         PostInput: {
+            /** @description Gallery album shown with the post (GET /admin/albums). Left out, a recap shows its event's album */
+            album_id?: number | null;
             /** @description Makes it a recap of that event */
             event_id?: number | null;
             /**
@@ -1101,6 +1172,26 @@ export interface components {
             has_account: boolean;
             id: number;
             instagram: string | null;
+            main_ride: string | null;
+            /** @enum {string} */
+            primary_pev_type: "euc" | "escooter" | "esk8" | "ebike" | "other";
+            slug: string;
+            /** @enum {string} */
+            status: "active" | "inactive" | "banned";
+            url: string;
+        };
+        RiderOfTheDay: {
+            alias: string;
+            /** Format: uri */
+            avatar_url: string | null;
+            bio: string | null;
+            city: string | null;
+            communities: {
+                name: string;
+                slug: string;
+            }[];
+            /** Format: date */
+            date: string;
             main_ride: string | null;
             /** @enum {string} */
             primary_pev_type: "euc" | "escooter" | "esk8" | "ebike" | "other";
@@ -1460,6 +1551,26 @@ export interface operations {
                             token_type: string;
                         };
                     };
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.Admin.AlbumController.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Albums */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlbumList"];
                 };
             };
         };
@@ -2182,6 +2293,52 @@ export interface operations {
                 };
             };
             /** @description Already published */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Not an image */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    "PevSquadWeb.API.Admin.EventController.cover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Event id or slug */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Image */
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["FileUpload"];
+            };
+        };
+        responses: {
+            /** @description Event */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Event"];
+                };
+            };
+            /** @description Published, or a group ride */
             409: {
                 headers: {
                     [name: string]: unknown;

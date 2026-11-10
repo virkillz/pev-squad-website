@@ -25,7 +25,7 @@ defmodule PevSquad.Riders do
   alias PevSquad.Accounts.Scope
   alias PevSquad.Repo
   alias PevSquad.Partners.Partner
-  alias PevSquad.Riders.{Avatar, Notifier, RiderProfile}
+  alias PevSquad.Riders.{Avatar, Notifier, RiderProfile, Spotlight}
 
   @max_communities 3
 
@@ -237,6 +237,135 @@ defmodule PevSquad.Riders do
 
     :ok
   end
+
+  ## Rider of the day
+
+  @doc """
+  Today's rider of the day (Jakarta date), with `communities` filled, or nil
+  when nobody qualifies.
+
+  The first call of the day picks one and saves it in `rider_spotlights`, so
+  the web and the app agree all day. The pick is the eligible rider featured
+  least recently (never featured first; ties at random), so everyone gets a
+  turn before anyone repeats. Eligible means listed on the roster, active,
+  and with a photo and a bio. If the day's rider stops being listed (banned,
+  hidden, made private), the next call picks someone else.
+
+  Options: `:exclude_users` (member ids the viewer blocked: nil when today's
+  rider is one of them), `:date` (for tests).
+  """
+  def rider_of_the_day(opts \\ []) do
+    date = opts[:date] || today()
+    hidden = opts[:exclude_users] || []
+
+    rider =
+      case spotlight_rider(date) do
+        {:ok, rider} -> rider
+        {:stale, old_id} -> pick_rider_of_the_day(date, old_id)
+        :none -> pick_rider_of_the_day(date, nil)
+      end
+
+    cond do
+      is_nil(rider) -> nil
+      rider.user_id && rider.user_id in hidden -> nil
+      true -> rider |> List.wrap() |> put_communities() |> hd()
+    end
+  end
+
+  @doc "Today's date in Jakarta, the day rider of the day turns over."
+  def today, do: DateTime.utc_now() |> DateTime.shift_zone!("Asia/Jakarta") |> DateTime.to_date()
+
+  @doc """
+  Staff make `rider` the rider of the day for `date` (default today),
+  replacing whoever was picked. The rider must be listed on the roster.
+  """
+  def set_rider_of_the_day(%Scope{} = scope, %RiderProfile{} = rider, date \\ today()) do
+    ensure_staff!(scope)
+
+    if listed?(rider.id) do
+      %Spotlight{date: date, rider_profile_id: rider.id, picked_by_id: scope.user.id}
+      |> Repo.insert(
+        on_conflict: {:replace, [:rider_profile_id, :picked_by_id, :updated_at]},
+        conflict_target: :date
+      )
+    else
+      {:error, :not_listed}
+    end
+  end
+
+  @doc "The dates a rider was rider of the day, newest first."
+  def spotlight_dates(%RiderProfile{id: id}) do
+    Spotlight
+    |> where(rider_profile_id: ^id)
+    |> order_by(desc: :date)
+    |> select([s], s.date)
+    |> Repo.all()
+  end
+
+  # {:ok, rider} while the day's rider is still listed, {:stale, id} when
+  # they've dropped off, :none before the first pick of the day.
+  defp spotlight_rider(date) do
+    case Repo.get_by(Spotlight, date: date) do
+      nil ->
+        :none
+
+      %Spotlight{rider_profile_id: id} ->
+        case listed_riders() |> where(id: ^id, status: :active) |> Repo.one() do
+          nil -> {:stale, id}
+          rider -> {:ok, rider}
+        end
+    end
+  end
+
+  # Inserting with on_conflict: :nothing (or replacing only the stale rider)
+  # means two first visits at once can't both pick: the loser reads the
+  # winner's row.
+  defp pick_rider_of_the_day(date, stale_id) do
+    case next_spotlight_candidate(date) do
+      nil ->
+        nil
+
+      candidate_id ->
+        now = DateTime.utc_now(:second)
+
+        if stale_id do
+          Spotlight
+          |> where(date: ^date, rider_profile_id: ^stale_id)
+          |> Repo.update_all(
+            set: [rider_profile_id: candidate_id, picked_by_id: nil, updated_at: now]
+          )
+        else
+          Repo.insert(%Spotlight{date: date, rider_profile_id: candidate_id},
+            on_conflict: :nothing,
+            conflict_target: :date
+          )
+        end
+
+        case spotlight_rider(date) do
+          {:ok, rider} -> rider
+          _ -> nil
+        end
+    end
+  end
+
+  defp next_spotlight_candidate(date) do
+    last =
+      from s in Spotlight,
+        where: s.date != ^date,
+        group_by: s.rider_profile_id,
+        select: %{rider_profile_id: s.rider_profile_id, last: max(s.date)}
+
+    listed_riders()
+    |> where([r], r.status == :active and not is_nil(r.avatar_path))
+    |> where([r], not is_nil(r.bio) and fragment("btrim(?) <> ''", r.bio))
+    |> join(:left, [r], l in subquery(last), on: l.rider_profile_id == r.id)
+    |> order_by([r, l], asc_nulls_first: l.last, asc: fragment("random()"))
+    |> limit(1)
+    |> select([r], r.id)
+    |> Repo.one()
+  end
+
+  defp listed?(id), do: listed_riders() |> where(id: ^id, status: :active) |> Repo.exists?()
 
   ## Staff
 

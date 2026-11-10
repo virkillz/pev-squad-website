@@ -136,6 +136,14 @@
     />
   </div>
   
+<!-- RIDER OF THE DAY — picked automatically each day (Riders.rider_of_the_day/1). -->
+  <PevSquadWeb.RiderComponents.rider_spotlight
+    :if={@rider_of_the_day}
+    rider={@rider_of_the_day}
+    date={@today}
+    share_url={url(~p"/community/#{@rider_of_the_day.slug}")}
+  />
+  
 <!-- BY THE NUMBERS ======================================================== -->
   <section class="band band-tight band-black">
     <div class="section-head" style="margin-bottom:1.75rem;">

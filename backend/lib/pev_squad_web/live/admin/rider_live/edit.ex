@@ -44,6 +44,27 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
             <.button phx-click="approve" variant="primary">Approve</.button>
           </div>
 
+          <div :if={@live_action == :edit} class="notice space-y-3" id="rider-spotlight">
+            <p :if={@spotlight_dates == []}>
+              <strong>Rider of the day:</strong>
+              not featured yet. Riders are picked automatically, one a day, from active public profiles with a photo and a bio, least recently featured first.
+            </p>
+            <p :if={@spotlight_dates != []}>
+              <strong>Rider of the day</strong>
+              on {Enum.map_join(@spotlight_dates, ", ", &Calendar.strftime(&1, "%-d %b %Y"))}.
+            </p>
+            <.button
+              :if={
+                @rider.is_public and !@rider.hidden_by_staff and @rider.status == :active and
+                  List.first(@spotlight_dates) != @today
+              }
+              phx-click="spotlight"
+              data-confirm="Make this rider today's rider of the day? It replaces today's pick."
+            >
+              Make today's rider of the day
+            </.button>
+          </div>
+
           <div :if={@live_action == :edit} class="notice space-y-3">
             <%= if @rider.user do %>
               <p>
@@ -223,6 +244,8 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
     socket =
       socket
       |> assign(:all_communities, all_communities)
+      |> assign(:spotlight_dates, [])
+      |> assign(:today, Riders.today())
       |> allow_upload(:avatar,
         accept: ~w(.jpg .jpeg .png .webp),
         max_entries: 1,
@@ -251,6 +274,7 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
     |> assign(:rider, rider)
     |> assign(:form, to_form(Riders.change_rider(rider)))
     |> assign(:community_ids, Riders.community_ids(socket.assigns.current_scope, rider))
+    |> assign(:spotlight_dates, Riders.spotlight_dates(rider))
   end
 
   defp reload(socket) do
@@ -337,6 +361,24 @@ defmodule PevSquadWeb.Admin.RiderLive.Edit do
 
       {:error, reason} ->
         {:noreply, put_flash(socket, :error, link_error(reason))}
+    end
+  end
+
+  def handle_event("spotlight", _params, socket) do
+    case Riders.set_rider_of_the_day(socket.assigns.current_scope, socket.assigns.rider) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "#{socket.assigns.rider.alias} is today's rider of the day.")
+         |> reload()}
+
+      {:error, :not_listed} ->
+        {:noreply,
+         put_flash(
+           socket,
+           :error,
+           "Only active riders shown on the public roster can be featured."
+         )}
     end
   end
 

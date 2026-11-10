@@ -33,7 +33,12 @@ defmodule PevSquadWeb.API.HomeController do
           [exclude_users: hidden]
           |> Listings.list_live_listings()
           |> Enum.take(4)
-          |> Enum.map(&PublicJSON.listing/1)
+          |> Enum.map(&PublicJSON.listing/1),
+        rider_of_the_day:
+          case PevSquad.Riders.rider_of_the_day(exclude_users: hidden) do
+            nil -> nil
+            rider -> PublicJSON.rider_of_the_day(rider, PevSquad.Riders.today())
+          end
       }
     })
   end

@@ -19,7 +19,14 @@ defmodule PevSquadWeb.HomeLive.Index do
        PevSquad.Gallery.list_featured_photos(
          exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
        )
-     )}
+     )
+     |> assign(
+       :rider_of_the_day,
+       PevSquad.Riders.rider_of_the_day(
+         exclude_users: PevSquad.Safety.hidden_user_ids(socket.assigns.current_scope)
+       )
+     )
+     |> assign(:today, PevSquad.Riders.today())}
   end
 
   # The hero's "Latest" block: the newest post as the feature, the next one

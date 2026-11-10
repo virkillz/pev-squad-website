@@ -120,6 +120,22 @@ defmodule PevSquadWeb.CommunityLiveTest do
     refute html =~ "popo.webp"
   end
 
+  test "the home page shows the rider of the day", %{conn: conn} do
+    {:ok, lv, _html} = live(conn, ~p"/")
+    refute has_element?(lv, "#rider-of-the-day")
+
+    rider =
+      rider_fixture(alias: "Daily Star", bio: "Commutes on a Sherman.")
+      |> Ecto.Changeset.change(avatar_path: "/uploads/avatars/star.webp")
+      |> PevSquad.Repo.update!()
+
+    {:ok, lv, _html} = live(build_conn(), ~p"/")
+    assert has_element?(lv, "#rider-of-the-day", "Daily Star")
+    assert has_element?(lv, "#rider-of-the-day", "Commutes on a Sherman.")
+    assert has_element?(lv, ~s|#rider-of-the-day a[href="/community/#{rider.slug}"]|)
+    assert has_element?(lv, "#share-rider-of-the-day")
+  end
+
   test "the old Featured Riders link goes to the community page", %{conn: conn} do
     assert redirected_to(get(conn, ~p"/riders")) == ~p"/community"
   end
@@ -365,6 +381,20 @@ defmodule PevSquadWeb.CommunityLiveTest do
 
       {:ok, _lv, html} = live(build_conn(), ~p"/community")
       assert html =~ "Fresh"
+    end
+
+    test "staff make a rider today's rider of the day", %{conn: conn} do
+      staff = staff_scope_fixture()
+      rider = rider_fixture(alias: "Pick Me")
+
+      {:ok, lv, _html} = live(log_in_user(conn, staff.user), ~p"/admin/riders/#{rider}/edit")
+      assert has_element?(lv, "#rider-spotlight", "not featured yet")
+
+      lv |> element("#rider-spotlight button", "Make today's rider of the day") |> render_click()
+
+      assert has_element?(lv, "#rider-spotlight", "Rider of the day")
+      refute has_element?(lv, "#rider-spotlight button")
+      assert PevSquad.Riders.rider_of_the_day().id == rider.id
     end
 
     test "members can't add riders", %{conn: conn} do
