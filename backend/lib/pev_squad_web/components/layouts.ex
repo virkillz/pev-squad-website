@@ -161,6 +161,7 @@ defmodule PevSquadWeb.Layouts do
       </div>
       <div class="footer-bottom">
         <span>© {Date.utc_today().year} PEV SQUAD</span>
+        <.link navigate={~p"/privacy"} id="footer-privacy">{gettext("Privacy policy")}</.link>
         <span>EUC / ESCOOTER / ESK8 — INDONESIA</span>
       </div>
     </footer>

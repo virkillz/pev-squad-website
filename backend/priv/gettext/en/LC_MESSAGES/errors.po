@@ -113,7 +113,7 @@ msgstr ""
 msgid "must be equal to %{number}"
 msgstr ""
 
-#: lib/pev_squad/riders.ex:610
+#: lib/pev_squad/riders.ex:612
 #, elixir-autogen, elixir-format
 msgid "couldn't read that image — try a JPG or PNG"
 msgstr ""
@@ -134,18 +134,18 @@ msgstr ""
 msgid "is already in the catalog"
 msgstr ""
 
-#: lib/pev_squad/riders/rider_profile.ex:75
-#: lib/pev_squad/riders/rider_profile.ex:78
+#: lib/pev_squad/riders/rider_profile.ex:76
+#: lib/pev_squad/riders/rider_profile.ex:79
 #, elixir-autogen, elixir-format
 msgid "is already taken by another rider"
 msgstr ""
 
-#: lib/pev_squad/riders/rider_profile.ex:68
+#: lib/pev_squad/riders/rider_profile.ex:69
 #, elixir-autogen, elixir-format
 msgid "just the handle, e.g. pevsquad"
 msgstr ""
 
-#: lib/pev_squad/riders/rider_profile.ex:61
+#: lib/pev_squad/riders/rider_profile.ex:62
 #, elixir-autogen, elixir-format
 msgid "letters, numbers, spaces, dots, dashes and underscores only"
 msgstr ""
@@ -198,7 +198,7 @@ msgstr ""
 msgid "use lowercase letters, numbers and dashes"
 msgstr ""
 
-#: lib/pev_squad/riders/rider_profile.ex:99
+#: lib/pev_squad/riders/rider_profile.ex:100
 #, elixir-autogen, elixir-format
 msgid "write the public statement for the ban"
 msgstr ""

@@ -107,8 +107,8 @@ msgstr ""
 msgid "Ask Us to Help Run It"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:217
-#: lib/pev_squad_web/components/layouts.ex:229
+#: lib/pev_squad_web/components/layouts.ex:218
+#: lib/pev_squad_web/components/layouts.ex:230
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr ""
@@ -278,7 +278,7 @@ msgstr ""
 msgid "LOGGED"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:178
+#: lib/pev_squad_web/components/layouts.ex:179
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr ""
@@ -408,7 +408,7 @@ msgstr ""
 msgid "Shaz is Back!"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:224
+#: lib/pev_squad_web/components/layouts.ex:225
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr ""
@@ -466,7 +466,7 @@ msgstr ""
 msgid "WATCH THE WHATSAPP GROUP"
 msgstr ""
 
-#: lib/pev_squad_web/components/layouts.ex:212
+#: lib/pev_squad_web/components/layouts.ex:213
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr ""
@@ -3782,4 +3782,26 @@ msgstr ""
 #: lib/pev_squad_web/components/rider_components.ex:77
 #, elixir-autogen, elixir-format
 msgid "Rider of the day: %{rider}"
+msgstr ""
+
+#: lib/pev_squad_web/live/privacy_live/index.ex:24
+#, elixir-autogen, elixir-format
+msgid "Legal"
+msgstr ""
+
+#: lib/pev_squad_web/components/layouts.ex:164
+#: lib/pev_squad_web/live/privacy_live/index.ex:29
+#: lib/pev_squad_web/live/privacy_live/index.ex:49
+#, elixir-autogen, elixir-format
+msgid "Privacy policy"
+msgstr ""
+
+#: lib/pev_squad_web/live/privacy_live/index.ex:26
+#, elixir-autogen, elixir-format
+msgid "Updated %{date}"
+msgstr ""
+
+#: lib/pev_squad_web/live/privacy_live/index.ex:52
+#, elixir-autogen, elixir-format
+msgid "What PEV Squad collects on the website and in the app, why, and how to delete it."
 msgstr ""
