@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 
@@ -6,6 +7,8 @@ import { ListingCard } from '@/components/cards';
 import { BigButton, Chips, PageHeader, QueryState } from '@/components/chrome';
 import { Body, Mono } from '@/components/text';
 import type { Listing } from '@/lib/api';
+import { useAuth } from '@/lib/auth';
+import { API_URL } from '@/lib/config';
 import { useLocale } from '@/lib/i18n';
 import { flatPages, useListings } from '@/lib/queries';
 import { bw, colors, space } from '@/theme';
@@ -31,6 +34,7 @@ function Grid({ items }: { items: Listing[] }) {
 export default function ForSaleScreen() {
   const router = useRouter();
   const { t, label } = useLocale();
+  const { signedIn } = useAuth();
   const [category, setCategory] = useState<string>('all');
   const cat = category === 'all' ? undefined : category;
   const live = useListings(cat);
@@ -46,7 +50,8 @@ export default function ForSaleScreen() {
         right={
           <Pressable
             accessibilityRole="button"
-            onPress={() => router.push('/login')}
+            // Posting a listing has no API yet (roadmap step 5), so members sell on the website.
+            onPress={() => (signedIn ? WebBrowser.openBrowserAsync(`${API_URL}/for-sale/new`) : router.push('/login'))}
             style={{ backgroundColor: colors.orange, borderWidth: bw, paddingHorizontal: 14, paddingVertical: 12, marginBottom: 4 }}>
             <Mono bold size={12}>{t('forSale.sell')}</Mono>
           </Pressable>

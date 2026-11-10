@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
 import { Linking, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,6 +12,7 @@ import { Body, Mono, Stencil, Tag } from '@/components/text';
 import type { EventDetail } from '@/lib/api';
 import { dayLabel, timeLabel } from '@/lib/format';
 import { useAuth } from '@/lib/auth';
+import { API_URL } from '@/lib/config';
 import { useLocale } from '@/lib/i18n';
 import { useEvent } from '@/lib/queries';
 import { bw, colors, space } from '@/theme';
@@ -40,7 +42,7 @@ export default function EventScreen() {
   const insets = useSafeAreaInsets();
   const { t, label, locale } = useLocale();
   const event = useEvent(slug);
-  const { me } = useAuth();
+  const { me, signedIn } = useAuth();
   // Read the clock once per screen, not on every render.
   const [openedAt] = useState(() => Date.now());
   const e = event.data;
@@ -147,8 +149,12 @@ export default function EventScreen() {
 
           {e.status === 'published' && new Date(e.starts_at).getTime() > openedAt ? (
             <View style={{ borderTopWidth: bw, padding: space.m, paddingHorizontal: space.l, paddingBottom: insets.bottom + space.m, gap: 8, backgroundColor: colors.white }}>
-              <BigButton label={t('event.rsvp')} onPress={() => router.push('/login')} />
-              <Mono size={10} color={colors.mutedOnWhite} style={{ textAlign: 'center' }}>{t('event.rsvpHint')}</Mono>
+              {/* RSVP has no API yet (roadmap step 5), so signed-in members RSVP on the website. */}
+              <BigButton
+                label={t('event.rsvp')}
+                onPress={() => (signedIn ? WebBrowser.openBrowserAsync(`${API_URL}/events/${e.slug}`) : router.push('/login'))}
+              />
+              <Mono size={10} color={colors.mutedOnWhite} style={{ textAlign: 'center' }}>{t(signedIn ? 'event.rsvpWebHint' : 'event.rsvpHint')}</Mono>
             </View>
           ) : null}
         </>
