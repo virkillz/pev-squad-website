@@ -276,7 +276,8 @@ defmodule PevSquad.Events do
   defp notify_promoted(_promoted, _event, nil), do: :ok
 
   defp notify_promoted(promoted, event, event_url_fun) do
-    for rsvp <- Repo.preload(promoted, :user) do
+    # Riders staff added without an account have no email to send to.
+    for rsvp <- Repo.preload(promoted, :user), rsvp.user do
       Notifier.deliver_waitlist_promotion(rsvp.user, event, event_url_fun.(event))
     end
 
@@ -325,14 +326,18 @@ defmodule PevSquad.Events do
 
   def change_event(%Event{} = event, attrs), do: Event.changeset(event, attrs)
 
-  @doc "Going riders first (in RSVP order), then the waitlist. Staff and the host."
+  @doc """
+  Going riders first (in RSVP order), then the waitlist. Staff and the host.
+  Each has `rider_alias` filled, and `user` preloaded (nil for a rider staff
+  added without an account).
+  """
   def list_rsvps(%Scope{} = scope, %Event{id: event_id} = event) do
     ensure_can_manage!(scope, event)
 
     from(r in Rsvp,
       where: r.event_id == ^event_id,
       left_join: p in RiderProfile,
-      on: p.user_id == r.user_id,
+      on: p.id == r.rider_profile_id or (not is_nil(r.user_id) and p.user_id == r.user_id),
       order_by: [asc: r.status, asc: r.inserted_at, asc: r.id],
       select_merge: %{rider_alias: p.alias},
       preload: :user
@@ -406,7 +411,7 @@ defmodule PevSquad.Events do
       broadcast_rsvps_changed(cancelled)
 
       Rsvp
-      |> where(event_id: ^event.id)
+      |> where([r], r.event_id == ^event.id and not is_nil(r.user_id))
       |> preload(:user)
       |> Repo.all()
       |> Enum.each(
@@ -531,6 +536,131 @@ defmodule PevSquad.Events do
       error ->
         error
     end
+  end
+
+  ## Staff: editing the rider list
+
+  @doc """
+  Puts a rider on an official event's list. A claimed profile is added under
+  its member's account; an unclaimed one by the profile itself. Staff may go
+  over capacity and add riders to past or closed events. Nobody is emailed.
+
+  Returns `{:ok, rsvp}` or `{:error, :already_listed}`.
+  """
+  def add_rider(%Scope{} = scope, %Event{} = event, %RiderProfile{} = profile, status)
+      when status in [:going, :waitlist] do
+    ensure_staff!(scope)
+
+    owner =
+      if profile.user_id,
+        do: [user_id: profile.user_id],
+        else: [rider_profile_id: profile.id]
+
+    result =
+      Repo.transact(fn ->
+        _locked = lock_event!(event.id)
+
+        if Repo.get_by(Rsvp, [event_id: event.id] ++ owner) do
+          {:error, :already_listed}
+        else
+          Rsvp |> struct([event_id: event.id, status: status] ++ owner) |> Repo.insert()
+        end
+      end)
+
+    with {:ok, rsvp} <- result do
+      broadcast_rsvps_changed(event)
+      {:ok, rsvp}
+    end
+  end
+
+  @doc "An RSVP of this event, for staff. Raises if there is none."
+  def get_event_rsvp!(%Scope{} = scope, %Event{id: event_id}, id) do
+    ensure_staff!(scope)
+    Repo.get_by!(Rsvp, id: id, event_id: event_id)
+  end
+
+  @doc """
+  Moves a rider between going and the waitlist. Staff may go over capacity.
+  Moving someone to the waitlist doesn't promote anyone: staff decide.
+  """
+  def set_rsvp_status(%Scope{} = scope, %Rsvp{} = rsvp, status)
+      when status in [:going, :waitlist] do
+    ensure_staff!(scope)
+
+    # Forced, so a stale struct can't turn the change into a no-op.
+    changeset = rsvp |> Ecto.Changeset.change() |> Ecto.Changeset.force_change(:status, status)
+
+    with {:ok, updated} <- Repo.update(changeset) do
+      broadcast_rsvps_changed(%Event{id: rsvp.event_id})
+      {:ok, updated}
+    end
+  end
+
+  @doc """
+  Takes a rider off the list. If they held a seat on an upcoming event, the
+  next waitlisted rider takes it and is emailed, as when a rider cancels.
+  Returns `{:ok, promoted}`.
+  """
+  def remove_rsvp(%Scope{} = scope, %Rsvp{} = rsvp, event_url_fun) do
+    ensure_staff!(scope)
+
+    result =
+      Repo.transact(fn ->
+        event = lock_event!(rsvp.event_id)
+
+        case Repo.get(Rsvp, rsvp.id) do
+          nil ->
+            {:ok, {event, nil}}
+
+          current ->
+            Repo.delete!(current)
+            promoted = if current.status == :going and upcoming?(event), do: promote_next(event)
+            {:ok, {event, promoted}}
+        end
+      end)
+
+    with {:ok, {event, promoted}} <- result do
+      broadcast_rsvps_changed(event)
+      if promoted, do: notify_promoted([promoted], event, event_url_fun)
+      {:ok, promoted}
+    end
+  end
+
+  defp upcoming?(%Event{status: status, starts_at: starts_at}),
+    do: status == :published and DateTime.after?(starts_at, DateTime.utc_now())
+
+  @doc """
+  When a member claims an imported profile, the RSVPs staff made for that
+  profile move to their account. Where they had already RSVP'd themselves,
+  their own RSVP is kept. Called by `PevSquad.Riders`.
+  """
+  def move_profile_rsvps(profile_id, user_id) do
+    mine = from(r in Rsvp, where: r.user_id == ^user_id, select: r.event_id)
+
+    Rsvp
+    |> where([r], r.rider_profile_id == ^profile_id and r.event_id in subquery(mine))
+    |> Repo.delete_all()
+
+    Rsvp
+    |> where([r], r.rider_profile_id == ^profile_id)
+    |> Repo.update_all(set: [user_id: user_id, rider_profile_id: nil])
+
+    :ok
+  end
+
+  @doc """
+  The reverse, when a member's account is deleted but their imported profile
+  stays on the roster: their RSVPs for past events move to the profile, so
+  the event history keeps them. Called by `PevSquad.Accounts`.
+  """
+  def keep_past_rsvps_on_profile(user_id, profile_id, now \\ DateTime.utc_now()) do
+    past = from(e in Event, where: e.starts_at <= ^now, select: e.id)
+
+    Rsvp
+    |> where([r], r.user_id == ^user_id and r.event_id in subquery(past))
+    |> Repo.update_all(set: [user_id: nil, rider_profile_id: profile_id])
+
+    :ok
   end
 
   # Must be called inside the transaction that holds the event lock.

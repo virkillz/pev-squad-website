@@ -127,6 +127,44 @@ defmodule PevSquadWeb.EventLiveTest do
     end
   end
 
+  describe "admin rider list" do
+    test "staff search, add, move and remove riders", %{conn: conn} do
+      conn = log_in_user(conn, staff_scope_fixture().user)
+      event = event_fixture(capacity: 1)
+      rider = PevSquad.RidersFixtures.rider_fixture(alias: "Kemayoran Kid")
+
+      {:ok, lv, _html} = live(conn, ~p"/admin/events/#{event.id}/edit")
+
+      lv |> form("#rider-search", q: "kemayoran") |> render_change()
+      assert has_element?(lv, "#result-#{rider.id}", "no account")
+
+      lv
+      |> element("#result-#{rider.id} button[phx-value-status=going]")
+      |> render_click()
+
+      [rsvp] = Events.list_rsvps(staff_scope_fixture(), event)
+      assert has_element?(lv, "#rsvp-#{rsvp.id}", "Kemayoran Kid")
+      assert has_element?(lv, "#rsvp-#{rsvp.id}", "going")
+      refute has_element?(lv, "#rider-results")
+
+      lv |> element("#rsvp-#{rsvp.id} button", "Move to waitlist") |> render_click()
+      assert has_element?(lv, "#rsvp-#{rsvp.id}", "waitlist")
+
+      lv |> element("#rsvp-#{rsvp.id} button", "Remove") |> render_click()
+      refute has_element?(lv, "#rsvp-#{rsvp.id}")
+      assert Events.list_rsvps(staff_scope_fixture(), event) == []
+    end
+
+    test "a search with no match says so", %{conn: conn} do
+      conn = log_in_user(conn, staff_scope_fixture().user)
+      event = event_fixture()
+
+      {:ok, lv, _html} = live(conn, ~p"/admin/events/#{event.id}/edit")
+      lv |> form("#rider-search", q: "zzz-nobody") |> render_change()
+      assert has_element?(lv, "#rider-no-results")
+    end
+  end
+
   describe "event page" do
     test "shows linked albums, and the album links back", %{conn: conn} do
       event = event_fixture(title: "Perklindo Ride")

@@ -262,7 +262,10 @@ defmodule PevSquad.Accounts do
             from e in Event, where: e.created_by_id == ^user.id and e.category == :group_ride
           ) do
       if ride.status == :published and DateTime.after?(ride.starts_at, now) do
-        from(r in Rsvp, where: r.event_id == ^ride.id and r.user_id != ^user.id, preload: :user)
+        from(r in Rsvp,
+          where: r.event_id == ^ride.id and r.user_id != ^user.id,
+          preload: :user
+        )
         |> Repo.all()
         |> Enum.each(&EventNotifier.deliver_event_cancelled(&1.user, ride, events_url))
       end
@@ -289,6 +292,12 @@ defmodule PevSquad.Accounts do
     for profile <- Repo.all(profile_query) do
       {:ok, deleted} = Repo.delete(profile)
       if deleted.avatar_path, do: PevSquad.Riders.Avatar.delete(deleted.avatar_path)
+    end
+
+    #    A profile that stays keeps their past events (upcoming RSVPs were
+    #    cancelled above), so the event history still lists them.
+    if kept = Repo.get_by(RiderProfile, user_id: user.id) do
+      :ok = PevSquad.Events.keep_past_rsvps_on_profile(user.id, kept.id, now)
     end
 
     # 5. The account; reviews, RSVPs, tokens, blocks and listings cascade.

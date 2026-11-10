@@ -7,6 +7,10 @@ defmodule PevSquad.Events.Rsvp do
   # Written only by PevSquad.Events, which decides :going vs :waitlist.
   # inserted_at is microsecond precision because it is the
   # first-come-first-served tiebreaker for waitlist promotion.
+  #
+  # An RSVP belongs to a user, or — when staff add a rider who has no account
+  # yet — to their unclaimed rider profile. Exactly one of the two is set;
+  # claiming the profile moves its RSVPs to the user.
   schema "event_rsvps" do
     field :status, Ecto.Enum, values: [:going, :waitlist]
     # The rider's alias, filled by Events.list_rsvps/2 — hosts see this, not emails.
@@ -14,6 +18,7 @@ defmodule PevSquad.Events.Rsvp do
 
     belongs_to :event, Event
     belongs_to :user, User
+    belongs_to :rider_profile, PevSquad.Riders.RiderProfile
 
     timestamps(type: :utc_datetime_usec)
   end

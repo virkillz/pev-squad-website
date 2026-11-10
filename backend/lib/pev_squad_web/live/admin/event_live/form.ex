@@ -1,7 +1,7 @@
 defmodule PevSquadWeb.Admin.EventLive.Form do
   use PevSquadWeb, :live_view
 
-  alias PevSquad.{Events, Gallery, Partners}
+  alias PevSquad.{Events, Gallery, Partners, Riders}
   alias PevSquad.Events.Event
   alias PevSquad.Posts.Images
 
@@ -192,15 +192,98 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
             <h2 class="section-title">Riders</h2>
           </div>
         </div>
-        <.table id="rsvps" rows={@rsvps}>
+        <div class="space-y-2" id="add-rider" style="max-width:40rem; margin-bottom:2rem;">
+          <form id="rider-search" phx-change="search_riders" phx-submit="search_riders">
+            <label class="label" for="rider-search-q">Add a rider</label>
+            <input
+              id="rider-search-q"
+              type="search"
+              name="q"
+              value={@rider_query}
+              class="input"
+              placeholder="Alias, city or ride"
+              autocomplete="off"
+              phx-debounce="300"
+            />
+          </form>
+          <p class="event-desc" style="margin:0;">
+            Riders without an account can be added too; their RSVP moves to their account when they claim the profile. Nobody is emailed, and capacity doesn't apply.
+          </p>
+          <ul :if={@rider_results != []} class="space-y-1" id="rider-results">
+            <li
+              :for={rider <- @rider_results}
+              id={"result-#{rider.id}"}
+              class="flex flex-wrap gap-3 items-center"
+            >
+              <span class="flex-1">
+                <strong>{rider.alias}</strong>
+                <span :if={rider.city} style="opacity:0.6;"> ·  {rider.city}</span>
+                <span :if={!rider.user_id} class="badge">no account</span>
+              </span>
+              <button
+                type="button"
+                phx-click="add_rider"
+                phx-value-id={rider.id}
+                phx-value-status="going"
+                class="btn btn-solid btn-sm"
+              >
+                Add as going
+              </button>
+              <button
+                type="button"
+                phx-click="add_rider"
+                phx-value-id={rider.id}
+                phx-value-status="waitlist"
+                class="btn btn-ghost btn-sm"
+              >
+                Waitlist
+              </button>
+            </li>
+          </ul>
+          <p
+            :if={@rider_results == [] and String.trim(@rider_query) != ""}
+            class="event-desc"
+            id="rider-no-results"
+          >
+            No rider matches “{@rider_query}”.
+          </p>
+        </div>
+
+        <.table id="rsvps" rows={@rsvps} row_id={&"rsvp-#{&1.id}"}>
           <:col :let={rsvp} label="#">{rsvp.position}</:col>
-          <:col :let={rsvp} label="Rider">{rsvp.user.email}</:col>
+          <:col :let={rsvp} label="Rider">
+            {rsvp.rider_alias || "Member without a profile"}
+            <span :if={rsvp.user} style="opacity:0.6;"> ·  {rsvp.user.email}</span>
+            <span :if={!rsvp.user} class="badge">no account</span>
+          </:col>
           <:col :let={rsvp} label="Status">{rsvp.status}</:col>
-          <:col :let={rsvp} label="RSVP'd at">
+          <:col :let={rsvp} label="Added">
             {Calendar.strftime(local(rsvp.inserted_at, @event.timezone), "%d %b %H:%M:%S")}
           </:col>
+          <:action :let={rsvp}>
+            <div class="flex gap-3 justify-end">
+              <button
+                type="button"
+                phx-click="set_status"
+                phx-value-id={rsvp.id}
+                phx-value-status={if rsvp.status == :going, do: "waitlist", else: "going"}
+                class="link-orange"
+              >
+                {if rsvp.status == :going, do: "Move to waitlist", else: "Move to going"}
+              </button>
+              <button
+                type="button"
+                phx-click="remove_rsvp"
+                phx-value-id={rsvp.id}
+                data-confirm={remove_confirm(rsvp, @event)}
+                class="link-orange"
+              >
+                Remove
+              </button>
+            </div>
+          </:action>
         </.table>
-        <p :if={@rsvps == []} class="event-desc">No RSVPs yet.</p>
+        <p :if={@rsvps == []} class="event-desc">No riders yet.</p>
       </section>
     </Layouts.app>
     """
@@ -215,6 +298,8 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
      |> assign(:all_albums, Gallery.list_albums_for_staff(socket.assigns.current_scope))
      |> assign(:album_ids, MapSet.new())
      |> assign(:cover_error, nil)
+     |> assign(:rider_query, "")
+     |> assign(:rider_results, [])
      |> allow_upload(:cover,
        accept: ~w(.jpg .jpeg .png .webp),
        max_entries: 1,
@@ -290,6 +375,49 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
     save_event(socket, socket.assigns.live_action, to_utc_params(params))
   end
 
+  def handle_event("search_riders", %{"q" => q}, socket) do
+    results = Riders.search_riders_for_staff(socket.assigns.current_scope, q)
+    {:noreply, socket |> assign(:rider_query, q) |> assign(:rider_results, results)}
+  end
+
+  def handle_event("add_rider", %{"id" => id, "status" => status}, socket) do
+    scope = socket.assigns.current_scope
+    rider = Riders.get_rider!(scope, id)
+
+    case Events.add_rider(scope, socket.assigns.event, rider, rsvp_status(status)) do
+      {:ok, _rsvp} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "#{rider.alias} added.")
+         |> assign(:rider_query, "")
+         |> assign(:rider_results, [])
+         |> refresh_riders()}
+
+      {:error, :already_listed} ->
+        {:noreply, put_flash(socket, :error, "#{rider.alias} is already on the list.")}
+    end
+  end
+
+  def handle_event("set_status", %{"id" => id, "status" => status}, socket) do
+    scope = socket.assigns.current_scope
+    rsvp = Events.get_event_rsvp!(scope, socket.assigns.event, id)
+    {:ok, _} = Events.set_rsvp_status(scope, rsvp, rsvp_status(status))
+    {:noreply, refresh_riders(socket)}
+  end
+
+  def handle_event("remove_rsvp", %{"id" => id}, socket) do
+    scope = socket.assigns.current_scope
+    rsvp = Events.get_event_rsvp!(scope, socket.assigns.event, id)
+    {:ok, promoted} = Events.remove_rsvp(scope, rsvp, &event_url/1)
+
+    message =
+      if promoted,
+        do: "Rider removed. The next rider on the waitlist took the seat and was emailed.",
+        else: "Rider removed."
+
+    {:noreply, socket |> put_flash(:info, message) |> refresh_riders()}
+  end
+
   def handle_event("remove_cover", _params, socket) do
     {:ok, event} = Events.remove_cover(socket.assigns.current_scope, socket.assigns.event)
     {:noreply, assign(socket, :event, %{socket.assigns.event | cover_path: event.cover_path})}
@@ -363,6 +491,26 @@ defmodule PevSquadWeb.Admin.EventLive.Form do
   end
 
   defp event_url(event), do: url(~p"/events/#{event.slug}")
+
+  defp rsvp_status("going"), do: :going
+  defp rsvp_status("waitlist"), do: :waitlist
+
+  # Seat counts in the heading come from the event, so reload it too.
+  defp refresh_riders(socket) do
+    event = Events.get_event!(socket.assigns.current_scope, socket.assigns.event.id)
+    socket |> assign(:event, event) |> assign_rsvps()
+  end
+
+  defp remove_confirm(rsvp, event) do
+    name = rsvp.rider_alias || "this rider"
+
+    if rsvp.status == :going and event.status == :published and
+         DateTime.after?(event.starts_at, DateTime.utc_now()) do
+      "Remove #{name}? If anyone is on the waitlist, the first one takes the seat and is emailed."
+    else
+      "Remove #{name} from the list?"
+    end
+  end
 
   defp album_label(album, event) do
     notes =

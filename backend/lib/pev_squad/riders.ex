@@ -251,6 +251,26 @@ defmodule PevSquad.Riders do
     |> Repo.all()
   end
 
+  @doc """
+  Riders whose alias, city or ride matches `term`, for picking one in the
+  admin (e.g. adding them to an event). Banned riders are left out.
+  """
+  def search_riders_for_staff(%Scope{} = scope, term, limit \\ 8) do
+    ensure_staff!(scope)
+
+    if String.trim(term || "") == "" do
+      []
+    else
+      RiderProfile
+      |> where([r], r.status != :banned)
+      |> search(term)
+      |> order_by([r], asc: fragment("lower(?)", r.alias))
+      |> limit(^limit)
+      |> preload(:user)
+      |> Repo.all()
+    end
+  end
+
   def get_rider!(%Scope{} = scope, id) do
     ensure_staff!(scope)
     RiderProfile |> Repo.get!(id) |> Repo.preload(:user)
@@ -388,8 +408,18 @@ defmodule PevSquad.Riders do
       profile.user_id -> {:error, :already_claimed}
       is_nil(user) -> {:error, :no_such_user}
       Repo.get_by(RiderProfile, user_id: user.id) -> {:error, :member_has_profile}
-      true -> profile |> Ecto.Changeset.change(user_id: user.id) |> Repo.update()
+      true -> claim(profile, user)
     end
+  end
+
+  # Staff-made RSVPs for the profile move to the member's account with it.
+  defp claim(profile, user) do
+    Repo.transact(fn ->
+      with {:ok, linked} <- profile |> Ecto.Changeset.change(user_id: user.id) |> Repo.update() do
+        :ok = PevSquad.Events.move_profile_rsvps(profile.id, user.id)
+        {:ok, linked}
+      end
+    end)
   end
 
   @doc "Profiles not linked to any account yet, by alias — for linking from the member list."
